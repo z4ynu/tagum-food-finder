@@ -73,7 +73,8 @@ See food places around you, narrow them to what fits the moment, and get a route
 | User-entered spin the wheel | MVP | Confirmed | Low complexity and does not require an account if stored locally |
 | Establishment details | MVP | Proposed | Available fields depend on the selected source and license |
 | User accounts and saved preferences | Later or excluded | Open | Add only if persistent personalization provides enough value |
-| Community corrections and enrichment | Later | Proposed | Useful for filling local data gaps but requires moderation |
+| Lightweight structured place corrections | MVP | Proposed | Helps fill local gaps without requiring accounts; all changes require moderation |
+| Contributor profiles and reputation | Later | Proposed | Useful only after submission volume justifies account and moderation complexity |
 | Claimed business profiles | Later | Proposed | Could improve accuracy but adds verification and support work |
 
 ## Data acquisition constraint
@@ -128,6 +129,48 @@ The main alternatives are:
 | Hide every incomplete place | Filter results are highly trustworthy | The map may look empty and new places become invisible | Not recommended as the default |
 | Show incomplete places as ordinary matches | Maximum visible coverage | Users may believe unknown places satisfy the selected budget or occasion | Reject |
 | Show all places but separate verified matches from unknowns | Balances coverage and honesty | Requires clearer interface states and two result groups | Recommended |
+
+## Proposed community correction flow
+
+Status: Recommended, awaiting approval.
+
+Each place with missing or incorrect information should offer a `Help complete this place` or `Suggest an update` action. The first version should use a structured form rather than a free-form message.
+
+The submission form may include:
+
+- Type of correction or missing information
+- Price range or example item prices
+- Food and cuisine categories
+- Occasion suitability
+- Opening hours
+- Place status, such as open, temporarily closed, permanently closed, or moved
+- Optional supporting link or image
+- Optional contributor contact information for follow-up
+- Confirmation that the contributor is permitted to share uploaded material
+
+Submission behavior:
+
+- An account is not required for the first version.
+- Contact information is optional and must state why it would be used.
+- A submission never changes public listing data automatically.
+- The contributor receives a clear `Submitted for review` state.
+- The owner receives a structured moderation queue rather than an unorganized inbox.
+- The owner can approve, edit, reject, merge, or mark a submission as insufficient.
+- Approved changes retain source, review date, and verification status.
+- Basic rate limiting, bot protection, duplicate detection, and upload restrictions are required.
+- Public contributor profiles, points, badges, and reputation are deferred until real usage proves they are needed.
+
+This feature helps improve data after launch but does not replace the initial licensed place-data source. It cannot solve the cold-start problem before users exist.
+
+The main alternatives are:
+
+| Approach | Benefit | Cost or risk | Recommendation |
+| --- | --- | --- | --- |
+| External email or social-media message link | Fastest to launch | Unstructured, hard to moderate, difficult to connect to the correct place | Acceptable only for an early prototype |
+| Free-form in-app message | Simple user experience | Spam, vague reports, and high manual interpretation cost | Not recommended |
+| Structured account-free submission with moderation | Low contributor friction and usable data | Requires a small moderation workflow and abuse controls | Recommended for MVP |
+| Account-required contribution system | Better contributor history and abuse control | Adds authentication, privacy obligations, and user friction | Defer |
+| Automatic publication | Minimal owner workload | High risk of false, malicious, or copyrighted content | Reject |
 
 ## Proposed development stages
 
@@ -220,6 +263,7 @@ Pending decisions:
 | PRD-012 | Account value and account-free boundary | Open |
 | PRD-013 | Craving and occasion taxonomy ownership | Open |
 | PRD-014 | Spin-the-wheel inputs and persistence | Open |
+| PRD-015 | Community correction and moderation flow | Open |
 
 ## Acceptance process
 
