@@ -36,7 +36,7 @@ The original concept suggested the following stack. None of these choices are ap
 | Maps | Leaflet with OpenStreetMap | Open |
 | PWA support | Vite PWA Plugin | Open |
 | Hosting | Vercel | Open |
-| Analytics | Vercel Web Analytics only | Open |
+| Analytics | No provider selected | Open |
 
 Versions must come from the package manager and lockfile when implementation begins. They must not be guessed in this document.
 

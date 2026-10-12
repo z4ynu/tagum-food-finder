@@ -48,7 +48,7 @@
 - Anonymous browsing by default
 - No precise location retention unless an approved feature requires it
 - No advertising trackers by default
-- Vercel Web Analytics as the only proposed analytics tool
+- No analytics provider or tracking policy has been selected
 - Explicit consent before optional notifications
 - Self-service account and content deletion if user accounts are introduced
 

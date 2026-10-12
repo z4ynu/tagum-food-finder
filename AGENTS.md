@@ -4,6 +4,8 @@
 
 This repository contains Tagum Food Finder, a food-discovery product for Tagum City. Keep changes focused on the user's current request. Do not invent product requirements, business rules, or technical constraints that have not been agreed with the user.
 
+Do not use the globally installed `pickletagum-web-standards` skill in this repository. It belongs to an unrelated project. Apply standards selected specifically for Tagum Food Finder instead.
+
 ## Obsidian vault
 
 The repository root is the Obsidian vault. Do not create a separate `docs/vault/` structure. Shared session notes live in `.vault/sessions/`.
