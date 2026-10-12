@@ -7,6 +7,7 @@
 - Status: Discovery
 - Last updated: 2026-10-12
 - Rule: A statement marked `Proposed` is not approved until the user confirms it.
+- Workflow: Complete and approve this PRD before creating architecture, design-system, data, or security documents.
 
 ## Product vision
 
