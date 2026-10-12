@@ -24,6 +24,7 @@ The repository root is the Obsidian vault. Do not create a separate `docs/vault/
 - Watch for over-engineering, oversized files, mismatched style or syntax, and obvious bugs.
 - Keep code comments to one line. Do not use emojis or decorative characters in comments.
 - Use kebab-case names for new Markdown files.
+- For product documents requested under `docs/`, complete the relevant discovery interview and resolve its material decisions before creating the document. Do not use the final document as a scratchpad for unanswered questions.
 
 ## Code quality
 
