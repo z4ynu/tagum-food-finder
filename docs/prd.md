@@ -11,7 +11,7 @@
 
 ## Discovery method
 
-Each important decision will be evaluated for user value, technical feasibility, data availability, privacy, cost, maintenance, scalability, and appropriate development phase. The recommended choice and its tradeoffs will be explained before approval. Unresolved decisions remain explicit rather than being silently assumed.
+Each important decision will be evaluated for user value, technical feasibility, data availability, privacy, cost, maintenance, scalability, and appropriate development phase. For every decision, the interview will provide a recommended choice, viable alternatives, tradeoffs, stage impact, and one exact question for approval. Follow-up questions will continue until the answer is precise enough to produce testable requirements. Unresolved decisions remain explicit rather than being silently assumed.
 
 ## Product vision
 
@@ -104,6 +104,30 @@ A short data-coverage investigation is required before architecture is approved.
 A broad point-of-interest source can make the map useful, but it is unlikely to provide complete and reliable menu prices, per-person budgets, cravings, or occasion suitability. Those discovery features require an enrichment strategy, such as curated rules, business claims, community corrections, menu ingestion from licensed sources, or a combination.
 
 Therefore, map coverage and food intelligence must be treated as separate product capabilities with separate quality indicators.
+
+## Proposed incomplete-data behavior
+
+Status: Recommended, awaiting approval.
+
+The recommended approach is a hybrid model:
+
+- Show every valid sourced food place on the unfiltered map, even when enrichment is incomplete.
+- Mark missing fields plainly, such as `Price information unavailable` or `Occasion tags not yet verified`.
+- When a strict budget, craving, or occasion filter is active, rank verified matches first.
+- Keep places with missing relevant data out of the confirmed-match count.
+- Offer a separate, clearly labeled way to reveal nearby places whose matching data is unknown.
+- Never treat missing data as a failed match.
+- Do not invent prices or occasion tags. Any future estimate must be explicitly labeled and supported by a documented method.
+
+This preserves broad local coverage without misleading users about whether a place satisfies their needs.
+
+The main alternatives are:
+
+| Approach | Benefit | Cost or risk | Recommendation |
+| --- | --- | --- | --- |
+| Hide every incomplete place | Filter results are highly trustworthy | The map may look empty and new places become invisible | Not recommended as the default |
+| Show incomplete places as ordinary matches | Maximum visible coverage | Users may believe unknown places satisfy the selected budget or occasion | Reject |
+| Show all places but separate verified matches from unknowns | Balances coverage and honesty | Requires clearer interface states and two result groups | Recommended |
 
 ## Proposed development stages
 
