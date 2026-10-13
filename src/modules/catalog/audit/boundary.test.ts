@@ -49,12 +49,16 @@ function createCandidate(
     address: null,
     alternateNames: [],
     candidateKey,
+    contacts: { email: null, phone: null, social: [], website: null },
     coordinates,
     name: candidateKey,
+    openingHoursText: null,
     retrievedAt: "2026-10-13T00:00:00.000Z",
     schemaVersion: candidateSchemaVersion,
-    source: { recordId: candidateKey, slug: "synthetic" },
+    source: { recordId: candidateKey, slug: "synthetic", snapshotVersion: "1" },
     sourceCategoryLabels: [],
+    sourceClosedAt: null,
+    sourceCuisineLabels: [],
     sourceUpdatedAt: null,
   };
 }
