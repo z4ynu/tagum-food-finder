@@ -12,6 +12,7 @@ const zeroCategoryQuotas = {
   dessert: 0,
   "fast-food": 0,
   "food-court": 0,
+  "food-stall": 0,
   "prepared-food-shop": 0,
   restaurant: 0,
 } as const;

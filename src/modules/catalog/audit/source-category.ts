@@ -7,6 +7,7 @@ export type AuditPlaceCategory =
   | "dessert"
   | "fast-food"
   | "food-court"
+  | "food-stall"
   | "prepared-food-shop"
   | "restaurant";
 

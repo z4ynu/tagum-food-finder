@@ -40,6 +40,7 @@ The strict food-place rule rejects bars, pubs, and beer gardens unless their sou
 | Dessert | 3 |
 | Fast food | 56 |
 | Food court | 2 |
+| Food stall | 0 |
 | Prepared-food shop | 0 |
 | Restaurant | 75 |
 
