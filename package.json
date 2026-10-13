@@ -11,25 +11,37 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "format": "biome format --write src package.json tsconfig.json next.config.ts vitest.config.ts biome.json",
-    "format:check": "biome format src package.json tsconfig.json next.config.ts vitest.config.ts biome.json",
-    "lint": "biome lint src next.config.ts vitest.config.ts",
+    "format": "biome format --write src package.json tsconfig.json next.config.ts vitest.config.ts vite.config.ts cloudflare.config.ts biome.json",
+    "format:check": "biome format src package.json tsconfig.json next.config.ts vitest.config.ts vite.config.ts cloudflare.config.ts biome.json",
+    "lint": "biome lint src next.config.ts vitest.config.ts vite.config.ts cloudflare.config.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "dev:vinext": "vite dev --port 3001",
+    "build:vinext": "vite build",
+    "start:vinext": "vite preview",
+    "deploy:vinext": "vinext-cloudflare deploy"
   },
   "dependencies": {
+    "@vinext/cloudflare": "^1.1.0",
     "next": "^16.4.0",
     "react": "^19.3.0",
-    "react-dom": "^19.3.0"
+    "react-dom": "^19.3.0",
+    "react-server-dom-webpack": "^19.3.0",
+    "vinext": "^1.1.0"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.15",
+    "@cloudflare/vite-plugin": "^2.0.0-beta.sha-91c870c02",
     "@types/node": "^26.6.5",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "@vitejs/plugin-rsc": "^0.5.36",
     "@vitest/coverage-v8": "^5.0.4",
+    "cf": "^1.0.0-beta.14",
     "typescript": "^7.0.2",
+    "vite": "^8.3.0",
     "vitest": "^5.0.4"
   }
 }

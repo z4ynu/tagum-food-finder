@@ -25,3 +25,4 @@ Thumbs.db
 
 # Local AI skill installations
 .claude/skills/
+.cloudflare/
