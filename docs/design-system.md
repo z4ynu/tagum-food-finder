@@ -921,6 +921,8 @@ Do not ship:
 
 Before public UI implementation begins, confirm:
 
+- [ ] A visual mockup or design image for the specific page has been shown to and explicitly approved by the product owner.
+- [ ] Mobile and desktop mockups are included when the page composition differs materially across those breakpoints.
 - [ ] Figtree delivery method and included weights are selected.
 - [ ] Tailwind and the app-owned component layer are installed at verified versions.
 - [ ] Light and dark semantic tokens exist as CSS variables or one equivalent strategy.
@@ -950,4 +952,4 @@ This document is ready for approval when the product owner confirms that:
 4. light and dark modes, accessibility, responsive behavior, and motion rules are acceptable;
 5. implementation should use these tokens and patterns without silently changing the visual direction.
 
-After approval, the next document is `data.md`. Its discovery must settle the canonical entities, field definitions, provenance model, validation rules, import mappings, retention fields, indexes, and migration strategy before that file is created.
+Before any page is implemented or materially redesigned, its mockup approval gate must be completed. The approved data and security specifications are defined in [`data.md`](./data.md) and [`security.md`](./security.md).

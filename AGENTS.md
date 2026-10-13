@@ -43,6 +43,7 @@ The Taste skill suite is installed locally under `.agents/skills/` and must be u
 - For those excluded surfaces, use established accessible product-UI patterns and apply only the Taste rules that remain relevant, such as coherent tokens, responsive layouts, interaction states, contrast, reduced motion, and anti-template quality checks.
 - Use the other installed Taste skills only when their descriptions match the task. Examples include `imagegen-frontend-mobile` for mobile screen concepts, `imagegen-frontend-web` or `image-to-code` for image-led web direction, and `redesign-existing-projects` for an existing interface redesign.
 - Do not combine stylistic skills blindly. User requirements, accessibility, performance, and product usability take precedence over ornamental effects.
+- Before implementing or materially redesigning any user-facing page, create and show the user a visual mockup or design image for that page. Include mobile and desktop variants when the layouts differ materially. Wait for explicit user approval or requested revisions before writing the page's UI code. Nonvisual maintenance that does not change the page design is exempt.
 
 ## Version control
 
