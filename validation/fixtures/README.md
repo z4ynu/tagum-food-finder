@@ -11,3 +11,5 @@ Fixture rules:
 - do not treat the manually verified 100-place reference sample as production catalog data.
 
 The first catalog-audit tests construct synthetic candidates in TypeScript so the approved metric boundaries can be verified without committing any real business record.
+
+`synthetic-boundary.osm` is a four-node administrative boundary used to verify the pinned, containerized Osmium extraction path before processing the Philippines snapshot. It is project-authored synthetic test data and contains no contributor or business information.

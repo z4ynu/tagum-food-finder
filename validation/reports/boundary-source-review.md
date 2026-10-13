@@ -62,4 +62,8 @@ Before a real fixture is added:
 
 ## Acquisition decision
 
-Do not download the 610 MB extract until the local extraction path is selected and tested against a small synthetic PBF or equivalent fixture. The extraction must be bounded to relation `15986415`, preserve relation and member versions in its manifest, exclude contributor-account metadata from committed outputs, and emit a deterministic GeoJSON fixture with SHA-256. Public Nominatim and Overpass services must not be used to acquire the city food catalog.
+The local extraction path is now pinned to Osmium 1.19.0 in container image `docker.io/iboates/osmium@sha256:a67987f7d822d951ae1979de656ab7bd8051605f79d2751ea4800cc6057124be`. `scripts/extract-osm-boundary.ps1` verifies the source MD5 before Docker runs, recursively extracts only the requested relation and referenced objects, removes tags from referenced members, exports one polygonal GeoJSON feature, validates the expected reference and official name, and writes a manifest with SHA-256 checksums.
+
+The workflow passed a synthetic boundary test on 13 October 2026. Repeated runs produced byte-identical PBF and GeoJSON outputs, and an incorrect source checksum was rejected before extraction. Generated snapshots remain ignored by Git. The next authorized step is downloading the pinned 610 MB Philippines extract and running this workflow for relation `15986415`.
+
+Public Nominatim and Overpass services must not be used to acquire the city food catalog. The real derived boundary remains pending until its geometry is visually compared with an independent reference, its ODbL handling is confirmed, and the fixture is explicitly approved.
