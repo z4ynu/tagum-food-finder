@@ -2,7 +2,7 @@
 
 ## Status
 
-`tagum-boundary-osm-15986415-v8.json` is a pending Stage 0 audit fixture. It is committed for reproducible review and testing, but it is not approved for a production boundary or a real place-coverage audit.
+`tagum-boundary-osm-15986415-v8.json` is approved for the Stage 0 Tagum place-coverage audit. Production use remains subject to the same attribution, provenance, and ODbL controls recorded here.
 
 ## Source and extraction
 
@@ -30,12 +30,18 @@ The checksum stored in the fixture is the checksum of the extracted GeoJSON sour
 
 ## License and attribution
 
-The source data is © OpenStreetMap contributors and is available under the Open Database License 1.0. Any public use must provide OpenStreetMap attribution. Distribution of a derived database may also trigger the ODbL share-alike obligations; that product-level handling must be confirmed before this fixture is approved.
+The source data is © OpenStreetMap contributors and is available under the Open Database License 1.0. The project owner accepted the following handling on 13 October 2026:
+
+- public use of the boundary or other OSM-derived data displays `© OpenStreetMap contributors` and links to the OSM copyright and license page;
+- the application provides a durable data-attribution surface identifying OSM, ODbL 1.0, the source version, and the extraction date;
+- any adapted OSM database that the project publicly uses or distributes is offered under ODbL 1.0 as required;
+- technological restrictions are not applied to the only redistributed copy of an ODbL database;
+- application source code, original editorial content, private user data, and independently sourced records are kept logically and operationally distinguishable from the ODbL database.
 
 - OSM copyright and attribution: `https://www.openstreetmap.org/copyright`
 - ODbL 1.0: `https://opendatacommons.org/licenses/odbl/1-0/`
 - Geofabrik download and license notes: `https://www.geofabrik.de/data/download.html`
 
-## Remaining approval gate
+## Approval decision
 
-The fixture must remain `pending` until the geometry is visually compared with an independent reference, ring validity is confirmed, and the project's ODbL attribution and derived-database obligations are accepted.
+The fixture was approved on 13 October 2026 after source checksum verification, jurisdiction identity matching, independent visual corroboration, PostGIS validity checking, and owner acceptance of the ODbL handling above. Approval applies to this exact checksummed source version and must not be inherited automatically by a refreshed geometry.

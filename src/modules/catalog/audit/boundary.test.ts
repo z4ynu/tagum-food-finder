@@ -220,11 +220,11 @@ describe("assertBoundaryReadyForAudit", () => {
   });
 });
 
-describe("pending Tagum boundary fixture", () => {
+describe("approved Tagum boundary fixture", () => {
   const fixture = tagumBoundaryFixtureJson as unknown as BoundaryFixture;
 
   it("preserves the reviewed source identity and geometry facts", () => {
-    expect(fixture.reviewStatus).toBe("pending");
+    expect(fixture.reviewStatus).toBe("approved");
     expect(fixture.jurisdiction.referenceCode).toBe("1102319000");
     expect(fixture.provenance.sourceRecordId).toBe("relation/15986415@8");
     expect(fixture.geometry.coordinates).toHaveLength(1);
@@ -237,7 +237,7 @@ describe("pending Tagum boundary fixture", () => {
     expect(geometryCoversPoint(fixture.geometry, [125.7, 7.4])).toBe(false);
   });
 
-  it("cannot be used by the Stage 0 audit before approval", () => {
-    expect(() => assertBoundaryReadyForAudit(fixture)).toThrow("not approved");
+  it("passes the Stage 0 boundary approval guard", () => {
+    expect(() => assertBoundaryReadyForAudit(fixture)).not.toThrow();
   });
 });

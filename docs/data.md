@@ -314,6 +314,12 @@ One row represents a provider, official publication, approved community channel,
 
 An active ingestion adapter requires a completed rights record. Application code must not treat a source as usable merely because its endpoint is technically accessible.
 
+### OpenStreetMap ODbL handling
+
+OpenStreetMap-derived boundary and place data is maintained as a distinguishable source database with field-level provenance. Every public map or surface using that data displays `© OpenStreetMap contributors` and links to the OpenStreetMap copyright and ODbL information. A durable data-attribution page records the source snapshot and extraction date.
+
+If the project publicly uses or distributes an adapted OSM database, that adapted database is offered under ODbL 1.0 as required. This database obligation does not by itself relicense application code, original editorial content, private user data, or records independently obtained under compatible terms; those materials remain logically and operationally separable. A refreshed OSM snapshot requires a new recorded checksum and review before publication.
+
 ### `source_records`
 
 Stores normalized provider data separately from canonical places. Important fields are source, external record key, normalized payload, payload schema version, retrieval time, source update time, content hash, licensing classification, raw-payload expiry, and latest-seen batch.
@@ -643,7 +649,7 @@ Every schema change identifies the class of new fields. Personal or sensitive fi
 
 - Stable taxonomies, status mappings, the Tagum boundary reference, and barangays use idempotent seed processes.
 - Seed rows use stable UUIDs or slugs so environments agree.
-- Local and CI fixtures are synthetic.
+- Local and CI customer or account fixtures are synthetic. A small immutable public reference fixture may use licensed real geography when its source version, checksum, license, attribution, and approval are committed with it.
 - Real user submissions, attachments, identities, and production analytics are never copied into development fixtures.
 
 ### Environment parity
@@ -697,7 +703,7 @@ Schema extensibility does not authorize collecting these fields without product,
 
 Before the data layer supports a private beta:
 
-- [ ] The Tagum boundary and barangay source are reviewed and versioned.
+- [x] The Tagum city boundary is reviewed, licensed, checksummed, and versioned; the barangay source remains pending.
 - [ ] Place activation constraints and merge redirects are tested.
 - [ ] Price aggregation, outlier flagging, tier derivation, and staleness have deterministic tests.
 - [ ] Every public field can identify its accepted provenance path.

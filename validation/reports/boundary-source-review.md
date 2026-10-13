@@ -2,7 +2,7 @@
 
 ## Status
 
-OpenStreetMap relation `15986415` version 8 is selected as the reproducible boundary candidate and is committed as a pending fixture. No real Tagum boundary is approved yet.
+OpenStreetMap relation `15986415` version 8 is approved as the reproducible Stage 0 Tagum boundary fixture. The approval applies only to the recorded source version and checksum.
 
 The boundary fixture contract and synthetic clipping tests are implemented so a real boundary cannot enter the audit without an approved purpose, review status, verified jurisdiction identity, source record, version, retrieval time, license, attribution, and SHA-256 checksum.
 
@@ -36,7 +36,7 @@ A policy-compliant, one-off Nominatim lookup on 13 October 2026 identified Tagum
 
 The dated Geofabrik source is `philippines-261012.osm.pbf`, containing OSM data through 12 October 2026 at 23:01 UTC. The 609,864,006-byte file passed the provider's MD5 `d12ded513809afc929b74573c2c28f57` before extraction. MD5 is recorded only to verify the provider download; the derived GeoJSON has SHA-256 `6b4633950b60c7402d0e8373354eb2df34ffe7e460464e934800f304543e2af0`.
 
-The pinned Osmium workflow extracted exactly one `MultiPolygon` with one polygon, one ring, and 548 positions. Its bounding box is `125.7338476, 7.2464576, 125.8872506, 7.5105777`. The geometry's `official_name=City of Tagum` and `ref=1102319000` match the independently verified PSA jurisdiction identity. The formatted fixture and its license note are committed under `validation/fixtures/` with `reviewStatus=pending`.
+The pinned Osmium workflow extracted exactly one `MultiPolygon` with one polygon, one ring, and 548 positions. Its bounding box is `125.7338476, 7.2464576, 125.8872506, 7.5105777`. The geometry's `official_name=City of Tagum` and `ref=1102319000` match the independently verified PSA jurisdiction identity. The formatted fixture and its license note are committed under `validation/fixtures/` with `reviewStatus=approved`.
 
 - Philippines extracts: `https://download.geofabrik.de/asia/philippines.html`
 - Pinned candidate: `https://download.geofabrik.de/asia/philippines-261012.osm.pbf`
@@ -53,7 +53,7 @@ The public Nominatim API is not selected as an ingestion source. Its policy allo
 
 ## Approval gate
 
-Before the pending real fixture is approved:
+The fixture approval required:
 
 1. verify the Tagum PSGC identity against the current PSA release (completed for PSGC `1102319000` on 13 October 2026);
 2. capture the exact source record and publication version;
@@ -61,6 +61,8 @@ Before the pending real fixture is approved:
 4. visually compare the geometry with an independent reference and inspect invalid or self-intersecting rings;
 5. calculate and record the file SHA-256 checksum (completed for the extracted GeoJSON);
 6. mark the fixture approved only after those checks pass.
+
+All six checks passed on 13 October 2026. The project owner accepted the recorded ODbL attribution and derived-database handling, and the fixture was marked approved. Any refreshed relation, source snapshot, or output checksum must pass this gate again.
 
 ## Independent comparison and validity
 
@@ -78,4 +80,4 @@ The local extraction path is now pinned to Osmium 1.19.0 in container image `doc
 
 The workflow passed a synthetic boundary test on 13 October 2026. Repeated runs produced byte-identical PBF and GeoJSON outputs, and an incorrect source checksum was rejected before extraction. The real pinned source also passed its MD5 gate and produced the checksummed relation extract described above. Bulk source and intermediate snapshots remain ignored by Git.
 
-Public Nominatim and Overpass services must not be used to acquire the city food catalog. The committed derived boundary remains pending and is programmatically rejected by the Stage 0 audit until its ODbL handling is accepted and the fixture is explicitly approved. The completed visual and validity checks do not waive that license decision.
+Public Nominatim and Overpass services must not be used to acquire the city food catalog. The committed boundary is approved for Stage 0 clipping under the documented ODbL controls. This approval does not authorize unrestricted reuse of other OSM fields or future snapshots; each ingestion scope must retain provenance and comply with the same license policy.
