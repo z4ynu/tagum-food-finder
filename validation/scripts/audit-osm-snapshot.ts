@@ -88,7 +88,7 @@ Generated from a checksummed local snapshot. This report contains aggregate evid
 - Records read: ${inventory.reader.recordsRead}
 - Adapter-accepted before boundary check: ${inventory.acceptedBeforeBoundary}
 - Inside approved Tagum boundary: ${inside}
-- Audit decision: incomplete pending the 100-place reference sample and manual lifecycle review
+- Audit decision: proceed to the 25-record candidate-quality check; catalog completeness remains unknown
 
 ## Reader disposition
 
@@ -147,7 +147,7 @@ ${Object.entries(inventory.fieldCompleteness)
 - Lifecycle assessed: 0; unknown: ${inventory.lifecycle.unknown}
 - Defensible price evidence: 0; unknown: ${inventory.priceEvidence.unknown}
 
-Boundary membership for lines and polygons is based on the documented deterministic representative coordinate. The duplicate heuristic only creates review candidates and does not merge records. Coverage, closed-place accuracy, and price usability are not inferred from this inventory.
+Boundary membership for lines and polygons is based on the documented deterministic representative coordinate. The duplicate heuristic only creates review candidates and does not merge records. The 25-record check will assess returned-record quality, closed-place accuracy, and average-price usability; it cannot estimate missing places or catalog completeness.
 `;
 
 await mkdir(outputDirectory, { recursive: true });

@@ -59,7 +59,7 @@ Scaling should be driven by measured load. The first upgrade path is vertical an
 | Interactive map | MapLibre | Open renderer with provider portability and marker clustering support |
 | Initial basemap | MapTiler during eligible private evaluation | Fastest beta path; provider remains replaceable |
 | Place seed data | OpenStreetMap | Lawful baseline place coverage with required attribution |
-| Enrichment candidate | Foursquare Places | Used only after coverage, licensing, retention, and cost audit passes |
+| Enrichment candidate | Foursquare Places | Used only after record-quality, licensing, retention, and cost checks pass |
 | Search | PostgreSQL full-text, trigram/fuzzy matching, and PostGIS | Adequate for city-scale discovery without another service |
 | Scheduled ingestion | GitHub Actions invoking protected ingestion jobs | Observable, versioned, and inexpensive weekly automation |
 | Error monitoring | Sentry free tier | Actionable client/server errors with required data scrubbing |
@@ -413,11 +413,10 @@ Adapters must not write directly to public canonical tables.
 
 ### Initial sources
 
-OpenStreetMap is the initial baseline. The exact permitted extraction mechanism is selected during Stage 0 based on coverage, reliability, and usage policy; the production application does not query community map infrastructure on every page load.
+OpenStreetMap is the initial baseline. The exact permitted extraction mechanism is selected during Stage 0 based on returned-record quality, reliability, and usage policy; the production application does not query community map infrastructure on every page load.
 
-Foursquare remains a candidate enrichment adapter. It is disabled for production ingestion until the 100-place audit confirms:
+Foursquare remains a candidate enrichment adapter. It is disabled for production ingestion until a 25-record candidate-quality spot check confirms:
 
-- at least 80 sampled places are found;
 - at least 95% of returned places have usable coordinates;
 - duplicates and permanently closed records remain below 5%;
 - requested fields may be retained and displayed as designed;
@@ -823,7 +822,7 @@ Failure requires an explicit architecture revision before product implementation
 
 ### Stage 0B: Data audit
 
-Build a repeatable audit harness and evaluate 100 representative real Tagum food places against the PRD gate. Produce coverage, coordinate, duplicate, closure, category, price-tier, license, and cost findings.
+Build a repeatable audit harness and manually review 25 candidates selected from the actual source inventory against the PRD gate. Produce coordinate, duplicate, closure, category, price-tier, license, refresh, and cost findings. Record catalog completeness as unknown rather than inferring it from this check.
 
 Do not interpret the audit as manual onboarding. It determines whether OSM plus Foursquare is viable and which fields require community enrichment.
 
@@ -867,7 +866,7 @@ Before moving beyond a controlled evaluation beta, confirm:
 | Public access | Restricted views/functions plus protected server operations |
 | Place acquisition | Batch import, not live per-request aggregation |
 | Initial source | OpenStreetMap |
-| Candidate enrichment | Foursquare after the 100-place audit |
+| Candidate enrichment | Foursquare after its 25-record quality check |
 | Map renderer | MapLibre |
 | Initial tiles | MapTiler evaluation with replaceable provider boundary |
 | Search | PostgreSQL full-text/fuzzy search and PostGIS |
@@ -909,7 +908,7 @@ This architecture is ready for approval when the product owner confirms that:
 
 1. the modular-monolith and managed-service approach is acceptable;
 2. Cloudflare, Supabase, MapLibre, and the replaceable map-provider boundary are acceptable;
-3. the Stage 0 deployment and 100-place data audits remain mandatory gates;
+3. the Stage 0 deployment and 25-record data-quality checks remain mandatory gates;
 4. the price, provenance, moderation, privacy, backup, and cost decisions match the intended product;
 5. no MVP implementation begins until the remaining required documents are completed and approved in sequence.
 

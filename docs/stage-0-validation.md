@@ -9,7 +9,7 @@
 
 ## Purpose
 
-Stage 0 answers the questions that could invalidate the planned product before substantial implementation begins. It does not build the MVP. It produces repeatable evidence for the deployment stack, Tagum place coverage, map delivery, authentication, cost posture, and the core location-to-route experience.
+Stage 0 answers the questions that could invalidate the planned product before substantial implementation begins. It does not build the MVP. It produces repeatable evidence for the deployment stack, returned place-data quality, map delivery, authentication, cost posture, and the core location-to-route experience.
 
 The Stage 1 MVP may begin only when every blocking gate in this document has passed or the affected product and architecture decisions have been explicitly revised and approved.
 
@@ -57,7 +57,7 @@ Conclusion: Apple sign-in remains an MVP requirement, but its annual membership 
 ### Place sources
 
 - Foursquare Open Source Places is available as a downloadable Apache 2.0 dataset through its Places Portal and Iceberg catalog.
-- Its core schema includes coordinates, address, categories, contact fields, website, social identifiers, and closure information. It does not remove the need to validate Tagum coverage or prices.
+- Its core schema includes coordinates, address, categories, contact fields, website, social identifiers, and closure information. It does not remove the need to validate returned-record quality or prices, and its completeness in Tagum remains unknown.
 - Foursquare's paid Places API should not be assumed free at production scale. Its current pricing gives 500 free Pro calls and then charges USD 15 per 1,000 Pro calls.
 - OpenStreetMap data is available under ODbL with attribution and share-alike obligations for derived databases.
 - The public Nominatim service forbids systematic POI downloads and autocomplete and limits normal use to one request per second.
@@ -118,23 +118,22 @@ Stage 0A passes when the matrix has evidence for every row, deployment is reprod
 
 ### Source inputs
 
-1. Foursquare Open Source Places, pinned to a documented release or snapshot.
+1. Foursquare Open Source Places, pinned to a documented release or snapshot when access is available.
 2. A Philippines or Mindanao OpenStreetMap extract, clipped locally to the approved Tagum boundary.
-3. A manually verified reference sample used only for evaluation, not as the production catalog.
 
-The reference sample may use official business websites or social pages, visible storefront evidence, direct owner confirmation, and other lawful public evidence. Google Maps consumer content must not be copied into the dataset or used as a bulk source.
+Google Maps consumer content must not be copied into the dataset or used as a bulk source.
 
-### Representative sample
+### Candidate-quality spot check
 
-Create a 100-place reference set stratified before measuring provider coverage:
+Select 25 records from the actual candidate catalog. Include a practical mix of:
 
-- geographic spread across Tagum barangays with known food activity;
-- independent businesses and chains;
-- restaurants, cafes, bakeries, fast food, food stalls, and other approved food-place categories;
-- established and newly opened businesses where evidence exists;
-- a mix of central and less dense areas.
+- approved food-place categories;
+- node and area-derived coordinates where present;
+- different parts of Tagum where the source provides enough location detail;
+- independent businesses and chains when that distinction is evidenced;
+- likely duplicate groups and ordinary records.
 
-Record the sampling rationale and reference evidence. Do not replace missing provider records by adding the reference sample to the production import.
+Review public business evidence only as needed to assess each selected record. This set is a lightweight quality-control check, not an independent sample: it cannot measure how many Tagum places are absent from the source.
 
 ### Repeatable harness
 
@@ -144,7 +143,7 @@ The audit command must:
 2. clip candidates to the Tagum boundary;
 3. normalize names, categories, addresses, coordinates, and source identifiers;
 4. propose cross-source matches without silently merging uncertain records;
-5. compare results with the 100-place reference sample;
+5. select and record the 25 candidate rows used for manual quality review;
 6. emit machine-readable results and a concise Markdown report;
 7. avoid storing credentials or redistributing source data beyond its license.
 
@@ -152,7 +151,6 @@ The audit command must:
 
 | Metric | Definition | Pass condition |
 | --- | --- | --- |
-| Coverage | Reference places matched by at least one selected source | At least 80 of 100 |
 | Coordinate usability | Returned places with coordinates inside or plausibly adjacent to Tagum and accurate enough for a destination marker | At least 95% of returned places |
 | Duplicate rate | Distinct candidate rows representing the same real branch after normalization | Below 5% |
 | Closed-record rate | Returned places verified permanently closed | Below 5% |
@@ -166,10 +164,10 @@ Coordinate accuracy must be checked against the actual entrance or building area
 
 ### Decision rules
 
-- If combined Foursquare OS Places and OSM pass, use both behind source adapters and retain field-level provenance.
+- If combined Foursquare OS Places and OSM pass their quality checks, use both behind source adapters and retain field-level provenance.
 - If only one source passes, use it as the initial catalog and document the resulting gaps.
-- If coverage fails but lawful local open data can close the gap, propose a second audit before changing the MVP.
-- If no lawful approach reaches 80% coverage, stop Stage 1 and ask the owner to revise geography, launch quality, or acquisition strategy.
+- Do not treat a passing spot check as evidence of complete or percentage-based Tagum coverage.
+- Launch the beta with an explicit incomplete-catalog notice and a moderated correction path; reassess the source strategy if users cannot make useful choices.
 - Price coverage does not block broad map discovery. It determines how often budget filters can claim a verified match and how much community enrichment is needed.
 
 ## Stage 0C: Basemap and experience validation
@@ -266,7 +264,7 @@ Each report records:
 Stop and request a decision if any of these occurs:
 
 - neither supported Cloudflare adapter can run a required feature reliably;
-- lawful place-source coverage misses the PRD gate;
+- returned place-data quality misses the PRD gate;
 - required source rights do not permit the canonical catalog or public display;
 - no compliant basemap path fits the approved ceiling;
 - a required identity provider cannot be configured under the owner's available accounts;
@@ -279,7 +277,7 @@ Stage 0 is not complete on the date of this document. Research is complete enoug
 
 - [ ] Deployment compatibility report
 - [ ] Adapter architecture decision record
-- [ ] 100-place data-audit report
+- [ ] 25-record candidate-quality report
 - [ ] Source license and attribution record
 - [ ] PMTiles versus eligible hosted-map benchmark
 - [ ] Approved experience mockups

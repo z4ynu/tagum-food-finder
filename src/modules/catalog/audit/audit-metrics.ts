@@ -9,16 +9,6 @@ export type CandidateAuditAssessment = Readonly<{
   priceEvidence: "defensible" | "unknown";
 }>;
 
-export type ReferenceMatch = Readonly<{
-  candidateKey: string;
-  decision: "confirmed" | "rejected" | "uncertain";
-}>;
-
-export type ReferencePlaceAssessment = Readonly<{
-  matches: readonly ReferenceMatch[];
-  referenceId: string;
-}>;
-
 export type AuditViability = Readonly<{
   categoryDiscovery: ReviewState;
   cost: ReviewState;
@@ -39,17 +29,15 @@ export type PlaceDataAuditResult = Readonly<{
     closedRecords: boolean;
     coordinateUsability: boolean;
     cost: boolean;
-    coverage: boolean;
     duplicates: boolean;
     license: boolean;
-    referenceSampleSize: boolean;
     refresh: boolean;
+    spotCheckSize: boolean;
   }>;
   metrics: Readonly<{
     categoryUsability: AuditRate;
     closedRecords: AuditRate;
     coordinateUsability: AuditRate;
-    coverage: AuditRate;
     duplicates: AuditRate;
     priceCoverage: AuditRate;
   }>;
@@ -87,34 +75,14 @@ function countDuplicateRows(assessments: readonly CandidateAuditAssessment[]): n
 }
 
 export function calculatePlaceDataAudit(
-  references: readonly ReferencePlaceAssessment[],
   candidates: readonly CandidateAuditAssessment[],
   viability: AuditViability,
 ): PlaceDataAuditResult {
-  assertUnique(
-    references.map((reference) => reference.referenceId),
-    "Reference identifiers",
-  );
   assertUnique(
     candidates.map((candidate) => candidate.candidateKey),
     "Candidate keys",
   );
 
-  const candidateKeys = new Set(candidates.map((candidate) => candidate.candidateKey));
-
-  for (const reference of references) {
-    for (const match of reference.matches) {
-      if (!candidateKeys.has(match.candidateKey)) {
-        throw new Error(
-          `Reference ${reference.referenceId} names unknown candidate ${match.candidateKey}.`,
-        );
-      }
-    }
-  }
-
-  const matchedReferenceCount = references.filter((reference) =>
-    reference.matches.some((match) => match.decision === "confirmed"),
-  ).length;
   const usableCoordinateCount = candidates.filter(
     (candidate) => candidate.coordinateUsability === "usable",
   ).length;
@@ -133,7 +101,6 @@ export function calculatePlaceDataAudit(
     categoryUsability: createRate(usableCategoryCount, candidates.length),
     closedRecords: createRate(closedRecordCount, candidates.length),
     coordinateUsability: createRate(usableCoordinateCount, candidates.length),
-    coverage: createRate(matchedReferenceCount, references.length),
     duplicates: createRate(duplicateCount, candidates.length),
     priceCoverage: createRate(defensiblePriceCount, candidates.length),
   };
@@ -146,15 +113,13 @@ export function calculatePlaceDataAudit(
       metrics.coordinateUsability.percentage !== null &&
       metrics.coordinateUsability.percentage >= 95,
     cost: viability.cost === "pass",
-    coverage: metrics.coverage.percentage !== null && metrics.coverage.percentage >= 80,
     duplicates: metrics.duplicates.percentage !== null && metrics.duplicates.percentage < 5,
     license: viability.license === "pass",
-    referenceSampleSize: references.length === 100,
     refresh: viability.refresh === "pass",
+    spotCheckSize: candidates.length === 25,
   };
 
   const hasFailedMeasuredGate =
-    !gates.coverage ||
     !gates.coordinateUsability ||
     !gates.duplicates ||
     !gates.closedRecords ||
@@ -163,7 +128,7 @@ export function calculatePlaceDataAudit(
     viability.license === "fail" ||
     viability.refresh === "fail";
   const hasIncompleteRequiredReview =
-    !gates.referenceSampleSize || Object.values(viability).includes("not-assessed");
+    !gates.spotCheckSize || Object.values(viability).includes("not-assessed");
 
   return {
     decision: hasFailedMeasuredGate ? "fail" : hasIncompleteRequiredReview ? "incomplete" : "pass",

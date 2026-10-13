@@ -18,7 +18,7 @@ Open items:
 - create a project-owned portal account and store its token outside Git;
 - capture a pinned release identifier and checksum or catalog snapshot identity;
 - confirm ongoing access, attribution, correction, and redistribution requirements;
-- measure actual Tagum coverage and field quality.
+- measure returned-record quality and report observed catalog size without claiming completeness.
 
 ## OpenStreetMap
 
@@ -53,8 +53,8 @@ The extraction command lives in `scripts/extract-osm-food-places.ps1`. Its gener
 Open items:
 
 - carry ODbL attribution and database obligations into the source-rights record;
-- compare recorded area-representative and node coordinates against the reference sample instead of assuming usability;
-- measure real Tagum coverage, duplicates, closure signals, and field completeness.
+- manually verify area-representative and node coordinates in the 25-record quality check instead of assuming usability;
+- measure duplicate signals, closure signals, and field completeness while keeping total Tagum coverage explicitly unknown.
 
 ## Deliberate exclusions
 

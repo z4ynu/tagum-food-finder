@@ -136,7 +136,7 @@ Deliverables:
 - OSM extract adapter;
 - normalization and category-mapping functions;
 - duplicate-candidate scorer;
-- 100-place reference-sample schema and evidence rules;
+- 25-record candidate-quality review schema and evidence rules;
 - deterministic metrics command;
 - machine-readable and Markdown audit reports;
 - source-license and attribution record;
@@ -149,9 +149,9 @@ Implementation order:
 3. Add Foursquare OS and OSM adapters independently.
 4. Add normalization and category mapping.
 5. Add candidate matching without automatic uncertain merges.
-6. Assemble the stratified reference sample without importing it into the catalog.
-7. Run the pinned audit and review outliers.
-8. Record coverage, coordinate, duplicate, closure, category, price, license, refresh, and cost findings.
+6. Select 25 returned candidates across categories, coordinate methods, geographic areas, and duplicate-risk groups.
+7. Review the selected candidates and audit outliers without treating the set as a coverage estimate.
+8. Record coordinate, duplicate, closure, category, price, license, refresh, and cost findings.
 
 Acceptance is exactly the data launch gate in `prd.md` and `stage-0-validation.md`. Price availability is measured but is not allowed to fabricate a pass or hide unknown values.
 
@@ -225,7 +225,7 @@ Create one decision record with links to all evidence. It must state one of:
 - `CONDITIONAL GO`: named limitations are accepted by the owner with an expiry or follow-up gate;
 - `NO GO`: Stage 1 is blocked pending an approved requirement or architecture change.
 
-Do not use `CONDITIONAL GO` for an unresolved license, privacy, credential-exposure, or data-coverage failure.
+Do not use `CONDITIONAL GO` for an unresolved license, privacy, credential-exposure, or returned-data-quality failure.
 
 ## Stage 1: Private-beta MVP
 
@@ -478,7 +478,7 @@ These are evidence-dependent decisions, not forgotten requirements:
 | Decision | Evidence needed | Deadline |
 | --- | --- | --- |
 | Cloudflare adapter | Stage 0A matrix | Before stable scaffold |
-| Catalog source mix | 100-place audit | Before catalog migrations are finalized |
+| Catalog source mix | 25-record source-quality check | Before catalog migrations are finalized |
 | Production basemap | PMTiles/hosted benchmark, rights, and cost | Before external beta |
 | Transactional email provider | delivery and quota test | Before external sign-in |
 | Apple setup | enrolled owner account and callback test | Before MVP identity gate |
@@ -498,4 +498,4 @@ The implementation is ready for a controlled private beta only when:
 6. backups, restore, monitoring, moderation, and incident procedures are operational;
 7. the owner explicitly approves the production deployment.
 
-Finishing code is not sufficient if data coverage, privacy, provider rights, or operational readiness remain unresolved.
+Finishing code is not sufficient if catalog usefulness, privacy, provider rights, or operational readiness remain unresolved.

@@ -2,7 +2,7 @@
 
 ## Status
 
-`tagum-boundary-osm-15986415-v8.json` is approved for the Stage 0 Tagum place-coverage audit. Production use remains subject to the same attribution, provenance, and ODbL controls recorded here.
+`tagum-boundary-osm-15986415-v8.json` is approved for the Stage 0 Tagum place-quality audit. Production use remains subject to the same attribution, provenance, and ODbL controls recorded here.
 
 ## Source and extraction
 

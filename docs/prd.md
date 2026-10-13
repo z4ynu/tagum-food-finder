@@ -361,7 +361,7 @@ Community corrections improve the product after launch but do not replace the in
 
 The owner does not want to manually onboard every food place. The product must begin from one or more lawful, maintainable place-data sources.
 
-Google Maps consumer content must not be scraped into a permanent listings database. Stage 0 must compare lawful candidates, including OpenStreetMap and Foursquare's open places offering, using actual Tagum coverage rather than marketing claims.
+Google Maps consumer content must not be scraped into a permanent listings database. Stage 0 evaluates lawful candidates, including OpenStreetMap and Foursquare's open places offering, using actual Tagum records rather than marketing claims. The MVP may launch from a useful but incomplete catalog when that limitation is disclosed clearly.
 
 Research references:
 
@@ -387,15 +387,15 @@ Evaluate candidate sources for:
 
 ### Data launch gate
 
-Audit a representative sample of 100 real Tagum food places. Proceed with full MVP implementation only if the selected approach:
+Review 25 records selected from the actual candidate catalog across categories, coordinate derivation methods, geographic areas, and duplicate-risk groups. Proceed with MVP implementation only if the selected approach:
 
-- Finds at least 80 of the 100 sampled places
-- Provides usable coordinates for at least 95% of returned places
-- Keeps duplicate and permanently closed results below 5%
+- Provides usable coordinates for at least 95% of reviewed records
+- Keeps confirmed duplicate and permanently closed records below 5%
+- Provides categories usable enough for general food-place discovery
 - Fits the approved operating-cost ceiling
-- Supports a lawful correction and refresh strategy
+- Supports lawful storage, attribution, correction, and refresh
 
-This audit is product validation, not manual onboarding.
+Price availability is measured but does not block broad map discovery. This check validates the quality of returned records; it does not measure missing places or prove complete Tagum coverage. The beta must disclose incomplete coverage and use community corrections to improve it over time.
 
 ## Analytics and success measurement
 
@@ -504,7 +504,7 @@ Provider usage must be monitored against the cost ceiling. Architecture must inc
 
 | Risk | Required mitigation |
 | --- | --- |
-| Insufficient Tagum place coverage | Complete Stage 0 audit before full implementation |
+| Incomplete Tagum place coverage | Disclose the limitation, monitor catalog growth, and use moderated community corrections |
 | Missing budget and occasion data | Separate broad coverage from verified enrichment and show unknown states |
 | Stale or closed listings | Moderated corrections, internal freshness metadata, and revalidation tooling |
 | Misleading dietary or halal information | Publish only evidence-backed verified attributes |

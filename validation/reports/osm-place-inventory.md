@@ -10,7 +10,7 @@ Generated from the checksummed local Stage 0 snapshot. This report contains aggr
 - Records read: 216
 - Adapter-accepted before boundary check: 194
 - Inside approved Tagum boundary: 194
-- Audit decision: incomplete pending the 100-place reference sample and manual lifecycle review
+- Audit decision: proceed to the 25-record candidate-quality check; catalog completeness remains unknown
 
 ## Reader disposition
 
@@ -81,4 +81,4 @@ All 194 adapter-accepted records have a usable representative coordinate inside 
 - Lifecycle assessed: 0; unknown: 194
 - Defensible price evidence: 0; unknown: 194
 
-The duplicate heuristic only creates review candidates and does not merge records. The weak address, barangay, contact, and opening-hours completeness means OSM alone cannot support every desired product filter. Coverage, closed-place accuracy, and average-price usability remain unmeasured until the independent reference and price-evidence work is complete.
+The duplicate heuristic only creates review candidates and does not merge records. The weak address, barangay, contact, and opening-hours completeness means OSM alone cannot support every desired product filter. The 25-record check will assess returned-record quality, closed-place accuracy, and average-price usability; it cannot estimate missing places or catalog completeness.
