@@ -13,7 +13,7 @@
 
 ## Scope of this increment
 
-This increment checks whether the current Cloudflare-recommended `vinext` adapter can compile and serve the minimal Stage 0 Next.js harness. It does not approve the adapter for production and does not cover Supabase, authentication callbacks, PostGIS, PWA behavior, image optimization, persistent caching, Sentry, or real-device browsers.
+This report tracks whether the current Cloudflare-recommended `vinext` adapter can compile and serve the minimal Stage 0 Next.js harness. It does not approve the adapter for production. Supabase client boundaries, the static authentication-callback contract, PWA resource delivery, and error scrubbing now have partial evidence; live Supabase sessions, PostGIS execution, browser PWA behavior, image optimization, persistent caching, Sentry transport, and real-device browsers remain unverified.
 
 ## Configuration decision
 
@@ -78,9 +78,9 @@ Risk owner: project owner. Review deadline: 2026-10-27, matching the fourteen-da
 
 - [x] App Router behavior
 - [x] Route handler behavior
-- [ ] Server action behavior
+- [ ] Server action behavior (protected action boundary compiles; framework transport awaits an approved page)
 - [ ] Supabase browser/server boundaries (typed factories and public-secret guards added; live project test pending)
-- [ ] Authentication callback behavior
+- [ ] Authentication callback behavior (both builds and the generic missing-code HTTP response pass; live provider and session exchange pending)
 - [ ] PostGIS boundary and nearest-place query (migration and pgTAP contract prepared; execution awaits a Docker-compatible local stack)
 - [ ] PWA manifest, service worker, and update behavior (HTTP delivery passed; browser registration, update, and approved icons pending)
 - [ ] Local/staging secret and environment isolation (runtime identity and project-match assertions added; separate deployed projects pending)
