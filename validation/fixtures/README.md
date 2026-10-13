@@ -13,3 +13,5 @@ Fixture rules:
 The first catalog-audit tests construct synthetic candidates in TypeScript so the approved metric boundaries can be verified without committing any real business record.
 
 `synthetic-boundary.osm` is a four-node administrative boundary used to verify the pinned, containerized Osmium extraction path before processing the Philippines snapshot. It is project-authored synthetic test data and contains no contributor or business information.
+
+`reference-sample.template.json` is an intentionally empty draft. Category, geography, business-type, opening-era, and barangay quotas must be owner-approved and total 100 before it can be locked. Provider measurement cannot begin against a draft, and real entries require lawful evidence for identity, location, category, and open status.

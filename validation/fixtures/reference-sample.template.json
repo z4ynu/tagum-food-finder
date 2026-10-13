@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "purpose": "stage0-provider-evaluation",
+  "status": "draft",
+  "measurementStartedAt": null,
+  "samplingPlan": {
+    "lockedAt": null,
+    "rationale": "Draft quotas await owner approval before any provider measurement.",
+    "newlyOpenedDefinition": "Opened during the 12 months before the sample lock date.",
+    "categoryQuotas": {
+      "bakery": 0,
+      "bar-with-food": 0,
+      "cafe": 0,
+      "dessert": 0,
+      "fast-food": 0,
+      "food-court": 0,
+      "prepared-food-shop": 0,
+      "restaurant": 0
+    },
+    "geographyQuotas": {
+      "central": 0,
+      "less-dense": 0
+    },
+    "businessTypeQuotas": {
+      "chain": 0,
+      "independent": 0
+    },
+    "openingEraQuotas": {
+      "established": 0,
+      "newly-opened": 0
+    },
+    "barangayTargets": {}
+  },
+  "places": []
+}
