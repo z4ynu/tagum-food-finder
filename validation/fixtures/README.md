@@ -1,0 +1,13 @@
+# Validation fixtures
+
+This directory is for small synthetic or lawfully redistributable inputs used by Stage 0 validation.
+
+Fixture rules:
+
+- identify the schema version, source, source version, retrieval date, license, and checksum when a fixture comes from an external publication;
+- use synthetic identifiers and content for unit tests whenever real records are unnecessary;
+- do not add credentials, personal data, private evidence, Google Maps consumer content, or provider rows whose terms prohibit redistribution;
+- keep bulk snapshots outside Git and identify them only through the applicable validation report;
+- do not treat the manually verified 100-place reference sample as production catalog data.
+
+The first catalog-audit tests construct synthetic candidates in TypeScript so the approved metric boundaries can be verified without committing any real business record.
