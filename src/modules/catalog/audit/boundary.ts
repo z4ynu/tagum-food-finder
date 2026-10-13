@@ -1,6 +1,7 @@
 import type { NormalizedPlaceCandidate } from "./candidate";
 
 export const boundaryFixtureSchemaVersion = 1 as const;
+export const tagumPsgcCode = "1102319000" as const;
 
 export type Position = readonly [longitude: number, latitude: number];
 export type LinearRing = readonly Position[];
@@ -13,6 +14,14 @@ export type MultiPolygonGeometry = Readonly<{
 
 export type BoundaryFixture = Readonly<{
   geometry: MultiPolygonGeometry;
+  jurisdiction: Readonly<{
+    countryCode: "PH";
+    name: string;
+    referenceCode: string;
+    referenceSystem: string;
+    verificationUrl: string;
+    verifiedAt: string;
+  }>;
   name: string;
   provenance: Readonly<{
     attribution: string;
@@ -43,6 +52,36 @@ type RingPosition = "boundary" | "inside" | "outside";
 
 const coordinateTolerance = 1e-10;
 const sha256Pattern = /^[a-f0-9]{64}$/;
+
+function assertNonEmpty(label: string, value: string): void {
+  if (value.trim().length === 0) {
+    throw new Error(`${label} must not be empty.`);
+  }
+}
+
+function assertIsoTimestamp(label: string, value: string): void {
+  if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?Z$/.test(value)) {
+    throw new Error(`${label} must be an ISO 8601 UTC timestamp.`);
+  }
+
+  if (!Number.isFinite(Date.parse(value))) {
+    throw new Error(`${label} must be a valid timestamp.`);
+  }
+}
+
+function assertHttpUrl(label: string, value: string): void {
+  let url: URL;
+
+  try {
+    url = new URL(value);
+  } catch {
+    throw new Error(`${label} must be a valid URL.`);
+  }
+
+  if (url.protocol !== "https:" && url.protocol !== "http:") {
+    throw new Error(`${label} must use HTTP or HTTPS.`);
+  }
+}
 
 function assertPosition([longitude, latitude]: Position): void {
   if (
@@ -164,6 +203,28 @@ export function assertBoundaryReadyForAudit(fixture: BoundaryFixture): void {
   if (!sha256Pattern.test(fixture.provenance.checksumSha256)) {
     throw new Error("The approved boundary fixture must have a lowercase SHA-256 checksum.");
   }
+
+  assertNonEmpty("Boundary name", fixture.name);
+  assertNonEmpty("Boundary slug", fixture.slug);
+  assertNonEmpty("Jurisdiction name", fixture.jurisdiction.name);
+  if (
+    fixture.jurisdiction.countryCode !== "PH" ||
+    fixture.jurisdiction.referenceSystem !== "PSGC-10" ||
+    fixture.jurisdiction.referenceCode !== tagumPsgcCode
+  ) {
+    throw new Error(`The audit boundary must identify Tagum with PSGC ${tagumPsgcCode}.`);
+  }
+  assertNonEmpty("Jurisdiction reference system", fixture.jurisdiction.referenceSystem);
+  assertHttpUrl("Jurisdiction verification URL", fixture.jurisdiction.verificationUrl);
+  assertIsoTimestamp("Jurisdiction verification time", fixture.jurisdiction.verifiedAt);
+  assertNonEmpty("Boundary attribution", fixture.provenance.attribution);
+  assertNonEmpty("Boundary license name", fixture.provenance.licenseName);
+  assertHttpUrl("Boundary license URL", fixture.provenance.licenseUrl);
+  assertNonEmpty("Boundary publisher", fixture.provenance.publisher);
+  assertIsoTimestamp("Boundary retrieval time", fixture.provenance.retrievedAt);
+  assertNonEmpty("Boundary source record ID", fixture.provenance.sourceRecordId);
+  assertHttpUrl("Boundary source URL", fixture.provenance.sourceUrl);
+  assertNonEmpty("Boundary source version", fixture.provenance.sourceVersion);
 
   if (fixture.geometry.coordinates.length === 0) {
     throw new Error("The approved boundary fixture must contain geometry.");

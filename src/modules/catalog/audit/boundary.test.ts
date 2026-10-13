@@ -130,6 +130,14 @@ describe("clipCandidatesToBoundary", () => {
 describe("assertBoundaryReadyForAudit", () => {
   const approvedFixture: BoundaryFixture = {
     geometry: syntheticGeometry,
+    jurisdiction: {
+      countryCode: "PH",
+      name: "City of Tagum",
+      referenceCode: "1102319000",
+      referenceSystem: "PSGC-10",
+      verificationUrl: "https://example.test/jurisdiction",
+      verifiedAt: "2026-10-13T00:00:00.000Z",
+    },
     name: "Synthetic boundary",
     provenance: {
       attribution: "Synthetic test data",
@@ -168,5 +176,44 @@ describe("assertBoundaryReadyForAudit", () => {
         provenance: { ...approvedFixture.provenance, checksumSha256: "missing" },
       }),
     ).toThrow("SHA-256");
+  });
+
+  it("rejects a fixture without verified jurisdiction identity", () => {
+    expect(() =>
+      assertBoundaryReadyForAudit({
+        ...approvedFixture,
+        jurisdiction: { ...approvedFixture.jurisdiction, referenceCode: "" },
+      }),
+    ).toThrow("PSGC 1102319000");
+
+    expect(() =>
+      assertBoundaryReadyForAudit({
+        ...approvedFixture,
+        jurisdiction: { ...approvedFixture.jurisdiction, referenceCode: "1102318000" },
+      }),
+    ).toThrow("PSGC 1102319000");
+
+    expect(() =>
+      assertBoundaryReadyForAudit({
+        ...approvedFixture,
+        jurisdiction: { ...approvedFixture.jurisdiction, verificationUrl: "not-a-url" },
+      }),
+    ).toThrow("Jurisdiction verification URL");
+  });
+
+  it("rejects incomplete or malformed provenance", () => {
+    expect(() =>
+      assertBoundaryReadyForAudit({
+        ...approvedFixture,
+        provenance: { ...approvedFixture.provenance, sourceVersion: "" },
+      }),
+    ).toThrow("Boundary source version");
+
+    expect(() =>
+      assertBoundaryReadyForAudit({
+        ...approvedFixture,
+        provenance: { ...approvedFixture.provenance, retrievedAt: "2026-10-13" },
+      }),
+    ).toThrow("Boundary retrieval time");
   });
 });
