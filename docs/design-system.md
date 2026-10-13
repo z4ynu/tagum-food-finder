@@ -561,7 +561,7 @@ Use a focused sign-in page rather than a modal over the map. Explain the concret
 - submit and follow corrections;
 - manage account preferences.
 
-Email magic link and Google sign-in receive equal visual clarity. Legal and privacy links remain present but do not overwhelm the primary task.
+Personal-email magic link, Google, Facebook, and Apple sign-in receive clear, consistent treatment without implying that one provider is required. Legal and privacy links remain present but do not overwhelm the primary task.
 
 After authentication, return the user to their original context when safe.
 

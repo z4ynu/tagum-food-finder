@@ -62,7 +62,7 @@ The private beta and MVP cover food places within the official boundary of Tagum
 
 ### Demographic reach
 
-The product is for anyone seeking food within Tagum City. It does not target a restricted age, occupation, income, or social group.
+The product is for anyone seeking food within Tagum City, including minors. It does not impose an age gate or target a restricted age, occupation, income, or social group. Public discovery and registered features must use privacy protections and explanations that remain understandable to younger users.
 
 ### Primary behavior
 
@@ -144,10 +144,11 @@ Additional moderation roles may be introduced after submission volume demonstrat
 
 - Accounts must be implemented in the MVP.
 - Registration is not required for public discovery.
-- Authentication should support email magic links and Google sign-in.
+- Authentication should support personal-email magic links plus Google, Facebook, and Apple sign-in.
 - Password-based authentication is not required unless a later technical review finds it necessary.
 - Signed-in state provides cloud persistence and contribution access.
 - Account collection must remain minimal and purpose-specific.
+- The product does not collect a birth date or create age-based profiles. Minors may use registered features, subject to the pre-beta privacy and legal launch gates in `security.md`.
 
 ## Primary user journey
 
@@ -427,7 +428,7 @@ Only privacy-conscious aggregate analytics required to improve discovery should 
 
 - Installable PWA
 - Anonymous public discovery
-- User accounts with email magic link and Google sign-in
+- User accounts with personal-email magic link plus Google, Facebook, and Apple sign-in
 - Cloud favorites and saved wheel lists for registered users
 - Live location and manual fallback
 - Tagum food-place map with marker clustering

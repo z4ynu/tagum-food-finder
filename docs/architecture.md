@@ -54,7 +54,7 @@ Scaling should be driven by measured load. The first upgrade path is vertical an
 | Hosting | Cloudflare Workers | Commercially usable low-cost path; deployment compatibility must pass Stage 0 |
 | Database | Supabase PostgreSQL | Managed relational store with authentication and storage integration |
 | Geospatial data | PostGIS | Boundary checks, distance sorting, nearby queries, and geospatial indexes |
-| Authentication | Supabase Auth | Email magic link and Google sign-in |
+| Authentication | Supabase Auth | Personal-email magic link plus Google, Facebook, and Apple sign-in |
 | Object storage | Private Supabase Storage buckets | Evidence attachment access can follow database authorization |
 | Interactive map | MapLibre | Open renderer with provider portability and marker clustering support |
 | Initial basemap | MapTiler during eligible private evaluation | Fastest beta path; provider remains replaceable |
@@ -529,12 +529,14 @@ Retention rules are:
 
 Supabase Auth provides:
 
-- email magic links;
-- Google sign-in;
+- personal-email magic links;
+- Google, Facebook, and Apple sign-in;
 - managed sessions;
 - account identity for cloud-owned data and submissions.
 
-The application collects only the account information required for authentication, saved data, moderation follow-up, and account operations.
+The application requests only the minimum provider scopes required for authentication. It collects only the account information required for authentication, saved data, moderation follow-up, and account operations. It does not import social graphs, contacts, birthdays, or provider profile content.
+
+The product does not impose an age gate or collect birth dates. Minors may use anonymous and registered features. Privacy explanations are written so younger users can understand them, and the beta launch remains gated on a Philippine privacy review of child-accessible processing.
 
 Supabase's default email capability may be used during local development. A dedicated SMTP provider must be configured before external beta invitations.
 
@@ -575,6 +577,8 @@ Analytics may record coarse outcomes such as `location_permission_succeeded` or 
 The beta stores only the events required by the PRD. Events use a documented schema and avoid free-form payloads. Anonymous use receives a rotating, non-identifying session identifier rather than cross-device identity.
 
 Raw events are aggregated on a schedule and deleted after 30 days. Aggregate statistics must not contain combinations that reasonably identify an individual.
+
+Analytics never attach discovery history, dietary choices, religious attributes, location, or age to an account. The service does not build behavioral profiles of minors or adults.
 
 ### Logs and errors
 
@@ -869,7 +873,7 @@ Before moving beyond a controlled evaluation beta, confirm:
 | Search | PostgreSQL full-text/fuzzy search and PostGIS |
 | Ranking | Deterministic, versioned, explainable scoring |
 | Price model | PHP per-person range, tier, confidence, source, and freshness |
-| Authentication | Email magic link and Google |
+| Authentication | Personal-email magic link plus Google, Facebook, and Apple |
 | Authorization | Row-level security plus server checks |
 | Administration | Protected section of the same application |
 | Ingestion schedule | Weekly GitHub Actions with authorized manual runs |

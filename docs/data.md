@@ -377,9 +377,9 @@ A lower-priority value may win when the higher-priority evidence is stale, incom
 
 ### `profiles`
 
-Supabase `auth.users` is the identity authority. `profiles` stores only the application UUID reference, account status, theme preference, navigation-provider preference, consent versions, locale, created time, and deletion state.
+Supabase `auth.users` is the identity authority. `profiles` stores only the application UUID reference, account status, theme preference, navigation-provider preference, notice and consent versions where applicable, locale, created time, and deletion state.
 
-The MVP does not require a display name, public username, biography, avatar, or public profile. Authentication email remains in the authentication system and is not duplicated into public application tables.
+The MVP does not require a display name, public username, biography, avatar, birth date, age band, or public profile. Authentication email and Google, Facebook, or Apple provider identity remain in the authentication system and are not duplicated into public application tables. The application does not import social graphs, contacts, birthdays, or provider profile content.
 
 ### `favorites`
 
@@ -428,7 +428,7 @@ Statuses are:
 - `rejected`;
 - `withdrawn`.
 
-Submissions require an account. Abandoned drafts are deleted after 30 days.
+Submissions require an account but do not impose an age gate. The interface presents rights, evidence, and privacy explanations in language understandable to younger users. Abandoned drafts are deleted after 30 days.
 
 ### `submission_changes`
 
@@ -726,4 +726,4 @@ This data model is approved because the product owner confirmed the complete dis
 7. typed correction submissions, private evidence, partial approval, and audit history;
 8. separate public media, privacy-preserving analytics, retention, indexes, and migrations.
 
-The next document is `security.md`. Its discovery must resolve threat actors, authentication and session policy, authorization and row-level security, secret management, upload security, abuse controls, privacy notices and request handling, logging and monitoring, backup security, dependency response, and incident procedures before that file is created.
+Security controls, authentication and session policy, authorization and row-level security, secret management, upload protection, abuse controls, privacy operations, monitoring, backup security, and incident procedures are defined in [`security.md`](./security.md).
