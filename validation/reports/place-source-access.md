@@ -2,7 +2,7 @@
 
 ## Status
 
-Adapter contracts implemented against synthetic rows. No provider snapshot has been downloaded, committed, or measured yet.
+Adapter contracts, a bounded OSM GeoJSON-sequence reader, and reviewed audit-category mapping are implemented against synthetic rows. The pinned OSM source is available locally but its real food-place extract has not yet been measured. No provider snapshot is committed.
 
 ## Foursquare Open Source Places
 
@@ -26,6 +26,10 @@ The OSM adapter recognizes the initial approved food-place families represented 
 
 The intended acquisition path is a pinned Geofabrik Philippines extract, clipped locally. The production product and repeatable audit must not systematically query public Nominatim or community Overpass infrastructure for the city catalog.
 
+The reader preserves Osmium object identity and timestamps, accepts exact source points, derives deterministic representative points from area geometries, and records the coordinate method beside each candidate for audit review. It rejects malformed features without silently dropping their count and enforces 5 MB and 10,000-record defaults so an accidental bulk input cannot enter the in-memory audit path.
+
+The reviewed category mapping treats direct restaurant, fast-food, cafe, food-court, ice-cream, bakery, and pastry tags as usable. Retail-oriented coffee, tea, deli, and confectionery tags require manual review because they do not prove a customer-facing prepared-food place. Foursquare category paths are mapped only at explicit hierarchy segments so unrelated labels such as restaurant-supply stores do not become food places.
+
 - Philippines extracts: `https://download.geofabrik.de/asia/philippines.html`
 - Geofabrik and ODbL information: `https://www.geofabrik.de/data/download.html`
 - OSM copyright and attribution: `https://www.openstreetmap.org/copyright`
@@ -35,9 +39,9 @@ The intended acquisition path is a pinned Geofabrik Philippines extract, clipped
 Open items:
 
 - select and checksum a dated extract;
-- document the extraction tool and exact tag filter;
+- document and execute the exact pinned extraction and tag-filter command;
 - carry ODbL attribution and database obligations into the source-rights record;
-- compare area centers and node coordinates against the reference sample instead of assuming usability;
+- compare recorded area-representative and node coordinates against the reference sample instead of assuming usability;
 - measure real Tagum coverage, duplicates, closure signals, and field completeness.
 
 ## Deliberate exclusions
@@ -45,4 +49,4 @@ Open items:
 - Foodpanda is not used as a city-wide ingestion source.
 - Google Maps consumer listings are not copied into the dataset.
 - Missing prices, opening hours, contacts, cuisines, or coordinates remain unknown.
-- Source category strings remain source evidence until a separately reviewed taxonomy mapping is implemented.
+- Unmapped or review-required source category strings remain source evidence and do not become canonical categories automatically.

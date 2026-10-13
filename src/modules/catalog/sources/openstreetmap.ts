@@ -1,5 +1,5 @@
 import { candidateSchemaVersion } from "../audit/candidate";
-import { type AdapterResult, normalizeOptionalText } from "./adapter-result";
+import { type AdapterResult, normalizeOptionalText, normalizeSourceDate } from "./adapter-result";
 
 export type OsmElementSnapshot = Readonly<{
   center?: Readonly<{ lat?: unknown; lon?: unknown }>;
@@ -7,6 +7,7 @@ export type OsmElementSnapshot = Readonly<{
   lat?: unknown;
   lon?: unknown;
   tags?: Readonly<Record<string, unknown>>;
+  timestamp?: unknown;
   type?: unknown;
 }>;
 
@@ -141,7 +142,7 @@ export function normalizeOpenStreetMapPlace(
       sourceCategoryLabels,
       sourceClosedAt: null,
       sourceCuisineLabels: splitTagList(readTag(tags, "cuisine")),
-      sourceUpdatedAt: null,
+      sourceUpdatedAt: normalizeSourceDate(element.timestamp),
     },
   };
 }
