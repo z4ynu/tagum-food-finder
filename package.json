@@ -1,0 +1,35 @@
+{
+  "name": "tagum-food-finder",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22",
+    "npm": ">=10"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "format": "biome format --write src package.json tsconfig.json next.config.ts vitest.config.ts biome.json",
+    "format:check": "biome format src package.json tsconfig.json next.config.ts vitest.config.ts biome.json",
+    "lint": "biome lint src next.config.ts vitest.config.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "next": "^16.4.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.5.15",
+    "@types/node": "^26.6.5",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitest/coverage-v8": "^5.0.4",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.4"
+  }
+}
