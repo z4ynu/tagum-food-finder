@@ -39,6 +39,7 @@ Vinext's own guidance recommends no persistent cache during an initial migration
 | Dynamic health route | Pass | `/api/health` returned HTTP 200 and the expected stable JSON payload |
 | Private response caching | Pass for tested handler | Health response returned `no-store`, `private`, and revalidation-prevention directives |
 | Framework header suppression | Pass | No `X-Powered-By` header on the root response |
+| PWA delivery | Partial pass | Manifest and root-scoped service worker returned HTTP 200 with correct content types; browser lifecycle and final icon approval remain pending |
 | Standard Next.js build | Pass | Next.js production build completed before adapter initialization |
 | Dependency audit before vinext | Pass | Zero known vulnerabilities |
 | Dependency audit after vinext | Blocked | Six high and four moderate advisories in vinext transitive dependencies |
@@ -79,7 +80,7 @@ Risk owner: project owner. Review deadline: 2026-10-27, matching the fourteen-da
 - [ ] Supabase browser/server boundaries (typed factories and public-secret guards added; live project test pending)
 - [ ] Authentication callback behavior
 - [ ] PostGIS boundary and nearest-place query
-- [ ] PWA manifest, service worker, and update behavior
+- [ ] PWA manifest, service worker, and update behavior (HTTP delivery passed; browser registration, update, and approved icons pending)
 - [ ] Local/staging secret and environment isolation
 - [ ] Public catalog cache behavior
 - [x] Tested private route does not enter shared cache
