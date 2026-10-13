@@ -40,6 +40,8 @@ Vinext's own guidance recommends no persistent cache during an initial migration
 | Private response caching | Pass for tested handler | Health response returned `no-store`, `private`, and revalidation-prevention directives |
 | Framework header suppression | Pass | No `X-Powered-By` header on the root response |
 | PWA delivery | Partial pass | Manifest and root-scoped service worker returned HTTP 200 with correct content types; browser lifecycle and final icon approval remain pending |
+| Environment identity | Partial pass | Local and hosted project-reference assertions pass unit tests; independent staging and production deployments remain pending |
+| Error scrubbing | Partial pass | Structured allowlist redacts tested tokens, email addresses, URLs, and precise coordinates; Sentry transport is not configured |
 | Standard Next.js build | Pass | Next.js production build completed before adapter initialization |
 | Dependency audit before vinext | Pass | Zero known vulnerabilities |
 | Dependency audit after vinext | Blocked | Six high and four moderate advisories in vinext transitive dependencies |
@@ -81,11 +83,11 @@ Risk owner: project owner. Review deadline: 2026-10-27, matching the fourteen-da
 - [ ] Authentication callback behavior
 - [ ] PostGIS boundary and nearest-place query
 - [ ] PWA manifest, service worker, and update behavior (HTTP delivery passed; browser registration, update, and approved icons pending)
-- [ ] Local/staging secret and environment isolation
+- [ ] Local/staging secret and environment isolation (runtime identity and project-match assertions added; separate deployed projects pending)
 - [ ] Public catalog cache behavior
 - [x] Tested private route does not enter shared cache
 - [ ] Image handling
-- [ ] Scrubbed client and server error reporting
+- [ ] Scrubbed client and server error reporting (structured scrubber and tests added; Sentry transport test pending)
 - [ ] Android Chrome smoke test
 - [ ] iPhone Safari smoke test
 - [ ] Reproducible staging deployment
