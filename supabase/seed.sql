@@ -1,0 +1,1 @@
+-- Stage 0 database tests create and roll back their own synthetic fixtures.

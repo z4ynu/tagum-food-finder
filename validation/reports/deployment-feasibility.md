@@ -81,7 +81,7 @@ Risk owner: project owner. Review deadline: 2026-10-27, matching the fourteen-da
 - [ ] Server action behavior
 - [ ] Supabase browser/server boundaries (typed factories and public-secret guards added; live project test pending)
 - [ ] Authentication callback behavior
-- [ ] PostGIS boundary and nearest-place query
+- [ ] PostGIS boundary and nearest-place query (migration and pgTAP contract prepared; execution awaits a Docker-compatible local stack)
 - [ ] PWA manifest, service worker, and update behavior (HTTP delivery passed; browser registration, update, and approved icons pending)
 - [ ] Local/staging secret and environment isolation (runtime identity and project-match assertions added; separate deployed projects pending)
 - [ ] Public catalog cache behavior

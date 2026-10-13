@@ -20,7 +20,12 @@
     "dev:vinext": "vite dev --port 3001",
     "build:vinext": "vite build",
     "start:vinext": "vite preview",
-    "deploy:vinext": "vinext-cloudflare deploy"
+    "deploy:vinext": "vinext-cloudflare deploy",
+    "db:start": "supabase start",
+    "db:stop": "supabase stop",
+    "db:reset": "supabase db reset",
+    "db:test": "supabase test db",
+    "db:lint": "supabase db lint --local --level warning"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
@@ -43,6 +48,7 @@
     "@vitejs/plugin-rsc": "^0.5.36",
     "@vitest/coverage-v8": "^5.0.4",
     "cf": "^1.0.0-beta.14",
+    "supabase": "^2.120.0",
     "typescript": "^7.0.2",
     "vite": "^8.3.0",
     "vitest": "^5.0.4"
