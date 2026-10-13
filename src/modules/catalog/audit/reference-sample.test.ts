@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import {
   assertReferenceSampleReady,
@@ -25,19 +26,34 @@ function draft(): ReferenceSample {
     samplingPlan: {
       barangayTargets: {},
       businessTypeQuotas: { chain: 0, independent: 0 },
+      barangaySourceUrl: "https://psa.gov.ph/classification/psgc/barangays/1102319000",
       categoryQuotas: zeroCategoryQuotas,
-      geographyQuotas: { central: 0, "less-dense": 0 },
+      geographyDefinition: "PSA urban and rural classifications.",
+      geographyQuotas: { rural: 0, urban: 0 },
       lockedAt: null,
       newlyOpenedDefinition: "Opened during the 12 months before the sample lock date.",
       openingEraQuotas: { established: 0, "newly-opened": 0 },
       rationale: "Draft quotas await owner approval before any provider measurement.",
     },
-    schemaVersion: 1,
+    schemaVersion: 2,
     status: "draft",
   };
 }
 
 describe("validateReferenceSample", () => {
+  it("accepts the committed owner-approved plan as an assembly draft", () => {
+    const fixture = JSON.parse(
+      readFileSync(
+        new URL("../../../../validation/fixtures/tagum-reference-sample.json", import.meta.url),
+        "utf8",
+      ),
+    ) as ReferenceSample;
+
+    expect(validateReferenceSample(fixture)).toEqual([]);
+    expect(fixture.samplingPlan.lockedAt).not.toBeNull();
+    expect(fixture.places).toHaveLength(0);
+  });
+
   it("allows an incomplete draft before provider measurement", () => {
     expect(validateReferenceSample(draft())).toEqual([]);
     expect(() => assertReferenceSampleReady(draft())).toThrow("must be locked");
@@ -66,7 +82,7 @@ describe("validateReferenceSample", () => {
               supports: ["category", "identity", "location", "open-status"],
             },
           ],
-          geography: "central",
+          geography: "urban",
           lifecycle: "open",
           name: "Synthetic Restaurant",
           openingEra: "established",
@@ -89,5 +105,23 @@ describe("validateReferenceSample", () => {
 
     expect(() => assertReferenceSampleReady(sample)).toThrow("exactly 100 places");
     expect(validateReferenceSample(sample)).toContain("Category quotas must total 100.");
+  });
+
+  it("allows an owner-approved sampling plan to be locked during assembly", () => {
+    const sample: ReferenceSample = {
+      ...draft(),
+      samplingPlan: {
+        ...draft().samplingPlan,
+        barangayTargets: { "Synthetic Barangay": 1 },
+        businessTypeQuotas: { chain: 25, independent: 75 },
+        categoryQuotas: { ...zeroCategoryQuotas, restaurant: 100 },
+        geographyQuotas: { rural: 25, urban: 75 },
+        lockedAt: "2026-10-13T13:21:55Z",
+        openingEraQuotas: { established: 85, "newly-opened": 15 },
+      },
+    };
+
+    expect(validateReferenceSample(sample)).toEqual([]);
+    expect(() => assertReferenceSampleReady(sample)).toThrow("must be locked");
   });
 });

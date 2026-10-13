@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 2,
+  "purpose": "stage0-provider-evaluation",
+  "status": "draft",
+  "measurementStartedAt": null,
+  "samplingPlan": {
+    "lockedAt": "2026-10-13T13:21:55Z",
+    "rationale": "Owner-approved discovery-balanced sample. It represents major food-place types and business models while deliberately oversampling rural barangays so strong urban coverage cannot hide geographic gaps. Provider coverage must not influence place selection.",
+    "newlyOpenedDefinition": "Opened during the 12 months before the sampling-plan lock date.",
+    "geographyDefinition": "Urban and rural use the Philippine Statistics Authority classifications shown for Tagum's 23 barangays. The rural quota operationalizes the approved less-dense stratum.",
+    "barangaySourceUrl": "https://psa.gov.ph/classification/psgc/barangays/1102319000",
+    "categoryQuotas": {
+      "bakery": 10,
+      "bar-with-food": 3,
+      "cafe": 15,
+      "dessert": 8,
+      "fast-food": 15,
+      "food-court": 4,
+      "food-stall": 10,
+      "prepared-food-shop": 5,
+      "restaurant": 30
+    },
+    "geographyQuotas": {
+      "rural": 25,
+      "urban": 75
+    },
+    "businessTypeQuotas": {
+      "chain": 25,
+      "independent": 75
+    },
+    "openingEraQuotas": {
+      "established": 85,
+      "newly-opened": 15
+    },
+    "barangayTargets": {
+      "Apokon": 1,
+      "Bincungan": 1,
+      "Busaon": 1,
+      "Canocotan": 1,
+      "Cuambogan": 1,
+      "La Filipina": 1,
+      "Liboganon": 1,
+      "Madaum": 1,
+      "Magdum": 1,
+      "Mankilam": 1,
+      "New Balamban": 1,
+      "Nueva Fuerza": 1,
+      "Pagsabangan": 1,
+      "Pandapan": 1,
+      "Magugpo Poblacion": 1,
+      "San Agustin": 1,
+      "San Isidro": 1,
+      "San Miguel": 1,
+      "Visayan Village": 1,
+      "Magugpo East": 1,
+      "Magugpo North": 1,
+      "Magugpo South": 1,
+      "Magugpo West": 1
+    }
+  },
+  "places": []
+}

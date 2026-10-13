@@ -1,6 +1,6 @@
 import type { AuditPlaceCategory } from "./source-category";
 
-export const referenceSampleSchemaVersion = 1 as const;
+export const referenceSampleSchemaVersion = 2 as const;
 
 export type ReferenceEvidenceKind =
   | "local-government-record"
@@ -28,7 +28,7 @@ export type ReferenceSamplePlace = Readonly<{
     reference: string;
     supports: readonly ReferenceEvidenceSupport[];
   }>[];
-  geography: "central" | "less-dense";
+  geography: "rural" | "urban";
   lifecycle: "open" | "permanently-closed" | "uncertain";
   name: string;
   openingEra: "established" | "newly-opened";
@@ -44,6 +44,8 @@ export type ReferenceSample = Readonly<{
     businessTypeQuotas: Readonly<Record<ReferenceSamplePlace["businessType"], number>>;
     categoryQuotas: Readonly<Record<AuditPlaceCategory, number>>;
     geographyQuotas: Readonly<Record<ReferenceSamplePlace["geography"], number>>;
+    geographyDefinition: string;
+    barangaySourceUrl: string;
     lockedAt: string | null;
     newlyOpenedDefinition: string;
     openingEraQuotas: Readonly<Record<ReferenceSamplePlace["openingEra"], number>>;
@@ -86,10 +88,9 @@ function countBy<T extends string>(values: readonly T[]): Record<T, number> {
   return result;
 }
 
-function quotaIssues<T extends string>(
+function quotaDefinitionIssues<T extends string>(
   label: string,
   quotas: Readonly<Record<T, number>>,
-  actualValues: readonly T[],
 ): string[] {
   const issues: string[] = [];
   if (Object.values<number>(quotas).some((value) => !Number.isInteger(value) || value < 0)) {
@@ -97,6 +98,15 @@ function quotaIssues<T extends string>(
   }
   if (sum(quotas) !== 100) issues.push(`${label} quotas must total 100.`);
 
+  return issues;
+}
+
+function quotaFulfillmentIssues<T extends string>(
+  label: string,
+  quotas: Readonly<Record<T, number>>,
+  actualValues: readonly T[],
+): string[] {
+  const issues: string[] = [];
   const actual = countBy(actualValues);
   for (const [key, quota] of Object.entries<number>(quotas)) {
     if ((actual[key as T] ?? 0) !== quota) {
@@ -105,6 +115,29 @@ function quotaIssues<T extends string>(
       );
     }
   }
+  return issues;
+}
+
+function quotaCapacityIssues<T extends string>(
+  label: string,
+  quotas: Readonly<Record<T, number>>,
+  actualValues: readonly T[],
+): string[] {
+  const actual = countBy(actualValues);
+  return Object.entries<number>(quotas).flatMap(([key, quota]) =>
+    (actual[key as T] ?? 0) > quota
+      ? [`${label} quota ${key} is already exceeded during sample assembly.`]
+      : [],
+  );
+}
+
+function barangayTargetDefinitionIssues(targets: Readonly<Record<string, number>>): string[] {
+  const issues: string[] = [];
+  if (Object.keys(targets).length === 0) issues.push("At least one barangay target is required.");
+  if (Object.values(targets).some((value) => !Number.isInteger(value) || value < 1)) {
+    issues.push("Barangay targets must be positive integers.");
+  }
+  if (sum(targets) > 100) issues.push("Barangay targets cannot require more than 100 places.");
   return issues;
 }
 
@@ -152,6 +185,14 @@ export function validateReferenceSample(sample: ReferenceSample): readonly strin
     issues.push("Sampling rationale is required.");
   if (sample.samplingPlan.newlyOpenedDefinition.trim().length === 0)
     issues.push("A newly-opened definition is required.");
+  if (sample.samplingPlan.geographyDefinition.trim().length === 0)
+    issues.push("A geography definition is required.");
+  try {
+    const barangaySourceUrl = new URL(sample.samplingPlan.barangaySourceUrl);
+    if (barangaySourceUrl.protocol !== "https:") issues.push("The barangay source must use HTTPS.");
+  } catch {
+    issues.push("A valid barangay source URL is required.");
+  }
 
   const referenceIds = sample.places.map(({ referenceId }) => referenceId);
   if (new Set(referenceIds).size !== referenceIds.length)
@@ -176,10 +217,40 @@ export function validateReferenceSample(sample: ReferenceSample): readonly strin
   }
 
   if (sample.status === "draft") {
-    if (sample.samplingPlan.lockedAt !== null)
-      issues.push("A draft sampling plan cannot have a lock time.");
     if (sample.measurementStartedAt !== null)
       issues.push("Provider measurement cannot start while the sample is a draft.");
+
+    if (sample.samplingPlan.lockedAt !== null) {
+      if (!isIsoTimestamp(sample.samplingPlan.lockedAt))
+        issues.push("A locked sampling plan requires a valid lock time.");
+      issues.push(
+        ...quotaDefinitionIssues("Category", sample.samplingPlan.categoryQuotas),
+        ...quotaCapacityIssues(
+          "Category",
+          sample.samplingPlan.categoryQuotas,
+          sample.places.map(({ category }) => category),
+        ),
+        ...quotaDefinitionIssues("Geography", sample.samplingPlan.geographyQuotas),
+        ...quotaCapacityIssues(
+          "Geography",
+          sample.samplingPlan.geographyQuotas,
+          sample.places.map(({ geography }) => geography),
+        ),
+        ...quotaDefinitionIssues("Business type", sample.samplingPlan.businessTypeQuotas),
+        ...quotaCapacityIssues(
+          "Business type",
+          sample.samplingPlan.businessTypeQuotas,
+          sample.places.map(({ businessType }) => businessType),
+        ),
+        ...quotaDefinitionIssues("Opening era", sample.samplingPlan.openingEraQuotas),
+        ...quotaCapacityIssues(
+          "Opening era",
+          sample.samplingPlan.openingEraQuotas,
+          sample.places.map(({ openingEra }) => openingEra),
+        ),
+        ...barangayTargetDefinitionIssues(sample.samplingPlan.barangayTargets),
+      );
+    }
     return issues;
   }
 
@@ -200,32 +271,35 @@ export function validateReferenceSample(sample: ReferenceSample): readonly strin
   }
 
   issues.push(
-    ...quotaIssues(
+    ...quotaDefinitionIssues("Category", sample.samplingPlan.categoryQuotas),
+    ...quotaFulfillmentIssues(
       "Category",
       sample.samplingPlan.categoryQuotas,
       sample.places.map(({ category }) => category),
     ),
-    ...quotaIssues(
+    ...quotaDefinitionIssues("Geography", sample.samplingPlan.geographyQuotas),
+    ...quotaFulfillmentIssues(
       "Geography",
       sample.samplingPlan.geographyQuotas,
       sample.places.map(({ geography }) => geography),
     ),
-    ...quotaIssues(
+    ...quotaDefinitionIssues("Business type", sample.samplingPlan.businessTypeQuotas),
+    ...quotaFulfillmentIssues(
       "Business type",
       sample.samplingPlan.businessTypeQuotas,
       sample.places.map(({ businessType }) => businessType),
     ),
-    ...quotaIssues(
+    ...quotaDefinitionIssues("Opening era", sample.samplingPlan.openingEraQuotas),
+    ...quotaFulfillmentIssues(
       "Opening era",
       sample.samplingPlan.openingEraQuotas,
       sample.places.map(({ openingEra }) => openingEra),
     ),
+    ...barangayTargetDefinitionIssues(sample.samplingPlan.barangayTargets),
   );
 
   const actualBarangays = countBy(sample.places.map(({ barangay }) => barangay));
   for (const [barangay, minimum] of Object.entries(sample.samplingPlan.barangayTargets)) {
-    if (!Number.isInteger(minimum) || minimum < 0)
-      issues.push(`Barangay target ${barangay} must be a non-negative integer.`);
     if ((actualBarangays[barangay] ?? 0) < minimum)
       issues.push(`Barangay target ${barangay} requires at least ${minimum} places.`);
   }

@@ -14,4 +14,4 @@ The first catalog-audit tests construct synthetic candidates in TypeScript so th
 
 `synthetic-boundary.osm` is a four-node administrative boundary used to verify the pinned, containerized Osmium extraction path before processing the Philippines snapshot. It is project-authored synthetic test data and contains no contributor or business information.
 
-`reference-sample.template.json` is an intentionally empty draft. Category, geography, business-type, opening-era, and barangay quotas must be owner-approved and total 100 before it can be locked. Provider measurement cannot begin against a draft, and real entries require lawful evidence for identity, location, category, and open status.
+`tagum-reference-sample.json` contains the owner-approved, locked sampling plan and an initially empty place list. The sample stays in draft assembly status until exactly 100 lawfully evidenced places fulfill its category, official PSA urban/rural, business-type, opening-era, and barangay targets. Provider measurement cannot begin against a draft, and real entries require lawful evidence for identity, location, category, and open status.
