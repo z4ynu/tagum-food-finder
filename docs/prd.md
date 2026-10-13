@@ -6,9 +6,10 @@
 | --- | --- |
 | Product | Asa Ta Mangaon? |
 | Descriptor | Tagum Food Finder |
-| Document status | Ready for user review |
+| Document status | Approved |
 | Discovery status | Complete |
 | Last updated | 2026-10-13 |
+| Approved | 2026-10-13 |
 | Target milestone | Private beta in February 2027 |
 | Product owner | Repository owner |
 | Build model | Solo-built |
