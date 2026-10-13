@@ -2,7 +2,7 @@
 
 ## Status
 
-Source selection pending. No real Tagum boundary is approved or committed yet.
+OpenStreetMap relation `15986415` version 8 is selected as the reproducible boundary candidate and is committed as a pending fixture. No real Tagum boundary is approved yet.
 
 The boundary fixture contract and synthetic clipping tests are implemented so a real boundary cannot enter the audit without an approved purpose, review status, verified jurisdiction identity, source record, version, retrieval time, license, attribution, and SHA-256 checksum.
 
@@ -34,7 +34,9 @@ Geofabrik publishes dated Philippines OpenStreetMap extracts and identifies them
 
 A policy-compliant, one-off Nominatim lookup on 13 October 2026 identified Tagum as OSM relation `15986415`. A direct OSM API metadata check found relation version `8`, updated 29 September 2026, with `official_name=City of Tagum`, `admin_level=6`, and `ref=1102319000`; the OSM reference matches the PSA code. The current full-relation response is small enough for inspection, but OSM does not expose that full member geometry through the tested version-pinned endpoint. It is supporting identity evidence, not the approved acquisition path.
 
-The dated Geofabrik candidate is `philippines-261012.osm.pbf`, containing OSM data through 12 October 2026 at 23:01 UTC. Geofabrik reports a size of 609,864,006 bytes and publishes MD5 `d12ded513809afc929b74573c2c28f57`. MD5 is recorded only to verify the provider download; the derived fixture must still receive its own SHA-256 checksum. The extract was not downloaded because it is approximately 610 MB and no OSM extraction tool is installed yet.
+The dated Geofabrik source is `philippines-261012.osm.pbf`, containing OSM data through 12 October 2026 at 23:01 UTC. The 609,864,006-byte file passed the provider's MD5 `d12ded513809afc929b74573c2c28f57` before extraction. MD5 is recorded only to verify the provider download; the derived GeoJSON has SHA-256 `6b4633950b60c7402d0e8373354eb2df34ffe7e460464e934800f304543e2af0`.
+
+The pinned Osmium workflow extracted exactly one `MultiPolygon` with one polygon, one ring, and 548 positions. Its bounding box is `125.7338476, 7.2464576, 125.8872506, 7.5105777`. The geometry's `official_name=City of Tagum` and `ref=1102319000` match the independently verified PSA jurisdiction identity. The formatted fixture and its license note are committed under `validation/fixtures/` with `reviewStatus=pending`.
 
 - Philippines extracts: `https://download.geofabrik.de/asia/philippines.html`
 - Pinned candidate: `https://download.geofabrik.de/asia/philippines-261012.osm.pbf`
@@ -51,19 +53,19 @@ The public Nominatim API is not selected as an ingestion source. Its policy allo
 
 ## Approval gate
 
-Before a real fixture is added:
+Before the pending real fixture is approved:
 
 1. verify the Tagum PSGC identity against the current PSA release (completed for PSGC `1102319000` on 13 October 2026);
 2. capture the exact source record and publication version;
 3. confirm written reuse, storage, modification, redistribution, and attribution terms;
 4. visually compare the geometry with an independent reference and inspect invalid or self-intersecting rings;
-5. calculate and record the file SHA-256 checksum;
+5. calculate and record the file SHA-256 checksum (completed for the extracted GeoJSON);
 6. mark the fixture approved only after those checks pass.
 
 ## Acquisition decision
 
 The local extraction path is now pinned to Osmium 1.19.0 in container image `docker.io/iboates/osmium@sha256:a67987f7d822d951ae1979de656ab7bd8051605f79d2751ea4800cc6057124be`. `scripts/extract-osm-boundary.ps1` verifies the source MD5 before Docker runs, recursively extracts only the requested relation and referenced objects, removes tags from referenced members, exports one polygonal GeoJSON feature, validates the expected reference and official name, and writes a manifest with SHA-256 checksums.
 
-The workflow passed a synthetic boundary test on 13 October 2026. Repeated runs produced byte-identical PBF and GeoJSON outputs, and an incorrect source checksum was rejected before extraction. Generated snapshots remain ignored by Git. The next authorized step is downloading the pinned 610 MB Philippines extract and running this workflow for relation `15986415`.
+The workflow passed a synthetic boundary test on 13 October 2026. Repeated runs produced byte-identical PBF and GeoJSON outputs, and an incorrect source checksum was rejected before extraction. The real pinned source also passed its MD5 gate and produced the checksummed relation extract described above. Bulk source and intermediate snapshots remain ignored by Git.
 
-Public Nominatim and Overpass services must not be used to acquire the city food catalog. The real derived boundary remains pending until its geometry is visually compared with an independent reference, its ODbL handling is confirmed, and the fixture is explicitly approved.
+Public Nominatim and Overpass services must not be used to acquire the city food catalog. The committed derived boundary remains pending and is programmatically rejected by the Stage 0 audit until its geometry is visually compared with an independent reference, ring validity is confirmed, its ODbL handling is accepted, and the fixture is explicitly approved.

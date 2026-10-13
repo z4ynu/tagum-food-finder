@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 
+import tagumBoundaryFixtureJson from "../../../../validation/fixtures/tagum-boundary-osm-15986415-v8.json";
+
 import {
   assertBoundaryReadyForAudit,
   type BoundaryFixture,
@@ -215,5 +217,27 @@ describe("assertBoundaryReadyForAudit", () => {
         provenance: { ...approvedFixture.provenance, retrievedAt: "2026-10-13" },
       }),
     ).toThrow("Boundary retrieval time");
+  });
+});
+
+describe("pending Tagum boundary fixture", () => {
+  const fixture = tagumBoundaryFixtureJson as unknown as BoundaryFixture;
+
+  it("preserves the reviewed source identity and geometry facts", () => {
+    expect(fixture.reviewStatus).toBe("pending");
+    expect(fixture.jurisdiction.referenceCode).toBe("1102319000");
+    expect(fixture.provenance.sourceRecordId).toBe("relation/15986415@8");
+    expect(fixture.geometry.coordinates).toHaveLength(1);
+    expect(fixture.geometry.coordinates[0]).toHaveLength(1);
+    expect(fixture.geometry.coordinates[0][0]).toHaveLength(548);
+  });
+
+  it("covers central Tagum while excluding a point outside its bounding box", () => {
+    expect(geometryCoversPoint(fixture.geometry, [125.8094853, 7.4470784])).toBe(true);
+    expect(geometryCoversPoint(fixture.geometry, [125.7, 7.4])).toBe(false);
+  });
+
+  it("cannot be used by the Stage 0 audit before approval", () => {
+    expect(() => assertBoundaryReadyForAudit(fixture)).toThrow("not approved");
   });
 });
