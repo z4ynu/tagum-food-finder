@@ -28,6 +28,22 @@ This plan intentionally separates validation from product construction. Stage 0 
 11. Use the installed Taste skill suite for user-facing design and frontend implementation, subject to the accessibility and usability rules in `design-system.md`.
 12. Do not use the unrelated `pickletagum-web-standards` skill.
 
+## Page-by-page approval cycle
+
+User-facing development proceeds one page at a time. Do not batch several pages into one design or implementation phase unless the owner explicitly requests it.
+
+Each page follows this sequence:
+
+1. Define the page's purpose, entry points, primary action, required states, and mobile and desktop scope from the approved product documents.
+2. Produce and present readable mobile and desktop mockups for that page, including the material loading, empty, error, permission, and responsive states relevant to it.
+3. Revise the mockups until the owner explicitly approves that page's visual direction. Mockup approval authorizes implementation of that page only.
+4. Implement only the approved page and the supporting non-visual code needed for it. Material visual or interaction changes return to the mockup gate.
+5. Verify behavior, responsiveness, accessibility, tests, and conformance with the approved mockups.
+6. Present the implemented page for owner review and address requested corrections.
+7. After owner acceptance, make a focused commit with the session-note update. Begin the next page only after that commit.
+
+Repository, data, security, deployment, and other non-visual foundation work may proceed independently when it does not determine an unapproved page design.
+
 ## Delivery map
 
 ```mermaid
@@ -151,11 +167,11 @@ Suggested commit sequence:
 
 Design gate:
 
-1. Produce a mobile mockup for the discovery map/list experience.
-2. Produce a desktop mockup when the layout materially differs.
+1. Treat the discovery map/list experience as the first page in the page-by-page approval cycle.
+2. Produce mobile and desktop mockups for that page.
 3. Show location permission, manual fallback, dense-marker, filtered-result, unknown-data, and map-failure states.
-4. Wait for explicit owner approval.
-5. Record approved direction and requested revisions before implementation.
+4. Wait for explicit owner approval before implementation.
+5. Present the implemented page for owner acceptance before starting the next page.
 
 Prototype deliverables after approval:
 
