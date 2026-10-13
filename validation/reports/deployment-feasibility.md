@@ -13,7 +13,7 @@
 
 ## Scope of this increment
 
-This report tracks whether the current Cloudflare-recommended `vinext` adapter can compile and serve the minimal Stage 0 Next.js harness. It does not approve the adapter for production. Supabase client boundaries, the static authentication-callback contract, PWA resource delivery, and error scrubbing now have partial evidence; live Supabase sessions, PostGIS execution, browser PWA behavior, image optimization, persistent caching, Sentry transport, and real-device browsers remain unverified.
+This report tracks whether the current Cloudflare-recommended `vinext` adapter can compile and serve the minimal Stage 0 Next.js harness. It does not approve the adapter for production. Supabase client boundaries, the static authentication-callback contract, PWA resource delivery, and error scrubbing now have partial evidence. Local PostGIS execution is verified; live Supabase sessions, browser PWA behavior, image optimization, persistent caching, Sentry transport, and real-device browsers remain unverified.
 
 ## Configuration decision
 
@@ -42,6 +42,7 @@ Vinext's own guidance recommends no persistent cache during an initial migration
 | PWA delivery | Partial pass | Manifest and root-scoped service worker returned HTTP 200 with correct content types; browser lifecycle and final icon approval remain pending |
 | Environment identity | Partial pass | Local and hosted project-reference assertions pass unit tests; independent staging and production deployments remain pending |
 | Error scrubbing | Partial pass | Structured allowlist redacts tested tokens, email addresses, URLs, and precise coordinates; Sentry transport is not configured |
+| Local PostGIS compatibility | Pass | Clean database reset applied the migration; 10 pgTAP assertions passed; the real pending boundary is valid; a 10,000-row nearest-place probe used the GiST index |
 | Standard Next.js build | Pass | Next.js production build completed before adapter initialization |
 | Dependency audit before vinext | Pass | Zero known vulnerabilities |
 | Dependency audit after vinext | Blocked | Six high and four moderate advisories in vinext transitive dependencies |
@@ -81,7 +82,7 @@ Risk owner: project owner. Review deadline: 2026-10-27, matching the fourteen-da
 - [ ] Server action behavior (protected action boundary compiles; framework transport awaits an approved page)
 - [ ] Supabase browser/server boundaries (typed factories and public-secret guards added; live project test pending)
 - [ ] Authentication callback behavior (both builds and the generic missing-code HTTP response pass; live provider and session exchange pending)
-- [ ] PostGIS boundary and nearest-place query (migration and pgTAP contract prepared; execution awaits a Docker-compatible local stack)
+- [x] PostGIS boundary and nearest-place query (clean reset, 10 pgTAP assertions, real-boundary validity, and indexed query plan passed locally)
 - [ ] PWA manifest, service worker, and update behavior (HTTP delivery passed; browser registration, update, and approved icons pending)
 - [ ] Local/staging secret and environment isolation (runtime identity and project-match assertions added; separate deployed projects pending)
 - [ ] Public catalog cache behavior

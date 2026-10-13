@@ -2,7 +2,7 @@
 
 ## Status
 
-Prepared but not executed against PostgreSQL.
+Passed against the local Supabase PostgreSQL/PostGIS stack on 13 October 2026.
 
 The repository now contains a disposable Stage 0 migration and pgTAP contract for the two geospatial behaviors that must be proven before the product schema is implemented:
 
@@ -38,11 +38,15 @@ The pgTAP suite asserts:
 
 All fixtures run inside a transaction that is rolled back.
 
-## Execution blocker
+## Execution evidence
 
-The Supabase local stack requires a Docker-compatible container runtime. Docker is not currently available on this workstation, so neither the migration nor pgTAP suite has been executed. Static preparation is not recorded as a passing database result.
+Docker Desktop 4.95 started the Supabase local stack with the pinned Supabase PostgreSQL `17.11.0.004` image. A clean `npm run db:reset` recreated the database, applied the migration, and loaded the seed without errors. The pgTAP suite then passed all 10 assertions.
 
-When Docker is available, run:
+The real pending Tagum boundary was separately parsed by PostGIS. `ST_IsValid` returned true with reason `Valid Geometry`; PostGIS counted 548 points and one polygon and measured approximately 255.997 square kilometres on the geography cast. This validates geometry structure only and does not approve the source or license.
+
+An `EXPLAIN (ANALYZE, BUFFERS)` probe inserted 10,000 synthetic locations inside a rolled-back transaction and requested the nearest 20. PostgreSQL used `locations_position_gist` through an index scan, followed by a small incremental sort for the deterministic ID tie-breaker. The measured local execution time was 8.754 ms. That timing is evidence for this workstation and dataset, not a production latency guarantee.
+
+Commands executed:
 
 ```text
 npm run db:start
@@ -52,4 +56,6 @@ npm run db:lint
 npm run db:stop
 ```
 
-The Stage 0 PostGIS gate remains open until those commands pass and an indexed query plan is captured.
+`npm run db:lint` completed with exit code zero. Its findings were confined to functions installed in the Supabase-managed `extensions` schema, including PostGIS compatibility functions; it reported no finding against the project-authored `stage0_geo` schema. Those upstream findings are recorded rather than modified locally.
+
+The Stage 0 PostGIS compatibility gate is passed. The disposable spike remains separate from the canonical product schema.

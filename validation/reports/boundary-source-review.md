@@ -62,10 +62,20 @@ Before the pending real fixture is approved:
 5. calculate and record the file SHA-256 checksum (completed for the extracted GeoJSON);
 6. mark the fixture approved only after those checks pass.
 
+## Independent comparison and validity
+
+The extracted outline was visually compared on 13 October 2026 with the Tagum maps in a Philippine Institute for Development Studies paper whose annex reproduces maps prepared by the Tagum City Planning and Development Office. The independent maps show the same distinguishing overall silhouette: a broad northern arm, irregular river-defined east and west edges, the central urban area, and a long southern taper to the Davao Gulf.
+
+- PIDS paper: `https://pidswebs.pids.gov.ph/CDN/PUBLICATIONS/pidsdps0444.pdf`
+- Relevant annex: pages 34-38 of the PDF, especially the political and settlement maps
+- Limitation: the document was created in 2004-2005 and the maps are scanned, so this is visual corroboration rather than a current coordinate-level authority
+
+PostGIS independently reported the extracted geometry as `Valid Geometry`, with 548 points, one polygon, and an approximate geodesic area of 255.997 square kilometres. The shape comparison and ring-validity portions of the gate are therefore complete, subject to the historical-reference limitation. A current authoritative geometry remains preferable if one becomes publicly reproducible.
+
 ## Acquisition decision
 
 The local extraction path is now pinned to Osmium 1.19.0 in container image `docker.io/iboates/osmium@sha256:a67987f7d822d951ae1979de656ab7bd8051605f79d2751ea4800cc6057124be`. `scripts/extract-osm-boundary.ps1` verifies the source MD5 before Docker runs, recursively extracts only the requested relation and referenced objects, removes tags from referenced members, exports one polygonal GeoJSON feature, validates the expected reference and official name, and writes a manifest with SHA-256 checksums.
 
 The workflow passed a synthetic boundary test on 13 October 2026. Repeated runs produced byte-identical PBF and GeoJSON outputs, and an incorrect source checksum was rejected before extraction. The real pinned source also passed its MD5 gate and produced the checksummed relation extract described above. Bulk source and intermediate snapshots remain ignored by Git.
 
-Public Nominatim and Overpass services must not be used to acquire the city food catalog. The committed derived boundary remains pending and is programmatically rejected by the Stage 0 audit until its geometry is visually compared with an independent reference, ring validity is confirmed, its ODbL handling is accepted, and the fixture is explicitly approved.
+Public Nominatim and Overpass services must not be used to acquire the city food catalog. The committed derived boundary remains pending and is programmatically rejected by the Stage 0 audit until its ODbL handling is accepted and the fixture is explicitly approved. The completed visual and validity checks do not waive that license decision.
