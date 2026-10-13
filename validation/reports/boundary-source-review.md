@@ -32,7 +32,14 @@ Read-only checks on 13 October 2026 found that the ArcGIS host was reachable, bu
 
 Geofabrik publishes dated Philippines OpenStreetMap extracts and identifies them as Open Database License 1.0 data. A pinned extract is reproducible and can support both the boundary and food-place audit, but its Tagum relation must be compared with an authoritative Philippine reference and its ODbL attribution and database obligations must be carried into the product plan.
 
+A policy-compliant, one-off Nominatim lookup on 13 October 2026 identified Tagum as OSM relation `15986415`. A direct OSM API metadata check found relation version `8`, updated 29 September 2026, with `official_name=City of Tagum`, `admin_level=6`, and `ref=1102319000`; the OSM reference matches the PSA code. The current full-relation response is small enough for inspection, but OSM does not expose that full member geometry through the tested version-pinned endpoint. It is supporting identity evidence, not the approved acquisition path.
+
+The dated Geofabrik candidate is `philippines-261012.osm.pbf`, containing OSM data through 12 October 2026 at 23:01 UTC. Geofabrik reports a size of 609,864,006 bytes and publishes MD5 `d12ded513809afc929b74573c2c28f57`. MD5 is recorded only to verify the provider download; the derived fixture must still receive its own SHA-256 checksum. The extract was not downloaded because it is approximately 610 MB and no OSM extraction tool is installed yet.
+
 - Philippines extracts: `https://download.geofabrik.de/asia/philippines.html`
+- Pinned candidate: `https://download.geofabrik.de/asia/philippines-261012.osm.pbf`
+- Provider checksum: `https://download.geofabrik.de/asia/philippines-261012.osm.pbf.md5`
+- OSM relation: `https://www.openstreetmap.org/relation/15986415`
 - Download and license information: `https://www.geofabrik.de/data/download.html`
 - OSM attribution and license: `https://www.openstreetmap.org/copyright`
 
@@ -52,3 +59,7 @@ Before a real fixture is added:
 4. visually compare the geometry with an independent reference and inspect invalid or self-intersecting rings;
 5. calculate and record the file SHA-256 checksum;
 6. mark the fixture approved only after those checks pass.
+
+## Acquisition decision
+
+Do not download the 610 MB extract until the local extraction path is selected and tested against a small synthetic PBF or equivalent fixture. The extraction must be bounded to relation `15986415`, preserve relation and member versions in its manifest, exclude contributor-account metadata from committed outputs, and emit a deterministic GeoJSON fixture with SHA-256. Public Nominatim and Overpass services must not be used to acquire the city food catalog.
