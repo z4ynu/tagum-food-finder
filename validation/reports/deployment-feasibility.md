@@ -76,7 +76,7 @@ Risk owner: project owner. Review deadline: 2026-10-27, matching the fourteen-da
 - [x] App Router behavior
 - [x] Route handler behavior
 - [ ] Server action behavior
-- [ ] Supabase browser/server boundaries
+- [ ] Supabase browser/server boundaries (typed factories and public-secret guards added; live project test pending)
 - [ ] Authentication callback behavior
 - [ ] PostGIS boundary and nearest-place query
 - [ ] PWA manifest, service worker, and update behavior
