@@ -24,6 +24,7 @@ This screen is a focused, trust-first entry point for a broad audience that may 
 - State that location and discovery history are not linked to the account.
 - Keep privacy and terms links available without letting legal copy overwhelm the main task.
 - Return the user to their original safe context after successful authentication.
+- On desktop, use a compact brand header with a back-to-discovery link instead of the application's persistent sidebar. Authentication is a focused entry surface, not an internal app workspace.
 
 ## Planned implementation states
 
