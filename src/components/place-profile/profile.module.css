@@ -1,0 +1,511 @@
+.profileShell {
+  min-height: 100dvh;
+  color: var(--ink);
+  background: var(--canvas);
+}
+
+.desktopNavigation {
+  display: none;
+}
+
+.profilePage {
+  width: min(100%, 1360px);
+  min-height: 100dvh;
+  margin-inline: auto;
+  padding: calc(18px + env(safe-area-inset-top)) 18px calc(104px + env(safe-area-inset-bottom));
+}
+
+.profileHeader {
+  display: grid;
+  gap: 22px;
+  margin-bottom: 22px;
+}
+
+.profileHeader a {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  min-height: 44px;
+  gap: 9px;
+  color: var(--brand-900);
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 10px;
+}
+
+.profileHeader a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.profileHeaderIcon {
+  width: 23px;
+  height: 23px;
+}
+
+.profileHeader h1 {
+  margin: 0;
+  font-size: clamp(30px, 8vw, 38px);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.profileGrid {
+  display: grid;
+  gap: 28px;
+}
+
+.identityColumn,
+.locationColumn {
+  min-width: 0;
+}
+
+.mediaPlaceholder,
+.profileMap,
+.profileMapPlaceholder {
+  overflow: hidden;
+  border: 1px solid #dce8dc;
+  border-radius: 16px;
+}
+
+.mediaPlaceholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 248px;
+  flex-direction: column;
+  gap: 13px;
+  color: #6b7a6c;
+  background: #eaf4ea;
+}
+
+.mediaPlaceholder svg {
+  width: 58px;
+  height: 58px;
+  padding: 12px;
+  background: #d9e9d9;
+  border-radius: 999px;
+}
+
+.mediaPlaceholder span {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.placeIdentity {
+  padding: 24px 2px 18px;
+}
+
+.placeIdentity h2 {
+  margin: 0;
+  color: #172018;
+  font-size: clamp(30px, 8vw, 40px);
+  font-weight: 700;
+  letter-spacing: -0.045em;
+  line-height: 1.04;
+}
+
+.placeIdentity p {
+  margin: 9px 0 0;
+  color: #667167;
+  font-size: 17px;
+  line-height: 1.35;
+}
+
+.sourceState {
+  display: flex;
+  align-items: center;
+  min-height: 54px;
+  gap: 11px;
+  padding: 12px 16px;
+  color: #3e5140;
+  background: #eaf3ea;
+  border-radius: 14px;
+}
+
+.sourceState svg {
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  color: var(--brand-700);
+}
+
+.sourceState span {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.detailRows {
+  margin: 20px 0 0;
+  border-top: 1px solid #dde5dd;
+}
+
+.detailRows > div {
+  display: grid;
+  gap: 5px;
+  padding: 16px 2px;
+  border-bottom: 1px solid #dde5dd;
+}
+
+.detailRows dt {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: #5e6a60;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.detailIcon {
+  width: 20px;
+  height: 20px;
+}
+
+.detailRows dd {
+  margin: 0 0 0 29px;
+  color: #253126;
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+.locationColumn {
+  display: flex;
+  flex-direction: column;
+}
+
+.locationHeading {
+  margin-bottom: 14px;
+}
+
+.locationHeading h2 {
+  margin: 0;
+  font-size: 25px;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.locationHeading p {
+  margin: 5px 0 0;
+  color: #627064;
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+.profileMap,
+.profileMapPlaceholder {
+  position: relative;
+  min-height: 240px;
+  background: #dfe9df;
+}
+
+.profileMapCanvas {
+  position: absolute;
+  inset: 0;
+}
+
+.profileMapLoading,
+.profileMapError {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  color: #425343;
+  font-weight: 600;
+  background: #e6eee6;
+}
+
+.profileMapError {
+  flex-direction: column;
+  gap: 9px;
+  color: var(--warning);
+  text-align: center;
+  background: var(--warning-soft);
+}
+
+.mapErrorIcon {
+  width: 28px;
+  height: 28px;
+}
+
+.profileMap > button {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  color: var(--brand-900);
+  background: rgb(255 255 255 / 0.96);
+  border: 1px solid #dde5dd;
+  border-radius: 999px;
+  box-shadow: 0 7px 20px rgb(38 87 40 / 0.13);
+  cursor: pointer;
+}
+
+.profileMap > button svg {
+  width: 21px;
+  height: 21px;
+}
+
+.profileAttribution {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  left: 8px;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  width: fit-content;
+  max-width: calc(100% - 16px);
+  gap: 4px;
+  padding: 4px 7px;
+  color: #263527;
+  font-size: 9px;
+  background: rgb(255 255 255 / 0.9);
+  border-radius: 7px;
+}
+
+.profileAttribution a {
+  color: inherit;
+}
+
+.actionStack {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.profileDirections {
+  position: fixed;
+  right: 18px;
+  bottom: calc(14px + env(safe-area-inset-bottom));
+  left: 18px;
+  z-index: 20;
+}
+
+.profileDirections summary,
+.actionPair button,
+.wideSecondaryAction {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+  gap: 9px;
+  padding: 10px 16px;
+  font-weight: 700;
+  list-style: none;
+  border-radius: 13px;
+  cursor: pointer;
+}
+
+.profileDirections summary {
+  color: #ffffff;
+  background: #2e7d32;
+  box-shadow: 0 8px 24px rgb(38 87 40 / 0.2);
+}
+
+.profileDirections summary::-webkit-details-marker {
+  display: none;
+}
+
+.actionIcon {
+  width: 22px;
+  height: 22px;
+}
+
+.profileDirectionOptions {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 9px);
+  left: 0;
+  display: grid;
+  gap: 4px;
+  padding: 7px;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  box-shadow: 0 16px 40px rgb(38 87 40 / 0.18);
+}
+
+.profileDirectionOptions a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 44px;
+  padding: 8px 10px;
+  color: var(--ink);
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 9px;
+}
+
+.profileDirectionOptions a:hover {
+  background: var(--surface-muted);
+}
+
+.actionPair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.actionPair button,
+.wideSecondaryAction {
+  color: var(--brand-900);
+  background: #ffffff;
+  border: 1.5px solid var(--brand-700);
+}
+
+.actionPair button:active:not(:disabled),
+.wideSecondaryAction:active:not(:disabled),
+.suggestAction:active:not(:disabled),
+.profileDirections summary:active {
+  transform: translateY(1px);
+}
+
+.actionPair button:disabled,
+.wideSecondaryAction:disabled,
+.suggestAction:disabled {
+  cursor: not-allowed;
+  opacity: 0.58;
+}
+
+.suggestAction {
+  display: flex;
+  align-items: center;
+  min-height: 52px;
+  gap: 11px;
+  padding: 10px 4px;
+  color: var(--ink);
+  text-align: left;
+  background: transparent;
+  border: 0;
+  border-top: 1px solid #dde5dd;
+  border-radius: 0;
+}
+
+.shareStatus {
+  min-height: 18px;
+  margin: -3px 0 0;
+  color: var(--text-secondary);
+  font-size: 12px;
+  text-align: center;
+}
+
+.sourceNote {
+  margin: 4px 0 0;
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+@media (min-width: 768px) {
+  .profilePage {
+    padding-inline: 28px;
+  }
+
+  .profileGrid {
+    grid-template-columns: minmax(0, 1.08fr) minmax(340px, 0.92fr);
+    align-items: start;
+  }
+
+  .mediaPlaceholder {
+    min-height: 360px;
+  }
+
+  .profileMap,
+  .profileMapPlaceholder {
+    min-height: 370px;
+  }
+
+  .profileDirections {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    left: auto;
+  }
+
+  .profilePage {
+    padding-bottom: 40px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .profileShell {
+    display: grid;
+    grid-template-columns: 164px minmax(0, 1fr);
+  }
+
+  .desktopNavigation {
+    position: sticky;
+    top: 0;
+    display: block;
+    height: 100dvh;
+  }
+
+  .profilePage {
+    min-height: 100dvh;
+    padding: 30px 36px 44px;
+  }
+
+  .profileHeader {
+    gap: 18px;
+    margin-bottom: 26px;
+  }
+
+  .profileHeader h1 {
+    font-size: 42px;
+  }
+
+  .profileGrid {
+    grid-template-columns: minmax(0, 1.04fr) minmax(420px, 0.96fr);
+    gap: 32px;
+  }
+
+  .locationColumn {
+    padding: 20px;
+    background: #ffffff;
+    border: 1px solid #dfe7df;
+    border-radius: 16px;
+  }
+
+  .placeIdentity h2 {
+    font-size: 40px;
+  }
+
+  .detailRows > div {
+    grid-template-columns: 170px minmax(0, 1fr);
+    align-items: center;
+    gap: 12px;
+  }
+
+  .detailRows dd {
+    margin: 0;
+  }
+
+  .mediaPlaceholder {
+    min-height: 390px;
+  }
+
+  .profileMap,
+  .profileMapPlaceholder {
+    min-height: 380px;
+  }
+}
+
+@media (min-width: 1320px) {
+  .profilePage {
+    padding-inline: 48px;
+  }
+
+  .profileGrid {
+    gap: 40px;
+  }
+}

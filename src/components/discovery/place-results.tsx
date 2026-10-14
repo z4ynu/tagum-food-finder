@@ -5,6 +5,7 @@ import {
   MapPinIcon,
   NavigationArrowIcon,
 } from "@phosphor-icons/react";
+import Link from "next/link";
 
 import { formatDistance } from "@/modules/discovery/distance";
 import {
@@ -12,6 +13,7 @@ import {
   wazeDirectionsUrl,
 } from "@/modules/discovery/external-navigation";
 import type { RankedPlace } from "@/modules/discovery/model";
+import { placeProfilePath } from "@/modules/discovery/place-profile-path";
 
 import styles from "./discovery.module.css";
 
@@ -99,6 +101,9 @@ function PlaceRow({
 
       {selected ? (
         <div className={styles.selectedActions}>
+          <Link className={styles.profileLink} href={placeProfilePath(result.place)}>
+            View details
+          </Link>
           <DirectionsMenu result={result} />
         </div>
       ) : null}
