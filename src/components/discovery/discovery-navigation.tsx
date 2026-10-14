@@ -7,7 +7,7 @@ import styles from "./discovery.module.css";
 
 const ITEMS = [
   { href: "/#discovery-results", icon: MapPinIcon, label: "Discover" },
-  { href: null, icon: BookmarkSimpleIcon, label: "Saved" },
+  { href: "/saved", icon: BookmarkSimpleIcon, label: "Saved" },
   { href: "/wheel", icon: CompassIcon, label: "Wheel" },
   { href: "/account", icon: UserCircleIcon, label: "Account" },
 ] as const;

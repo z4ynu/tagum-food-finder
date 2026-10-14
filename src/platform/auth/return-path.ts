@@ -1,4 +1,4 @@
-const ALLOWED_EXACT_PATHS = new Set(["/", "/wheel"]);
+const ALLOWED_EXACT_PATHS = new Set(["/", "/saved", "/wheel"]);
 
 export function safeAuthReturnPath(value: string | null | undefined): string {
   const candidate = value?.trim();

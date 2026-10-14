@@ -7,6 +7,7 @@ describe("safeAuthReturnPath", () => {
     [null, "/"],
     [undefined, "/"],
     ["/", "/"],
+    ["/saved", "/saved"],
     ["/wheel?place=tagum-pie", "/wheel?place=tagum-pie"],
     ["/places/the-turq-cafe#location", "/places/the-turq-cafe#location"],
   ])("maps %s to %s", (input, expected) => {

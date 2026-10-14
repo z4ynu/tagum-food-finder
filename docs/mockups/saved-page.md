@@ -1,8 +1,8 @@
 # Saved page
 
-Status: **AWAITING OWNER APPROVAL**
+Status: **APPROVED AND IMPLEMENTED**
 
-No Saved page UI implementation should begin until the owner explicitly approves these mockups or requests revisions.
+The owner approved this direction on 2026-10-14. The responsive `/saved` prototype now follows these mockups.
 
 ## Design read
 
@@ -26,17 +26,17 @@ This is a practical personal library for signed-in users, not a dashboard. It sh
 - Keep wheel lists private and identify them by name and place count.
 - State that saved content syncs to the signed-in account without implying that sync is currently connected in the local prototype.
 
-## Planned implementation states
+## Implemented prototype states
 
-- Signed-in populated library
+- Populated Saved library using clearly identified prototype content
 - Empty Saved places with a `Find places` action
 - Empty Wheel lists with a `Create a wheel list` action
-- Loading skeletons matching the final rows
 - Offline access to last available content
-- Recoverable synchronization error
-- Remove-place confirmation with undo
+- Remove-place action with undo
 - Create, rename, and delete wheel-list dialogs
 - Signed-out handoff to the Account page
+
+Saved changes currently remain in the browser session. Account-backed persistence, loading skeletons, and recoverable synchronization errors will be added with the hosted Supabase integration rather than simulated as working cloud behavior.
 
 ## Mockups
 
