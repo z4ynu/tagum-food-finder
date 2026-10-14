@@ -30,6 +30,7 @@ export type OsmPlaceInventory = Readonly<{
   objectTypes: CountBy<"node" | "relation" | "unknown" | "way">;
   priceEvidence: Readonly<{ defensible: 0; unknown: number }>;
   reader: Readonly<{
+    collapsedSourceDuplicates: number;
     recordsRead: number;
     rejected: OsmSnapshotReadResult["rejected"];
   }>;
@@ -201,6 +202,10 @@ export function createOsmPlaceInventory(
     lifecycle: { assessed: 0, unknown: clipped.accepted.length },
     objectTypes,
     priceEvidence: { defensible: 0, unknown: clipped.accepted.length },
-    reader: { recordsRead: snapshot.recordsRead, rejected: snapshot.rejected },
+    reader: {
+      collapsedSourceDuplicates: snapshot.collapsedSourceDuplicates,
+      recordsRead: snapshot.recordsRead,
+      rejected: snapshot.rejected,
+    },
   };
 }

@@ -26,7 +26,7 @@ The OSM adapter recognizes the initial approved food-place families represented 
 
 The intended acquisition path is a pinned Geofabrik Philippines extract, clipped locally. The production product and repeatable audit must not systematically query public Nominatim or community Overpass infrastructure for the city catalog.
 
-The reader preserves Osmium object identity and timestamps, accepts exact source points, derives deterministic representative points from area geometries, and records the coordinate method beside each candidate for audit review. It rejects malformed features without silently dropping their count and enforces 5 MB and 10,000-record defaults so an accidental bulk input cannot enter the in-memory audit path.
+The reader preserves Osmium object identity and timestamps, accepts exact source points, derives deterministic representative points from area geometries, and records the coordinate method beside each candidate for audit review. When Osmium emits the same tagged way as both a line and an area, the reader collapses the repeated source identity and prefers the polygon representative. It rejects malformed features without silently dropping their count and enforces 5 MB and 10,000-record defaults so an accidental bulk input cannot enter the in-memory audit path.
 
 The reviewed category mapping treats direct restaurant, fast-food, cafe, food-court, ice-cream, bakery, and pastry tags as usable. Retail-oriented coffee, tea, deli, and confectionery tags require manual review because they do not prove a customer-facing prepared-food place. Foursquare category paths are mapped only at explicit hierarchy segments so unrelated labels such as restaurant-supply stores do not become food places.
 

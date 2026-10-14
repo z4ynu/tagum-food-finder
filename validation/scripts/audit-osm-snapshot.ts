@@ -3,6 +3,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { basename, join, resolve } from "node:path";
 import type { BoundaryFixture } from "../../src/modules/catalog/audit/boundary";
 import { createOsmPlaceInventory } from "../../src/modules/catalog/audit/osm-inventory";
+import { selectQualitySpotCheckCandidates } from "../../src/modules/catalog/audit/quality-spot-check";
 import { readOsmGeoJsonSequence } from "../../src/modules/catalog/sources/osm-geojson-sequence";
 
 type ExtractionManifest = Readonly<{
@@ -75,6 +76,7 @@ if (readResult.recordsRead !== manifest.outputs.geoJsonSequenceRecords) {
 
 const boundary = JSON.parse(boundaryText) as BoundaryFixture;
 const inventory = createOsmPlaceInventory(readResult, boundary);
+const spotCheckCandidates = selectQualitySpotCheckCandidates(readResult, boundary);
 const inside = inventory.boundary.inside;
 const report = `# OSM Tagum Place Inventory
 
@@ -95,6 +97,7 @@ Generated from a checksummed local snapshot. This report contains aggregate evid
 | Outcome | Count |
 | --- | ---: |
 | Accepted | ${inventory.acceptedBeforeBoundary} |
+| Collapsed duplicate source feature | ${inventory.reader.collapsedSourceDuplicates} |
 | Invalid feature | ${inventory.reader.rejected["invalid-feature"]} |
 | Missing source ID | ${inventory.reader.rejected["missing-id"]} |
 | Missing usable name | ${inventory.reader.rejected["missing-name"]} |
@@ -157,6 +160,36 @@ await Promise.all([
     `${JSON.stringify(inventory, null, 2)}\n`,
   ),
   writeFile(join(outputDirectory, "osm-place-inventory.md"), report),
+  writeFile(
+    join(outputDirectory, "osm-quality-spot-check.json"),
+    `${JSON.stringify(
+      {
+        catalogCompleteness: "unknown",
+        generatedAt: new Date().toISOString(),
+        purpose: "returned-record-quality-review",
+        records: spotCheckCandidates.map((candidate) => ({
+          ...candidate,
+          review: {
+            categoryUsability: "not-assessed",
+            coordinateUsability: "not-assessed",
+            evidenceUrls: [],
+            lifecycle: "not-assessed",
+            notes: "",
+            priceEvidence: "not-assessed",
+          },
+        })),
+        source: {
+          md5: manifest.source.md5,
+          snapshotSha256,
+          version: manifest.source.version,
+        },
+      },
+      null,
+      2,
+    )}\n`,
+  ),
 ]);
 
-console.log(`Wrote aggregate inventory for ${inside} in-boundary candidates to ${outputDirectory}`);
+console.log(
+  `Wrote aggregate inventory and ${spotCheckCandidates.length}-record quality worksheet for ${inside} in-boundary candidates to ${outputDirectory}`,
+);

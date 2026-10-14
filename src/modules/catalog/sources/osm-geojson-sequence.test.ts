@@ -29,6 +29,7 @@ describe("readOsmGeoJsonSequence", () => {
     );
 
     expect(result.recordsRead).toBe(1);
+    expect(result.collapsedSourceDuplicates).toBe(0);
     expect(result.rejected).toEqual({
       "invalid-feature": 0,
       "missing-id": 0,
@@ -94,6 +95,51 @@ describe("readOsmGeoJsonSequence", () => {
       "missing-name": 1,
       "not-food-place": 1,
     });
+  });
+
+  it("collapses duplicate source identities and keeps the best geometry", () => {
+    const sharedProperties = {
+      "@id": 456,
+      "@type": "way",
+      amenity: "cafe",
+      name: "Area Cafe",
+    };
+    const input = [
+      line({
+        geometry: {
+          coordinates: [
+            [125.8, 7.4],
+            [125.82, 7.42],
+          ],
+          type: "LineString",
+        },
+        properties: sharedProperties,
+        type: "Feature",
+      }),
+      line({
+        geometry: {
+          coordinates: [
+            [
+              [125.8, 7.4],
+              [125.82, 7.4],
+              [125.82, 7.42],
+              [125.8, 7.42],
+              [125.8, 7.4],
+            ],
+          ],
+          type: "Polygon",
+        },
+        properties: sharedProperties,
+        type: "Feature",
+      }),
+    ].join("\n");
+
+    const result = readOsmGeoJsonSequence(input, options);
+
+    expect(result.recordsRead).toBe(2);
+    expect(result.collapsedSourceDuplicates).toBe(1);
+    expect(result.accepted).toHaveLength(1);
+    expect(result.accepted[0].coordinateMethod).toBe("polygon-representative");
   });
 
   it("enforces byte and record bounds", () => {

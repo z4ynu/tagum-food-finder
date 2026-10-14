@@ -101,6 +101,7 @@ describe("createOsmPlaceInventory", () => {
           coordinateMethod: "missing",
         },
       ],
+      collapsedSourceDuplicates: 0,
       recordsRead: 6,
       rejected: { "invalid-feature": 1, "missing-id": 0, "missing-name": 1, "not-food-place": 0 },
     };
@@ -125,6 +126,7 @@ describe("createOsmPlaceInventory", () => {
       createOsmPlaceInventory(
         {
           accepted: [],
+          collapsedSourceDuplicates: 0,
           recordsRead: 0,
           rejected: {
             "invalid-feature": 0,

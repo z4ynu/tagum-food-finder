@@ -15,6 +15,7 @@ export type OsmSnapshotCandidate = Readonly<{
 
 export type OsmSnapshotReadResult = Readonly<{
   accepted: readonly OsmSnapshotCandidate[];
+  collapsedSourceDuplicates: number;
   recordsRead: number;
   rejected: Readonly<
     Record<"invalid-feature" | "missing-id" | "missing-name" | "not-food-place", number>
@@ -234,7 +235,8 @@ export function readOsmGeoJsonSequence(
     throw new Error(`OSM snapshot exceeds the ${maxRecords}-record reader limit.`);
   }
 
-  const accepted: OsmSnapshotCandidate[] = [];
+  const acceptedByKey = new Map<string, OsmSnapshotCandidate>();
+  let collapsedSourceDuplicates = 0;
   const rejected = {
     "invalid-feature": 0,
     "missing-id": 0,
@@ -260,8 +262,29 @@ export function readOsmGeoJsonSequence(
       continue;
     }
 
-    accepted.push({ candidate: result.candidate, coordinateMethod: converted.coordinateMethod });
+    const candidate = { candidate: result.candidate, coordinateMethod: converted.coordinateMethod };
+    const existing = acceptedByKey.get(result.candidate.candidateKey);
+    if (!existing) {
+      acceptedByKey.set(result.candidate.candidateKey, candidate);
+      continue;
+    }
+
+    collapsedSourceDuplicates += 1;
+    const methodPriority: Readonly<Record<OsmCoordinateMethod, number>> = {
+      "line-midpoint": 1,
+      missing: 0,
+      "polygon-representative": 3,
+      "source-point": 2,
+    };
+    if (methodPriority[candidate.coordinateMethod] > methodPriority[existing.coordinateMethod]) {
+      acceptedByKey.set(result.candidate.candidateKey, candidate);
+    }
   }
 
-  return { accepted, recordsRead: lines.length, rejected };
+  return {
+    accepted: [...acceptedByKey.values()],
+    collapsedSourceDuplicates,
+    recordsRead: lines.length,
+    rejected,
+  };
 }
