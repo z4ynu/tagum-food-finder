@@ -1,11 +1,7 @@
-import {
-  BookmarkSimpleIcon,
-  CompassIcon,
-  LeafIcon,
-  MapPinIcon,
-  UserCircleIcon,
-} from "@phosphor-icons/react";
+import { BookmarkSimpleIcon, CompassIcon, MapPinIcon, UserCircleIcon } from "@phosphor-icons/react";
 import Link from "next/link";
+
+import { MascotMark } from "@/components/brand/mascot-mark";
 
 import styles from "./discovery.module.css";
 
@@ -25,7 +21,7 @@ export function DiscoveryNavigation({
     <nav className={styles.navigation} aria-label="Primary navigation">
       <Link className={styles.brand} href="/#discovery-results" aria-label="Asa Ta Mangaon? home">
         <span className={styles.brandMark} aria-hidden="true">
-          <LeafIcon weight="fill" />
+          <MascotMark priority />
         </span>
         <span className={styles.brandText}>
           <strong>Asa Ta Mangaon?</strong>

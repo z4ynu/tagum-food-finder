@@ -5,6 +5,20 @@ export default function manifest(): MetadataRoute.Manifest {
     background_color: "#F7FAF7",
     description: "Find food places in Tagum based on what matters to you.",
     display: "standalone",
+    icons: [
+      {
+        purpose: "any",
+        sizes: "192x192",
+        src: "/brand/icon-192.png",
+        type: "image/png",
+      },
+      {
+        purpose: "maskable",
+        sizes: "512x512",
+        src: "/brand/icon-512.png",
+        type: "image/png",
+      },
+    ],
     lang: "en",
     name: "Asa Ta Mangaon?",
     orientation: "any",

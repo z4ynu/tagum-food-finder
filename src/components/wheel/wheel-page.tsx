@@ -14,6 +14,7 @@ import {
 import type { CSSProperties, FormEvent } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 
+import { MascotMark } from "@/components/brand/mascot-mark";
 import { DiscoveryNavigation } from "@/components/discovery/discovery-navigation";
 import { googleMapsDirectionsUrl } from "@/modules/discovery/external-navigation";
 import { findPlaceByProfileSlug, placeProfileSlug } from "@/modules/discovery/place-profile-path";
@@ -333,7 +334,7 @@ export function WheelPage() {
                     })
                   : null}
                 <div className={styles.wheelHub} aria-hidden="true">
-                  <ForkKnifeIcon className={styles.wheelHubIcon} weight="bold" />
+                  <MascotMark className={styles.wheelHubIcon} />
                 </div>
               </div>
             </div>

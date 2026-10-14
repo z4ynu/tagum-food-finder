@@ -8,7 +8,7 @@
 | Descriptor | Tagum Food Finder |
 | Document status | Approved |
 | Discovery status | Complete |
-| Last updated | 2026-10-13 |
+| Last updated | 2026-10-14 |
 | Approved | 2026-10-13 |
 | Target milestone | Private beta in February 2027 |
 | Product owner | Repository owner |
@@ -67,6 +67,19 @@ The implementation must inspect the package manifest before adding any dependenc
 ### Greenfield mode
 
 This is a greenfield system. There is no existing interface to preserve. The approved product name, requirements, language, routes established later, legal copy, and accessibility behavior must not be changed silently during implementation.
+
+### Brand identity
+
+The approved mascot mark is a friendly local food guide combining a location-pin silhouette, rice-bowl curve, leaf sprout, fork, and restrained face. It communicates food discovery without borrowing delivery-marketplace imagery.
+
+- Use the standalone mark for favicons, PWA icons, compact navigation, and branded product moments such as the wheel hub.
+- Compose the primary lockup from the mark and live Figtree text so the product name remains crisp, accessible, and responsive.
+- Keep the mark's proportions, colors, face, sprout, bowl curve, and fork unchanged.
+- Do not add a chef hat, delivery bag, vehicle, food photo, or unapproved mascot name.
+- Do not stretch, rotate, recolor, or place the mark on a background that obscures its dark-green outline.
+- Expression variants require separate approval before use.
+
+Production asset locations and concept history are recorded in [`brand/mascot-logo-concept-01.md`](./brand/mascot-logo-concept-01.md).
 
 ## Color system
 

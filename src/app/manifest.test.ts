@@ -14,7 +14,20 @@ describe("web app manifest", () => {
     });
   });
 
-  it("does not claim final install icons before their design approval", () => {
-    expect(manifest().icons).toBeUndefined();
+  it("publishes the approved mascot install icons", () => {
+    expect(manifest().icons).toEqual([
+      {
+        purpose: "any",
+        sizes: "192x192",
+        src: "/brand/icon-192.png",
+        type: "image/png",
+      },
+      {
+        purpose: "maskable",
+        sizes: "512x512",
+        src: "/brand/icon-512.png",
+        type: "image/png",
+      },
+    ]);
   });
 });

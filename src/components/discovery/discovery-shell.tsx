@@ -5,7 +5,6 @@ import {
   CaretUpIcon,
   CrosshairIcon,
   FunnelSimpleIcon,
-  LeafIcon,
   MagnifyingGlassIcon,
   MapPinIcon,
   WifiSlashIcon,
@@ -15,6 +14,7 @@ import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { rankPlaces } from "@/modules/discovery/filter-places";
+import { MascotMark } from "@/components/brand/mascot-mark";
 import type { Coordinates, DiscoveryFilters } from "@/modules/discovery/model";
 import {
   MANUAL_LOCATIONS,
@@ -197,7 +197,7 @@ export function DiscoveryShell() {
       <div className={styles.workspace}>
         <header className={styles.mobileMapHeader}>
           <a className={styles.mobileMapBrand} href="#discovery-results">
-            <LeafIcon aria-hidden="true" weight="fill" />
+            <MascotMark priority />
             <span>
               <strong>Asa Ta Mangaon?</strong>
               <small>Tagum Food Finder</small>

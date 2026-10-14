@@ -327,8 +327,9 @@
 }
 
 .wheelHubIcon {
-  width: 42%;
-  height: 42%;
+  width: 68%;
+  height: 68%;
+  object-fit: contain;
 }
 
 .wheelPointer {

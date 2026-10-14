@@ -1,6 +1,7 @@
-import { CrosshairIcon, MapPinIcon, XIcon } from "@phosphor-icons/react";
+import { CrosshairIcon, XIcon } from "@phosphor-icons/react";
 import { useEffect, useRef } from "react";
 
+import { MascotMark } from "@/components/brand/mascot-mark";
 import { MANUAL_LOCATIONS } from "@/modules/discovery/prototype-places";
 
 import styles from "./discovery.module.css";
@@ -54,7 +55,7 @@ export function LocationDialog({
           <XIcon aria-hidden="true" />
         </button>
         <span className={styles.locationIllustration} aria-hidden="true">
-          <MapPinIcon weight="fill" />
+          <MascotMark priority />
         </span>
         <div>
           <p className={styles.dialogBrand}>Asa Ta Mangaon?</p>

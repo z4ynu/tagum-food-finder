@@ -1,8 +1,8 @@
 # Mascot logo concept 01
 
-Status: **AWAITING OWNER APPROVAL**
+Status: **APPROVED AND INTEGRATED**
 
-This is a visual direction board, not a production logo asset. Do not replace the current application mark until the owner approves the concept and the final vector assets have been created and checked at small sizes.
+The owner approved this mascot direction on 2026-10-14. The concept board remains a visual reference; production interfaces use the clean vector and raster assets listed below.
 
 ## Concept
 
@@ -15,13 +15,13 @@ The mascot is a friendly local food guide built from the product's core actions:
 
 The mascot does not have an approved name yet.
 
-## Intended logo system
+## Logo system
 
-- Primary horizontal wordmark
+- Primary lockup composed from the mascot mark and live Figtree text
 - Standalone mascot mark
-- PWA and favicon app icon
-- One-color and reversed variants
-- Small set of consistent expressions for onboarding, empty states, and wheel results
+- PWA, Apple touch, and favicon app icons
+- Future one-color and reversed variants when a print or dark-surface use case requires them
+- Future expression variants for onboarding and empty states after separate visual approval
 
 ## Canonical identity constraints
 
@@ -38,7 +38,13 @@ The mascot does not have an approved name yet.
 
 The written values above are authoritative. Any tiny text or swatch-label variation in the generated concept board is not a specification.
 
-## Approval gate
+## Production assets
 
-After approval, recreate the selected mark as clean production vector artwork, verify it at favicon and app-icon sizes, and export the required transparent and monochrome assets before integrating it into the interface.
+- `/public/brand/mascot-mark.svg`
+- `/public/brand/favicon-32.png`
+- `/public/brand/apple-touch-icon.png`
+- `/public/brand/icon-192.png`
+- `/public/brand/icon-512.png`
+
+The mark is used in discovery branding, desktop navigation, the location prompt, and the wheel hub. The raster exports were checked at their target sizes, and the install icons are registered in the web app manifest.
 
