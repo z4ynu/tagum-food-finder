@@ -1,8 +1,8 @@
 # Signed-in Account page
 
-Status: **AWAITING OWNER APPROVAL**
+Status: **APPROVED AND IMPLEMENTED**
 
-No signed-in Account UI implementation should begin until the owner explicitly approves these mockups or requests revisions.
+The owner approved this direction on 2026-10-15. The responsive prototype is implemented at `/account`, with a development-only signed-in preview at `/account?preview=signed-in`.
 
 ## Design read
 
@@ -28,17 +28,19 @@ This is a private account utility for a broad audience that may include minors, 
 - Preserve the light visual system, Figtree typography, mascot, and restrained green palette.
 - Do not add Apple sign-in, password settings, or a theme selector.
 
-## Planned implementation states
+## Implemented prototype states
 
 - Signed-in account summary
-- Zero and populated submitted-update counts
-- Account data export request with pending, ready, expired, and failure states
+- Zero-count authenticated state and clearly labeled populated preview state
+- Data export explanation that states the secure export service is not connected
 - Current-session sign-out
 - All-device sign-out confirmation and completion
-- Account deletion explanation, recent-authentication gate, confirmation, pending, and failure states
+- Account deletion explanation that states secure deletion is not connected and performs no deletion
 - Offline messaging for actions that require connectivity
 - Provider or session error with a clear recovery action
 - Signed-out fallback to the existing sign-in experience
+
+Real authenticated identity and sign-out use the configured Supabase client. Cloud-backed activity counts, submitted-update history, export processing, and account deletion remain future backend work and are not simulated as successful actions.
 
 ## Mockups
 

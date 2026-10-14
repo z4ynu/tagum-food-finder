@@ -1,0 +1,702 @@
+.shell {
+  min-height: 100dvh;
+  padding-bottom: calc(78px + env(safe-area-inset-bottom));
+  color: var(--ink);
+  background: var(--canvas);
+}
+
+.desktopHeader {
+  display: none;
+}
+
+.offlineBanner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  gap: 8px;
+  padding: 9px 18px;
+  color: var(--warning);
+  font-size: 14px;
+  font-weight: 650;
+  text-align: center;
+  background: var(--warning-soft);
+  border-bottom: 1px solid #efd98b;
+}
+
+.offlineBanner svg {
+  flex: 0 0 auto;
+  width: 19px;
+  height: 19px;
+}
+
+.page {
+  width: min(100%, 1440px);
+  margin-inline: auto;
+  padding: 28px 18px 36px;
+}
+
+.pageHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.pageHeader h1 {
+  margin: 0;
+  font-size: clamp(40px, 12vw, 52px);
+  font-weight: 780;
+  letter-spacing: -0.05em;
+  line-height: 0.96;
+}
+
+.pageHeader p {
+  max-width: 560px;
+  margin: 10px 0 0;
+  color: var(--text-secondary);
+  font-size: 17px;
+  line-height: 1.4;
+}
+
+.mobileMascot {
+  flex: 0 0 auto;
+  width: 58px;
+  height: 58px;
+  padding: 5px;
+  object-fit: contain;
+  background: var(--surface-muted);
+  border-radius: 50%;
+}
+
+.errorMessage {
+  margin: 0 0 18px;
+  padding: 12px 14px;
+  color: #842029;
+  font-size: 14px;
+  line-height: 1.4;
+  background: #fff0f1;
+  border: 1px solid #f2c8cc;
+  border-radius: 12px;
+}
+
+.accountLayout {
+  display: grid;
+  gap: 24px;
+}
+
+.identityPanel,
+.settingsPanel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+}
+
+.identityPanel {
+  padding: 24px 18px;
+}
+
+.identity {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.identityIcon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  color: var(--brand-700);
+  background: var(--surface-muted);
+  border-radius: 50%;
+}
+
+.identityIcon svg {
+  width: 43px;
+  height: 43px;
+}
+
+.identity div {
+  display: grid;
+  min-width: 0;
+}
+
+.identity strong {
+  overflow: hidden;
+  font-size: 18px;
+  font-weight: 740;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.identity span {
+  margin-top: 3px;
+  color: var(--text-secondary);
+  font-size: 15px;
+}
+
+.identity small {
+  width: fit-content;
+  margin-top: 7px;
+  padding: 3px 8px;
+  color: var(--brand-900);
+  font-size: 12px;
+  font-weight: 700;
+  background: var(--surface-muted);
+  border-radius: 999px;
+}
+
+.activitySummary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 22px 0 0;
+  padding: 14px 4px;
+  list-style: none;
+  background: var(--surface-muted);
+  border-radius: 14px;
+}
+
+.activitySummary li {
+  display: grid;
+  justify-items: center;
+  min-width: 0;
+  padding: 0 6px;
+  text-align: center;
+  border-right: 1px solid var(--border);
+}
+
+.activitySummary li:last-child {
+  border-right: 0;
+}
+
+.activitySummary svg {
+  width: 26px;
+  height: 26px;
+  color: var(--brand-700);
+}
+
+.activitySummary strong {
+  margin-top: 5px;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.activitySummary span {
+  margin-top: 4px;
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+.previewNote {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 14px 0 0;
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.previewNote svg {
+  flex: 0 0 auto;
+  width: 17px;
+  height: 17px;
+  color: var(--brand-700);
+}
+
+.signOutButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 50px;
+  gap: 10px;
+  margin-top: 22px;
+  color: var(--brand-900);
+  font-weight: 740;
+  background: var(--surface);
+  border: 1px solid var(--brand-700);
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.signOutButton:hover:not(:disabled) {
+  background: var(--surface-muted);
+}
+
+.signOutButton:active:not(:disabled),
+.settingRow:active,
+.deleteRow:active,
+.dialogPrimary:active:not(:disabled),
+.dialogSecondary:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.signOutButton:disabled,
+.dialogPrimary:disabled,
+.dialogSecondary:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.signOutButton svg {
+  width: 23px;
+  height: 23px;
+}
+
+.settingsPanel {
+  padding: 22px 16px 16px;
+}
+
+.settingsPanel h2 {
+  margin: 0 4px 12px;
+  font-size: 25px;
+  font-weight: 760;
+  letter-spacing: -0.035em;
+}
+
+.settingList {
+  display: grid;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.settingRow {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr) 24px;
+  align-items: center;
+  width: 100%;
+  min-height: 76px;
+  gap: 12px;
+  padding: 10px 12px 10px 10px;
+  color: var(--ink);
+  text-align: left;
+  text-decoration: none;
+  background: var(--surface);
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+}
+
+.settingRow:last-child {
+  border-bottom: 0;
+}
+
+.settingRow:hover {
+  background: var(--canvas);
+}
+
+.rowIcon,
+.deleteIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  color: var(--brand-700);
+  background: var(--surface-muted);
+  border-radius: 12px;
+}
+
+.rowIcon svg,
+.deleteIcon svg {
+  width: 27px;
+  height: 27px;
+}
+
+.rowCopy {
+  display: grid;
+  min-width: 0;
+}
+
+.rowCopy strong {
+  font-size: 16px;
+  line-height: 1.25;
+}
+
+.rowCopy small {
+  margin-top: 3px;
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.3;
+}
+
+.rowCaret {
+  width: 21px;
+  height: 21px;
+  color: var(--text-secondary);
+}
+
+.sectionDivider {
+  height: 1px;
+  margin: 20px 4px 16px;
+  background: var(--border);
+}
+
+.deleteRow {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr) 24px;
+  align-items: center;
+  width: 100%;
+  min-height: 68px;
+  gap: 12px;
+  margin-top: 14px;
+  padding: 8px 12px 8px 10px;
+  color: #b42318;
+  font-weight: 720;
+  text-align: left;
+  background: var(--surface);
+  border: 0;
+  border-top: 1px solid var(--border);
+  cursor: pointer;
+}
+
+.deleteRow:hover {
+  background: #fff7f6;
+}
+
+.deleteRow > svg {
+  width: 21px;
+  height: 21px;
+}
+
+.deleteIcon {
+  color: #b42318;
+  background: #fff0ee;
+}
+
+.mobileNavigation {
+  display: block;
+}
+
+.dialogBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgb(31 45 31 / 0.48);
+}
+
+.dialog {
+  position: relative;
+  width: min(100%, 470px);
+  padding: 28px;
+  background: var(--surface);
+  border-radius: 16px;
+  box-shadow: 0 24px 60px rgb(var(--shadow-color) / 0.22);
+}
+
+.dialogClose {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  color: var(--ink);
+  background: var(--surface-muted);
+  border: 0;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.dialogClose:hover {
+  background: var(--brand-200);
+}
+
+.dialogClose svg {
+  width: 21px;
+  height: 21px;
+}
+
+.dialogHeroIcon {
+  width: 42px;
+  height: 42px;
+  color: var(--brand-700);
+}
+
+.dangerIcon {
+  color: #b42318;
+}
+
+.dialog h2 {
+  margin: 14px 44px 8px 0;
+  font-size: 27px;
+  font-weight: 760;
+  letter-spacing: -0.035em;
+  line-height: 1.1;
+}
+
+.dialog p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.dialogPrimary,
+.dialogSecondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  gap: 8px;
+  margin-top: 22px;
+  padding: 0 20px;
+  font-weight: 740;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.dialogPrimary {
+  width: 100%;
+  color: #ffffff;
+  background: var(--brand-700);
+  border: 1px solid var(--brand-700);
+}
+
+.dialogPrimary:hover:not(:disabled) {
+  background: var(--brand-800);
+}
+
+.dialogSecondary {
+  color: var(--brand-900);
+  background: var(--surface);
+  border: 1px solid var(--brand-700);
+}
+
+.dialogSecondary:hover:not(:disabled) {
+  background: var(--surface-muted);
+}
+
+.dialogActions {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 10px;
+}
+
+.dialogActions .dialogPrimary,
+.dialogActions .dialogSecondary {
+  width: 100%;
+}
+
+.spinner {
+  animation: account-settings-spin 750ms linear infinite;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@keyframes account-settings-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (min-width: 640px) {
+  .page {
+    padding-inline: 32px;
+  }
+
+  .identityPanel,
+  .settingsPanel {
+    padding: 28px;
+  }
+
+  .identityIcon {
+    width: 84px;
+    height: 84px;
+  }
+
+  .identity strong {
+    font-size: 21px;
+  }
+
+  .activitySummary {
+    padding-block: 18px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .shell {
+    padding-bottom: 0;
+  }
+
+  .desktopHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 78px;
+    padding: 10px 48px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .headerBrand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .headerBrand img {
+    width: 54px;
+    height: 54px;
+    object-fit: contain;
+  }
+
+  .headerBrand span {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .headerBrand strong {
+    color: var(--brand-900);
+    font-size: 21px;
+    letter-spacing: -0.025em;
+    line-height: 1;
+  }
+
+  .headerBrand small {
+    margin-top: 4px;
+    color: var(--text-secondary);
+    font-size: 12px;
+  }
+
+  .desktopNav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .desktopNav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    gap: 8px;
+    padding: 0 15px;
+    color: var(--text-secondary);
+    font-weight: 650;
+    text-decoration: none;
+    border-radius: 12px;
+  }
+
+  .desktopNav a:hover {
+    color: var(--brand-900);
+    background: var(--canvas);
+  }
+
+  .desktopNav svg {
+    width: 21px;
+    height: 21px;
+  }
+
+  .desktopNav .desktopNavActive {
+    color: var(--brand-900);
+    background: var(--surface-muted);
+  }
+
+  .page {
+    padding: 44px 54px 58px;
+  }
+
+  .pageHeader {
+    margin-bottom: 30px;
+  }
+
+  .pageHeader h1 {
+    font-size: 54px;
+  }
+
+  .pageHeader p {
+    font-size: 19px;
+  }
+
+  .mobileMascot,
+  .mobileNavigation {
+    display: none;
+  }
+
+  .accountLayout {
+    grid-template-columns: minmax(330px, 0.78fr) minmax(0, 1.22fr);
+    align-items: stretch;
+    gap: 22px;
+  }
+
+  .identityPanel {
+    display: flex;
+    flex-direction: column;
+    padding: 34px 28px;
+  }
+
+  .identity {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .identityIcon {
+    width: 116px;
+    height: 116px;
+  }
+
+  .identityIcon svg {
+    width: 66px;
+    height: 66px;
+  }
+
+  .identity strong {
+    font-size: 22px;
+  }
+
+  .activitySummary {
+    margin-top: 26px;
+  }
+
+  .previewNote {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .signOutButton {
+    margin-top: auto;
+  }
+
+  .settingsPanel {
+    padding: 26px 30px 18px;
+  }
+
+  .settingsPanel h2 {
+    font-size: 29px;
+  }
+
+  .settingRow {
+    min-height: 78px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation: none;
+  }
+}
