@@ -221,7 +221,7 @@ export function WheelPage() {
 
   return (
     <main className={styles.wheelShell}>
-      <DiscoveryNavigation activeDestination="Wheel" />
+      <DiscoveryNavigation activeDestination="Wheel" accountReturnTo="/wheel" />
 
       <div className={styles.wheelPage}>
         <header className={styles.pageHeader}>

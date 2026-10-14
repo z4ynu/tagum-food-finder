@@ -205,7 +205,7 @@ flowchart LR
     db[(PostgreSQL with RLS)]
     storage[Private Storage]
     jobs[Protected ingestion and backup jobs]
-    oauth[Google, Facebook, and Apple]
+    oauth[Google and Facebook]
     external[Map, navigation, email, and monitoring providers]
 
     browser -->|validated HTTPS requests| edge
@@ -229,11 +229,10 @@ Supabase Auth supports:
 - a one-time magic link sent to a personal email address;
 - Google sign-in;
 - Facebook sign-in;
-- Apple sign-in.
 
 Passwords are not implemented. Additional providers require a separate scope, privacy, maintenance, and demand review.
 
-OAuth requests use only the minimum identity and verified-email scopes needed for sign-in. The application does not request contacts, friends, posts, birthdays, photos, or advertising permissions. Apple private relay addresses are valid account emails.
+OAuth requests use only the minimum identity and verified-email scopes needed for sign-in. The application does not request contacts, friends, posts, birthdays, photos, or advertising permissions.
 
 Provider identities are not automatically linked merely because email strings match. Self-service identity linking is deferred because unsafe linking can enable account takeover. The UI explains that different sign-in choices may create separate accounts.
 
@@ -248,7 +247,7 @@ Provider identities are not automatically linked merely because email strings ma
 
 ### Administrator identity
 
-The administrator uses a dedicated Google identity reserved for administration. It is not an ordinary user account and does not use Facebook, Apple, or magic-link sign-in for administrative access.
+The administrator uses a dedicated Google identity reserved for administration. It is not an ordinary user account and does not use Facebook or magic-link sign-in for administrative access.
 
 Administrative access requires:
 
@@ -368,7 +367,7 @@ The device used for production access requires:
 - automatic screen lock;
 - a non-shared OS account;
 - password-manager-protected credentials;
-- MFA on GitHub, Cloudflare, Supabase, domain, email, Google, Apple, Facebook, Sentry, and backup accounts;
+- MFA on GitHub, Cloudflare, Supabase, domain, email, Google, Facebook, Sentry, and backup accounts;
 - minimal browser extensions for the administrative profile.
 
 Production dashboard access is reviewed quarterly.
@@ -566,7 +565,7 @@ Before production use, each provider record includes:
 - outage and exit plan;
 - last and next review dates.
 
-Google, Facebook, and Apple receive authentication requests only when chosen by the user. Navigation providers receive destination data only after the user requests directions. Sentry receives scrubbed technical events. Map providers receive only requests necessary to render the viewed map.
+Google and Facebook receive authentication requests only when chosen by the user. Navigation providers receive destination data only after the user requests directions. Sentry receives scrubbed technical events. Map providers receive only requests necessary to render the viewed map.
 
 Provider terms and international-transfer safeguards are reviewed before beta and at least annually. A provider's certification does not replace application configuration or controller accountability.
 
@@ -728,7 +727,7 @@ Critical launch blockers cannot be waived for private beta:
 - [ ] Complete NPC registration or the applicable declaration.
 - [ ] Publish standard and child-readable layered privacy notices.
 - [ ] Publish terms and evidence-rights language.
-- [ ] Configure personal-email magic link, Google, Facebook, and Apple callback allowlists.
+- [ ] Configure personal-email magic link, Google, and Facebook callback allowlists.
 - [ ] Verify OAuth scopes request no social graph, contacts, birthday, or unnecessary profile data.
 - [ ] Enforce dedicated administrator identity and AAL2.
 - [ ] Test every RLS and Storage policy using the role matrix.
@@ -772,7 +771,7 @@ Critical launch blockers cannot be waived for private beta:
 
 This security and privacy specification is approved because the product owner confirmed the complete discovery decision set with two explicit adjustments:
 
-1. users authenticate with their own personal email or Google, Facebook, or Apple identity;
+1. users authenticate with their own personal email or Google or Facebook identity;
 2. users, including minors, can use anonymous and registered product features without an age gate.
 
 Implementation must preserve the safeguards, legal launch gates, and data-minimization requirements in this document. Material changes to identity, public interaction, advertising, payment, business claims, messaging, age-related processing, or sensitive-data use require new privacy, threat-model, architecture, and data reviews before implementation.

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { evaluateAuthCallback } from "@/platform/auth/callback";
+import { safeAuthReturnPath } from "@/platform/auth/return-path";
 import { readAppOrigin } from "@/platform/config/app-origin";
 import { createServerSupabaseClient } from "@/platform/supabase/server";
 
@@ -12,6 +13,7 @@ const privateResponseHeaders = {
 export async function GET(request: Request) {
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get("code");
+  const returnPath = safeAuthReturnPath(requestUrl.searchParams.get("next"));
 
   if (!code) {
     return NextResponse.json(
@@ -32,7 +34,7 @@ export async function GET(request: Request) {
     );
   }
 
-  const destination = new URL("/", readAppOrigin());
+  const destination = new URL(returnPath, readAppOrigin());
   return NextResponse.redirect(destination, {
     status: 303,
     headers: privateResponseHeaders,

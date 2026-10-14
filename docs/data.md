@@ -385,7 +385,7 @@ A lower-priority value may win when the higher-priority evidence is stale, incom
 
 Supabase `auth.users` is the identity authority. `profiles` stores only the application UUID reference, account status, theme preference, navigation-provider preference, notice and consent versions where applicable, locale, created time, and deletion state.
 
-The MVP does not require a display name, public username, biography, avatar, birth date, age band, or public profile. Authentication email and Google, Facebook, or Apple provider identity remain in the authentication system and are not duplicated into public application tables. The application does not import social graphs, contacts, birthdays, or provider profile content.
+The MVP does not require a display name, public username, biography, avatar, birth date, age band, or public profile. Authentication email and Google or Facebook provider identity remain in the authentication system and are not duplicated into public application tables. The application does not import social graphs, contacts, birthdays, or provider profile content.
 
 ### `favorites`
 

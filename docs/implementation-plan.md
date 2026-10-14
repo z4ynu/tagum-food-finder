@@ -201,14 +201,12 @@ Deliverables:
 
 - custom SMTP delivery test with an authenticated sending domain;
 - magic-link callback and replay/expiry behavior report;
-- Google, Facebook, and Apple provider setup checklists;
+- Google and Facebook provider setup checklists;
 - provider-disabled product behavior for unavailable providers;
-- account linking, sign-out, reauthentication, deletion, and Apple relay tests;
+- account linking, sign-out, reauthentication, and deletion tests;
 - RLS test harness for anonymous, authenticated, owner, moderator, and administrator access;
 - current monthly cost forecast and paid-threshold alerts;
 - documented legal/privacy review status for minor access and evidence collection.
-
-Apple sign-in is implemented when the enrolled developer account is available. Its absence is a failed MVP identity gate, not permission to remove the approved requirement silently.
 
 Suggested commit sequence:
 
@@ -321,7 +319,7 @@ Mockup approval is required for sign-in, callback/error, saved-content, settings
 Deliverables:
 
 - personal-email magic links through custom SMTP;
-- Google, Facebook, and Apple sign-in;
+- Google and Facebook sign-in;
 - account linking and collision handling;
 - cloud favorites and saved wheel lists;
 - safe merge choice for anonymous local data after sign-in;
@@ -330,7 +328,7 @@ Deliverables:
 
 Definition of done:
 
-- authentication works with personal addresses and Apple private relay;
+- authentication works with representative personal email addresses;
 - public profiles, birth dates, contacts, social graphs, and provider content are not collected;
 - users can access only their own private records;
 - deletion removes or anonymizes data according to `data.md` and `security.md`.
@@ -481,7 +479,6 @@ These are evidence-dependent decisions, not forgotten requirements:
 | Catalog source mix | 25-record source-quality check | Before catalog migrations are finalized |
 | Production basemap | PMTiles/hosted benchmark, rights, and cost | Before external beta |
 | Transactional email provider | delivery and quota test | Before external sign-in |
-| Apple setup | enrolled owner account and callback test | Before MVP identity gate |
 | Performance budgets | real prototype measurements | Before Stage 1 discovery |
 | Numeric product targets | observed private-beta behavior | After controlled beta begins |
 | Supabase paid upgrade | capacity, pause, backup, and reliability evidence | Before broad public launch or earlier if risk requires |

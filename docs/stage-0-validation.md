@@ -20,7 +20,7 @@ Proceed with Stage 0 using the approved Next.js, Cloudflare, Supabase, PostGIS, 
 1. Treat Cloudflare's `vinext` path as an experimental deployment candidate, not a settled adapter. The official guide currently recommends it for new Next.js applications but labels it beta. Test it against the required feature matrix before selecting it.
 2. Use Foursquare Open Source Places and an OpenStreetMap regional extract as the first catalog candidates. Do not make the paid Foursquare Places API a runtime dependency.
 3. Test a Tagum or Davao del Norte PMTiles archive on Cloudflare R2 as the preferred long-term basemap path. Keep MapTiler only as a time-boxed evaluation fallback when its terms allow the intended use.
-4. Keep Google, Facebook, Apple, and personal-email magic-link sign-in in scope. Schedule Apple last among the identity-provider spikes because it requires Apple developer configuration and a paid membership.
+4. Keep Google, Facebook, and personal-email magic-link sign-in in scope.
 5. Use a dedicated transactional-email provider before inviting external users. Supabase's default sender is development-only.
 
 ## Research snapshot
@@ -41,18 +41,11 @@ Conclusion: Cloudflare remains plausible, but framework-adapter compatibility is
 - Supabase Free currently includes two free projects, 500 MB database size per project, 50,000 monthly active users, 1 GB storage, 5 GB egress, and 500,000 Edge Function invocations.
 - Two projects are enough for the approved staging and production separation during a controlled beta.
 - Free projects may be paused for low activity, and downloadable managed backups are not included.
-- Supabase supports email magic links and the requested Google, Facebook, and Apple OAuth providers.
+- Supabase supports email magic links and the requested Google and Facebook OAuth providers.
 - Supabase's default SMTP service is limited to authorized team addresses, currently sends at most two messages per hour, and has no delivery or uptime SLA.
 - A custom SMTP provider is therefore required before external beta invitations. Resend's current free tier is a viable candidate at 3,000 emails per month and 100 per day, subject to domain authentication and a delivery test.
 
 Conclusion: Supabase is viable for a controlled beta if external backups, custom SMTP, quotas, and project-pause risk are handled.
-
-### Apple sign-in
-
-- Apple web authentication requires a Services ID associated with a primary Apple-platform App ID.
-- The Apple Developer Program currently costs USD 99 per membership year, converted to local currency where available.
-
-Conclusion: Apple sign-in remains an MVP requirement, but its annual membership and configuration are explicit owner-funded launch dependencies. Local development must use a provider-disabled state until the required account is available.
 
 ### Place sources
 
@@ -216,8 +209,7 @@ Stage 0C passes when every scenario has recorded results, no critical journey de
 1. Implement and test personal-email magic links with custom SMTP.
 2. Implement Google sign-in.
 3. Implement Facebook sign-in and record any app-review or business-verification requirement.
-4. Implement Apple sign-in after the owner supplies the required enrolled developer account.
-5. Verify account linking, provider-email changes, private Apple relay addresses, sign-out, deletion, and reauthentication behavior.
+4. Verify account linking, provider-email changes, sign-out, deletion, and reauthentication behavior.
 
 Provider secrets must exist only in password managers and provider configuration. Never place them in the repository, documentation, screenshots, or session notes.
 
@@ -225,7 +217,7 @@ Provider secrets must exist only in password managers and provider configuration
 
 Maintain a live monthly forecast with three columns: free allowance, expected beta usage, and paid threshold. Include Cloudflare, Supabase, map delivery, transactional email, monitoring, CI, domain, backups, and place data.
 
-Annual fees such as Apple membership and the domain must be shown separately and as a monthly equivalent. Currency conversion must use the amount charged at purchase time plus a contingency; this document does not fix an exchange rate.
+Annual fees such as the domain must be shown separately and as a monthly equivalent. Currency conversion must use the amount charged at purchase time plus a contingency; this document does not fix an exchange rate.
 
 The gate passes only when:
 
@@ -233,7 +225,7 @@ The gate passes only when:
 - automatic overage is disabled or capped wherever possible;
 - the owner explicitly approves every paid service and annual fee;
 - graceful-degradation behavior exists for exhausted quotas;
-- custom SMTP delivery succeeds to representative Gmail, Outlook, and Apple relay addresses.
+- custom SMTP delivery succeeds to representative Gmail, Outlook, and Yahoo addresses.
 
 ## Evidence layout
 
@@ -297,8 +289,6 @@ Stage 0 is not complete on the date of this document. Research is complete enoug
 - [Supabase: Production checklist](https://supabase.com/docs/guides/deployment/going-into-prod)
 - [Supabase: Custom SMTP](https://supabase.com/docs/guides/auth/auth-smtp)
 - [Supabase: Social login](https://supabase.com/docs/guides/auth/social-login)
-- [Apple: Configure Sign in with Apple for the web](https://developer.apple.com/help/account/capabilities/configure-sign-in-with-apple-for-the-web/)
-- [Apple: Program enrollment](https://developer.apple.com/help/account/membership/program-enrollment/)
 - [Foursquare: Access FSQ Open Source Places](https://docs.foursquare.com/data-products/docs/access-fsq-os-places)
 - [Foursquare: Places OS data schema](https://docs.foursquare.com/data-products/docs/places-os-data-schema)
 - [Foursquare: Places API changes](https://docs.foursquare.com/developer/reference/upcoming-changes)

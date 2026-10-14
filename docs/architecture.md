@@ -54,7 +54,7 @@ Scaling should be driven by measured load. The first upgrade path is vertical an
 | Hosting | Cloudflare Workers | Commercially usable low-cost path; deployment compatibility must pass Stage 0 |
 | Database | Supabase PostgreSQL | Managed relational store with authentication and storage integration |
 | Geospatial data | PostGIS | Boundary checks, distance sorting, nearby queries, and geospatial indexes |
-| Authentication | Supabase Auth | Personal-email magic link plus Google, Facebook, and Apple sign-in |
+| Authentication | Supabase Auth | Personal-email magic link plus Google and Facebook sign-in |
 | Object storage | Private Supabase Storage buckets | Evidence attachment access can follow database authorization |
 | Interactive map | MapLibre | Open renderer with provider portability and marker clustering support |
 | Initial basemap | MapTiler during eligible private evaluation | Fastest beta path; provider remains replaceable |
@@ -529,7 +529,7 @@ Retention rules are:
 Supabase Auth provides:
 
 - personal-email magic links;
-- Google, Facebook, and Apple sign-in;
+- Google and Facebook sign-in;
 - managed sessions;
 - account identity for cloud-owned data and submissions.
 
@@ -872,7 +872,7 @@ Before moving beyond a controlled evaluation beta, confirm:
 | Search | PostgreSQL full-text/fuzzy search and PostGIS |
 | Ranking | Deterministic, versioned, explainable scoring |
 | Price model | PHP per-person range, tier, confidence, source, and freshness |
-| Authentication | Personal-email magic link plus Google, Facebook, and Apple |
+| Authentication | Personal-email magic link plus Google and Facebook |
 | Authorization | Row-level security plus server checks |
 | Administration | Protected section of the same application |
 | Ingestion schedule | Weekly GitHub Actions with authorized manual runs |

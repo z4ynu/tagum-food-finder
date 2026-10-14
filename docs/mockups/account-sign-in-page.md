@@ -1,8 +1,6 @@
 # Account sign-in page
 
-Status: **AWAITING OWNER APPROVAL**
-
-No Account page UI implementation should begin until the owner explicitly approves these mockups or requests revisions.
+Status: **APPROVED AND IMPLEMENTED**
 
 ## Design read
 
@@ -18,7 +16,7 @@ This screen is a focused, trust-first entry point for a broad audience that may 
 
 - Lead with the practical value of an account: saved places, saved wheel lists, and tracked updates.
 - Make personal-email magic-link authentication the primary action.
-- Give Google, Facebook, and Apple equal secondary treatment so no provider appears required or preferred.
+- Give Google and Facebook equal secondary treatment so neither provider appears required or preferred.
 - Do not ask for a password, age, birth date, profile photo, location history, contacts, or social permissions.
 - Explain that choosing a different sign-in method may create a separate account.
 - State that location and discovery history are not linked to the account.
@@ -41,4 +39,10 @@ This screen is a focused, trust-first entry point for a broad audience that may 
 
 - `account-sign-in-mobile.png`
 - `account-sign-in-desktop.png`
+
+## Implementation notes
+
+- The local preview presents a clear unavailable state until a hosted Supabase project is connected.
+- Email magic links expire after 10 minutes in the local Supabase configuration.
+- Apple Sign In is intentionally excluded from the approved authentication scope.
 

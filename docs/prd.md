@@ -144,7 +144,7 @@ Additional moderation roles may be introduced after submission volume demonstrat
 
 - Accounts must be implemented in the MVP.
 - Registration is not required for public discovery.
-- Authentication should support personal-email magic links plus Google, Facebook, and Apple sign-in.
+- Authentication should support personal-email magic links plus Google and Facebook sign-in.
 - Password-based authentication is not required unless a later technical review finds it necessary.
 - Signed-in state provides cloud persistence and contribution access.
 - Account collection must remain minimal and purpose-specific.
@@ -428,7 +428,7 @@ Only privacy-conscious aggregate analytics required to improve discovery should 
 
 - Installable PWA
 - Anonymous public discovery
-- User accounts with personal-email magic link plus Google, Facebook, and Apple sign-in
+- User accounts with personal-email magic link plus Google and Facebook sign-in
 - Cloud favorites and saved wheel lists for registered users
 - Live location and manual fallback
 - Tagum food-place map with marker clustering

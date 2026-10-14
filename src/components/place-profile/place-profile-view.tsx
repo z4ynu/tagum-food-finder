@@ -13,6 +13,7 @@ import Link from "next/link";
 
 import { DiscoveryNavigation } from "@/components/discovery/discovery-navigation";
 import type { DiscoveryPlace } from "@/modules/discovery/model";
+import { placeProfileSlug } from "@/modules/discovery/place-profile-path";
 
 import { ProfileActions } from "./profile-actions";
 import styles from "./profile.module.css";
@@ -35,7 +36,7 @@ export function PlaceProfileView({ distanceLabel, place }: PlaceProfileViewProps
   return (
     <main className={styles.profileShell}>
       <div className={styles.desktopNavigation}>
-        <DiscoveryNavigation />
+        <DiscoveryNavigation accountReturnTo={`/places/${placeProfileSlug(place)}`} />
       </div>
 
       <article className={styles.profilePage}>

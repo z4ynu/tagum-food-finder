@@ -9,14 +9,18 @@ const ITEMS = [
   { href: "/#discovery-results", icon: MapPinIcon, label: "Discover" },
   { href: null, icon: BookmarkSimpleIcon, label: "Saved" },
   { href: "/wheel", icon: CompassIcon, label: "Wheel" },
-  { href: null, icon: UserCircleIcon, label: "Account" },
+  { href: "/account", icon: UserCircleIcon, label: "Account" },
 ] as const;
 
 type NavigationDestination = (typeof ITEMS)[number]["label"];
 
 export function DiscoveryNavigation({
   activeDestination = "Discover",
-}: Readonly<{ activeDestination?: NavigationDestination }>) {
+  accountReturnTo = "/",
+}: Readonly<{
+  accountReturnTo?: string;
+  activeDestination?: NavigationDestination;
+}>) {
   return (
     <nav className={styles.navigation} aria-label="Primary navigation">
       <Link className={styles.brand} href="/#discovery-results" aria-label="Asa Ta Mangaon? home">
@@ -30,12 +34,15 @@ export function DiscoveryNavigation({
       </Link>
 
       <div className={styles.navItems}>
-        {ITEMS.map(({ href, icon: Icon, label }) =>
-          href ? (
+        {ITEMS.map(({ href, icon: Icon, label }) => {
+          const destinationHref =
+            label === "Account" ? `/account?returnTo=${encodeURIComponent(accountReturnTo)}` : href;
+
+          return destinationHref ? (
             <Link
               aria-current={label === activeDestination ? "page" : undefined}
               className={label === activeDestination ? styles.navItemSelected : styles.navItem}
-              href={href}
+              href={destinationHref}
               key={label}
             >
               <Icon aria-hidden="true" weight={label === activeDestination ? "fill" : "regular"} />
@@ -52,8 +59,8 @@ export function DiscoveryNavigation({
               <Icon aria-hidden="true" />
               <span>{label}</span>
             </button>
-          ),
-        )}
+          );
+        })}
       </div>
     </nav>
   );
