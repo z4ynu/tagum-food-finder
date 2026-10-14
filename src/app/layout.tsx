@@ -3,14 +3,20 @@ import type { ReactNode } from "react";
 
 import { ServiceWorkerRegistration } from "@/platform/pwa/service-worker-registration";
 
+import "./globals.css";
+
 export const metadata: Metadata = {
-  title: "Asa Ta Mangaon? Stage 0",
-  description: "Platform compatibility harness for Tagum Food Finder.",
+  title: "Asa Ta Mangaon? | Tagum Food Finder",
+  description: "Find nearby food places in Tagum based on what fits your moment.",
   manifest: "/manifest.webmanifest",
 };
 
 export const viewport: Viewport = {
-  themeColor: "#2E7D32",
+  colorScheme: "light dark",
+  themeColor: [
+    { color: "#F7FAF7", media: "(prefers-color-scheme: light)" },
+    { color: "#101811", media: "(prefers-color-scheme: dark)" },
+  ],
 };
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {

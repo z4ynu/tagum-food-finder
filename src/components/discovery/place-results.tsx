@@ -1,0 +1,189 @@
+import {
+  ArrowSquareOutIcon,
+  CheckCircleIcon,
+  InfoIcon,
+  MapPinIcon,
+  NavigationArrowIcon,
+} from "@phosphor-icons/react";
+
+import { formatDistance } from "@/modules/discovery/distance";
+import {
+  googleMapsDirectionsUrl,
+  wazeDirectionsUrl,
+} from "@/modules/discovery/external-navigation";
+import type { RankedPlace } from "@/modules/discovery/model";
+
+import styles from "./discovery.module.css";
+
+type PlaceResultsProps = Readonly<{
+  activeFilters: boolean;
+  onSelect: (placeId: string) => void;
+  results: readonly RankedPlace[];
+  selectedPlaceId: string | null;
+}>;
+
+function EvidenceLabel({ result }: Readonly<{ result: RankedPlace }>) {
+  if (result.matchState === "probable") {
+    return (
+      <span className={styles.probableLabel}>
+        <InfoIcon aria-hidden="true" weight="fill" />
+        Source-supported match
+      </span>
+    );
+  }
+
+  return (
+    <span className={styles.unknownLabel}>
+      <InfoIcon aria-hidden="true" weight="fill" />
+      Price information unavailable
+    </span>
+  );
+}
+
+function DirectionsMenu({ result }: Readonly<{ result: RankedPlace }>) {
+  return (
+    <details className={styles.directionsMenu}>
+      <summary>
+        <NavigationArrowIcon aria-hidden="true" weight="fill" />
+        Get directions
+      </summary>
+      <div className={styles.directionsOptions}>
+        <a
+          href={googleMapsDirectionsUrl(result.place.coordinates)}
+          rel="noreferrer"
+          target="_blank"
+        >
+          Google Maps
+          <ArrowSquareOutIcon aria-hidden="true" />
+        </a>
+        <a href={wazeDirectionsUrl(result.place.coordinates)} rel="noreferrer" target="_blank">
+          Waze
+          <ArrowSquareOutIcon aria-hidden="true" />
+        </a>
+      </div>
+    </details>
+  );
+}
+
+function PlaceRow({
+  result,
+  selected,
+  onSelect,
+}: Readonly<{
+  onSelect: () => void;
+  result: RankedPlace;
+  selected: boolean;
+}>) {
+  const initial = result.place.category.slice(0, 1).toLocaleUpperCase();
+
+  return (
+    <article className={selected ? styles.placeRowSelected : styles.placeRow}>
+      <button
+        aria-label={`Show ${result.place.name} on the map`}
+        aria-pressed={selected}
+        className={styles.placeSelect}
+        onClick={onSelect}
+        type="button"
+      >
+        <span className={styles.placeInitial} aria-hidden="true">
+          {initial}
+        </span>
+        <span className={styles.placeCopy}>
+          <span className={styles.placeName}>
+            {result.place.name}
+            {selected ? <CheckCircleIcon aria-hidden="true" weight="fill" /> : null}
+          </span>
+          <span className={styles.placeMeta}>
+            {result.place.category} <span aria-hidden="true">·</span>{" "}
+            {formatDistance(result.distanceKilometers)}
+          </span>
+          <EvidenceLabel result={result} />
+        </span>
+      </button>
+
+      {selected ? (
+        <div className={styles.selectedActions}>
+          <DirectionsMenu result={result} />
+        </div>
+      ) : null}
+    </article>
+  );
+}
+
+export function PlaceResults({
+  activeFilters,
+  onSelect,
+  results,
+  selectedPlaceId,
+}: PlaceResultsProps) {
+  const directResults = activeFilters
+    ? results.filter(
+        (result) => result.matchState === "confirmed" || result.matchState === "probable",
+      )
+    : results;
+  const unknownResults = activeFilters
+    ? results.filter((result) => result.matchState === "unknown")
+    : [];
+
+  if (results.length === 0) {
+    return (
+      <div className={styles.emptyState}>
+        <MapPinIcon aria-hidden="true" />
+        <h2>No places match that search</h2>
+        <p>Try a shorter place name or clear one filter. Your selections have not been removed.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className={styles.resultGroups}>
+      {directResults.length > 0 ? (
+        <section aria-label={activeFilters ? "Matches" : "Nearby places"}>
+          {activeFilters ? (
+            <div className={styles.groupHeading}>
+              <h2>Best available matches</h2>
+              <span>{directResults.length}</span>
+            </div>
+          ) : null}
+          <div className={styles.resultList}>
+            {directResults.map((result) => (
+              <PlaceRow
+                key={result.place.id}
+                onSelect={() => onSelect(result.place.id)}
+                result={result}
+                selected={selectedPlaceId === result.place.id}
+              />
+            ))}
+          </div>
+        </section>
+      ) : activeFilters ? (
+        <div className={styles.constraintNote}>
+          <strong>No confirmed matches yet.</strong>
+          <span>One or more selected details are unavailable in the current catalog.</span>
+        </div>
+      ) : null}
+
+      {unknownResults.length > 0 ? (
+        <section aria-labelledby="unknown-results-heading" className={styles.unknownGroup}>
+          <div className={styles.groupHeading}>
+            <h2 id="unknown-results-heading">More nearby, details unknown</h2>
+            <span>{unknownResults.length}</span>
+          </div>
+          <p>
+            These places may still fit. The information needed to confirm your filters is missing.
+          </p>
+          <div className={styles.resultList}>
+            {unknownResults.map((result) => (
+              <PlaceRow
+                key={result.place.id}
+                onSelect={() => onSelect(result.place.id)}
+                result={result}
+                selected={selectedPlaceId === result.place.id}
+              />
+            ))}
+          </div>
+        </section>
+      ) : null}
+    </div>
+  );
+}

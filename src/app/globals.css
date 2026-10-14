@@ -1,0 +1,98 @@
+@import "tailwindcss";
+@import "@fontsource-variable/figtree";
+@import "maplibre-gl/dist/maplibre-gl.css";
+
+:root {
+  color-scheme: light dark;
+  --brand-900: #1f5722;
+  --brand-800: #256628;
+  --brand-700: #2e7d32;
+  --brand-500: #4caf50;
+  --brand-200: #a5d6a7;
+  --lime-300: #c5e86c;
+  --canvas: #f7faf7;
+  --surface: #ffffff;
+  --surface-muted: #edf5ed;
+  --ink: #1f2d1f;
+  --text-secondary: #5a6b5a;
+  --border: #d5e3d5;
+  --focus: #527a17;
+  --map-control: #ffffff;
+  --shadow-color: 38 87 40;
+  --warning: #7a4e00;
+  --warning-soft: #fff4cc;
+  --information: #175cd3;
+  --information-soft: #eff8ff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --canvas: #101811;
+    --surface: #172318;
+    --surface-muted: #1f2d1f;
+    --ink: #f2f7f2;
+    --text-secondary: #b8c5b8;
+    --border: #344735;
+    --brand-700: #a5d6a7;
+    --brand-800: #b8dfba;
+    --brand-900: #c9e8ca;
+    --focus: #c5e86c;
+    --map-control: #172318;
+    --shadow-color: 0 0 0;
+    --warning: #ffd884;
+    --warning-soft: #3d2f11;
+    --information: #9cc2ff;
+    --information-soft: #142b4d;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: "Figtree Variable", Figtree, system-ui, sans-serif;
+  text-rendering: optimizeLegibility;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button,
+a,
+input,
+select {
+  -webkit-tap-highlight-color: transparent;
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+
+::selection {
+  background: var(--brand-200);
+  color: #1f2d1f;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto;
+    transition-duration: 0.01ms;
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+  }
+}
