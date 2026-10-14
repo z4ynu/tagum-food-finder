@@ -8,6 +8,7 @@ Partial pass. The owner-approved discovery page is implemented and verified in d
 
 - Map-first experience with a mobile results sheet and a 40/60 results-to-map desktop split.
 - Figtree typography and the approved green design tokens.
+- Light canvas and white/sage surfaces are the controlling visual treatment; the public page does not switch to dark presentation from the device preference.
 - Nearest-first discovery with search, budget, craving, and occasion filters.
 - Honest treatment of incomplete source data: supported matches and nearby places with unknown details are shown separately.
 - External navigation handoff to Google Maps or Waze instead of an in-app routing engine.
@@ -40,6 +41,8 @@ The visual reference and approval record are in `docs/mockups/discovery-page.md`
 | Map worker delivery | Pass: MapLibre worker loads from the same origin at `/maplibre-gl-worker.mjs` |
 | Precise browser location | Not exercised: requires an owner-approved browser permission interaction and real-device validation |
 | External navigation launch | Not exercised: destination URLs are unit tested; browser QA did not open third-party navigation sites |
+
+The owner then supplied the light mobile reference again and requested direct implementation rather than retaining the dark system-theme rendering. The revised implementation was visually rechecked at 390 × 844 and 1280 × 720. It now matches the reference's overlay brand and search, white mobile sheet, light desktop rail and results panel, green action hierarchy, and pale-green selection states. Listing media remains an explicit `No photo` placeholder until lawful media exists.
 
 ## Temporary map-source decision
 

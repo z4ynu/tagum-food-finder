@@ -3,7 +3,7 @@
 @import "maplibre-gl/dist/maplibre-gl.css";
 
 :root {
-  color-scheme: light dark;
+  color-scheme: light;
   --brand-900: #1f5722;
   --brand-800: #256628;
   --brand-700: #2e7d32;
@@ -23,27 +23,6 @@
   --warning-soft: #fff4cc;
   --information: #175cd3;
   --information-soft: #eff8ff;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --canvas: #101811;
-    --surface: #172318;
-    --surface-muted: #1f2d1f;
-    --ink: #f2f7f2;
-    --text-secondary: #b8c5b8;
-    --border: #344735;
-    --brand-700: #a5d6a7;
-    --brand-800: #b8dfba;
-    --brand-900: #c9e8ca;
-    --focus: #c5e86c;
-    --map-control: #172318;
-    --shadow-color: 0 0 0;
-    --warning: #ffd884;
-    --warning-soft: #3d2f11;
-    --information: #9cc2ff;
-    --information-soft: #142b4d;
-  }
 }
 
 * {

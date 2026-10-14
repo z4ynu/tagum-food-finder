@@ -119,7 +119,7 @@ Add the derived token:
 
 ### Dark-theme roles
 
-Dark mode remains recognizably green and avoids pure black or pure white.
+Dark mode is an optional later preference, not the default public presentation. If implemented, it remains recognizably green and avoids pure black or pure white.
 
 | Token | Value | Use |
 | --- | --- | --- |
@@ -565,7 +565,7 @@ Personal-email magic link, Google, Facebook, and Apple sign-in receive clear, co
 
 After authentication, return the user to their original context when safe.
 
-Account preferences contain theme selection. The initial theme follows the system preference.
+Account preferences may contain theme selection in a later phase. The initial and default public theme is light, following the owner-approved Discovery references even when the device prefers a dark color scheme.
 
 ## Correction flow
 

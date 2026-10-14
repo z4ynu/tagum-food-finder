@@ -5,6 +5,7 @@ import {
   CaretUpIcon,
   CrosshairIcon,
   FunnelSimpleIcon,
+  LeafIcon,
   MagnifyingGlassIcon,
   MapPinIcon,
   WifiSlashIcon,
@@ -194,6 +195,37 @@ export function DiscoveryShell() {
       <DiscoveryNavigation />
 
       <div className={styles.workspace}>
+        <header className={styles.mobileMapHeader}>
+          <a className={styles.mobileMapBrand} href="#discovery-results">
+            <LeafIcon aria-hidden="true" weight="fill" />
+            <span>
+              <strong>Asa Ta Mangaon?</strong>
+              <small>Tagum Food Finder</small>
+            </span>
+          </a>
+          <div className={styles.mobileSearchRow}>
+            <label className={styles.searchField}>
+              <span className="sr-only">Search food places</span>
+              <MagnifyingGlassIcon aria-hidden="true" />
+              <input
+                onChange={(event) => setFilters({ ...filters, query: event.target.value })}
+                placeholder="Search food places"
+                type="search"
+                value={filters.query}
+              />
+            </label>
+            <button
+              className={styles.filtersButton}
+              onClick={() => setFiltersOpen(true)}
+              type="button"
+            >
+              <FunnelSimpleIcon aria-hidden="true" weight="bold" />
+              Filters
+              {filterLabels.length > 0 ? <span>{filterLabels.length}</span> : null}
+            </button>
+          </div>
+        </header>
+
         <aside
           className={`${styles.resultsPanel} ${styles[`sheet-${sheetPosition}`]}`}
           id="discovery-results"

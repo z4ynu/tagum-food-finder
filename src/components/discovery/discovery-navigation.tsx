@@ -1,4 +1,10 @@
-import { BookmarkSimpleIcon, CompassIcon, MapPinIcon, UserCircleIcon } from "@phosphor-icons/react";
+import {
+  BookmarkSimpleIcon,
+  CompassIcon,
+  LeafIcon,
+  MapPinIcon,
+  UserCircleIcon,
+} from "@phosphor-icons/react";
 
 import styles from "./discovery.module.css";
 
@@ -14,7 +20,7 @@ export function DiscoveryNavigation() {
     <nav className={styles.navigation} aria-label="Primary navigation">
       <a className={styles.brand} href="#discovery-results" aria-label="Asa Ta Mangaon? home">
         <span className={styles.brandMark} aria-hidden="true">
-          <MapPinIcon weight="fill" />
+          <LeafIcon weight="fill" />
         </span>
         <span className={styles.brandText}>
           <strong>Asa Ta Mangaon?</strong>

@@ -1,6 +1,6 @@
 import {
   ArrowSquareOutIcon,
-  CheckCircleIcon,
+  ForkKnifeIcon,
   InfoIcon,
   MapPinIcon,
   NavigationArrowIcon,
@@ -74,8 +74,6 @@ function PlaceRow({
   result: RankedPlace;
   selected: boolean;
 }>) {
-  const initial = result.place.category.slice(0, 1).toLocaleUpperCase();
-
   return (
     <article className={selected ? styles.placeRowSelected : styles.placeRow}>
       <button
@@ -86,13 +84,11 @@ function PlaceRow({
         type="button"
       >
         <span className={styles.placeInitial} aria-hidden="true">
-          {initial}
+          <ForkKnifeIcon weight="fill" />
+          <small>No photo</small>
         </span>
         <span className={styles.placeCopy}>
-          <span className={styles.placeName}>
-            {result.place.name}
-            {selected ? <CheckCircleIcon aria-hidden="true" weight="fill" /> : null}
-          </span>
+          <span className={styles.placeName}>{result.place.name}</span>
           <span className={styles.placeMeta}>
             {result.place.category} <span aria-hidden="true">·</span>{" "}
             {formatDistance(result.distanceKilometers)}
