@@ -8,6 +8,7 @@ import {
   PencilSimpleIcon,
   ShareNetworkIcon,
 } from "@phosphor-icons/react";
+import Link from "next/link";
 import { useState } from "react";
 
 import {
@@ -15,6 +16,7 @@ import {
   wazeDirectionsUrl,
 } from "@/modules/discovery/external-navigation";
 import type { DiscoveryPlace } from "@/modules/discovery/model";
+import { placeProfileSlug } from "@/modules/discovery/place-profile-path";
 
 import styles from "./profile.module.css";
 
@@ -68,15 +70,13 @@ export function ProfileActions({ place }: Readonly<{ place: DiscoveryPlace }>) {
         </button>
       </div>
 
-      <button
+      <Link
         className={styles.wideSecondaryAction}
-        disabled
-        title="The wheel will be added in its own phase"
-        type="button"
+        href={`/wheel?place=${encodeURIComponent(placeProfileSlug(place))}`}
       >
         <CompassIcon aria-hidden="true" className={styles.actionIcon} />
         Add to wheel
-      </button>
+      </Link>
 
       <button
         className={styles.suggestAction}

@@ -304,6 +304,7 @@
   list-style: none;
   border-radius: 13px;
   cursor: pointer;
+  text-decoration: none;
 }
 
 .profileDirections summary {

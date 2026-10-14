@@ -5,20 +5,25 @@ import {
   MapPinIcon,
   UserCircleIcon,
 } from "@phosphor-icons/react";
+import Link from "next/link";
 
 import styles from "./discovery.module.css";
 
 const ITEMS = [
-  { icon: MapPinIcon, label: "Discover", selected: true },
-  { icon: BookmarkSimpleIcon, label: "Saved", selected: false },
-  { icon: CompassIcon, label: "Wheel", selected: false },
-  { icon: UserCircleIcon, label: "Account", selected: false },
+  { href: "/#discovery-results", icon: MapPinIcon, label: "Discover" },
+  { href: null, icon: BookmarkSimpleIcon, label: "Saved" },
+  { href: "/wheel", icon: CompassIcon, label: "Wheel" },
+  { href: null, icon: UserCircleIcon, label: "Account" },
 ] as const;
 
-export function DiscoveryNavigation() {
+type NavigationDestination = (typeof ITEMS)[number]["label"];
+
+export function DiscoveryNavigation({
+  activeDestination = "Discover",
+}: Readonly<{ activeDestination?: NavigationDestination }>) {
   return (
     <nav className={styles.navigation} aria-label="Primary navigation">
-      <a className={styles.brand} href="#discovery-results" aria-label="Asa Ta Mangaon? home">
+      <Link className={styles.brand} href="/#discovery-results" aria-label="Asa Ta Mangaon? home">
         <span className={styles.brandMark} aria-hidden="true">
           <LeafIcon weight="fill" />
         </span>
@@ -26,15 +31,20 @@ export function DiscoveryNavigation() {
           <strong>Asa Ta Mangaon?</strong>
           <small>Tagum Food Finder</small>
         </span>
-      </a>
+      </Link>
 
       <div className={styles.navItems}>
-        {ITEMS.map(({ icon: Icon, label, selected }) =>
-          selected ? (
-            <a className={styles.navItemSelected} href="#discovery-results" key={label}>
-              <Icon aria-hidden="true" weight="fill" />
+        {ITEMS.map(({ href, icon: Icon, label }) =>
+          href ? (
+            <Link
+              aria-current={label === activeDestination ? "page" : undefined}
+              className={label === activeDestination ? styles.navItemSelected : styles.navItem}
+              href={href}
+              key={label}
+            >
+              <Icon aria-hidden="true" weight={label === activeDestination ? "fill" : "regular"} />
               <span>{label}</span>
-            </a>
+            </Link>
           ) : (
             <button
               className={styles.navItem}
