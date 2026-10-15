@@ -317,6 +317,8 @@ Administrator authorization is held in a server-controlled role table or protect
 
 Privileged `security definer` functions live in an unexposed schema, set an empty search path, schema-qualify every object, validate the caller, and expose no general SQL execution capability.
 
+The implemented catalog importer follows this boundary: public RPC wrappers are executable only by `service_role`, delegate to narrowly scoped functions in `app_private`, and cannot be invoked by `anon` or `authenticated`. The staging transaction validates schema version, checksums, record limits, coordinates, and identifiers before writing. The publication transaction accepts only an awaiting-review batch and never publishes records marked for moderation.
+
 ### Policy testing
 
 Every policy or role change tests:

@@ -181,6 +181,7 @@ export type Database = {
           is_current: boolean;
           name: string;
           slug: string;
+          source_checksum: string;
           source_id: string;
           source_version: string;
         };
@@ -194,6 +195,7 @@ export type Database = {
           is_current?: boolean;
           name: string;
           slug: string;
+          source_checksum: string;
           source_id: string;
           source_version: string;
         };
@@ -206,6 +208,7 @@ export type Database = {
           is_current?: boolean;
           name?: string;
           slug?: string;
+          source_checksum?: string;
           source_id?: string;
           source_version?: string;
         };
@@ -1256,7 +1259,8 @@ export type Database = {
       };
     };
     Functions: {
-      [_ in never]: never;
+      publish_osm_import: { Args: { p_batch_id: string }; Returns: Json };
+      stage_osm_import: { Args: { p_payload: Json }; Returns: Json };
     };
     Enums: {
       account_status: "active" | "deletion_requested" | "disabled" | "deleted";

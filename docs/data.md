@@ -320,9 +320,11 @@ OpenStreetMap-derived boundary and place data is maintained as a distinguishable
 
 If the project publicly uses or distributes an adapted OSM database, that adapted database is offered under ODbL 1.0 as required. This database obligation does not by itself relicense application code, original editorial content, private user data, or records independently obtained under compatible terms; those materials remain logically and operationally separable. A refreshed OSM snapshot requires a new recorded checksum and review before publication.
 
+The implemented baseline importer accepts only the approved, checksummed GeoJSON sequence and Tagum boundary fixture. It records the OSM snapshot version, SHA-256 checksum, adapter version, normalized content hash, boundary version, and ODbL classification. The first verified snapshot contains 176 in-boundary candidates: 174 usable-category records and two records held for category review. No price is inferred from OSM data.
+
 ### `source_records`
 
-Stores normalized provider data separately from canonical places. Important fields are source, external record key, normalized payload, payload schema version, retrieval time, source update time, content hash, licensing classification, raw-payload expiry, and latest-seen batch.
+Stores normalized provider data separately from canonical places. Important fields are source, external record key, normalized payload, payload schema version, retrieval time, source update time, content hash, licensing classification, raw-payload expiry, and latest-seen batch. A changed content hash creates a new source-record version; it does not rewrite evidence already referenced by published provenance.
 
 Normalized payloads contain only approved fields. Raw responses are stored only when source terms permit and are deleted after at most 30 days unless a stricter source limit applies. Secrets and request authorization data are never stored with source records.
 
@@ -366,6 +368,8 @@ Stores proposed source-to-place matches with score, model or rules version, cont
 Represents an atomic public catalog publication. It records the included batch set, validation result, publication time, publisher, previous release, and rollback target. Failed batches never change the active release.
 
 A source record disappearing from one import does not delete or close a canonical place. It creates a revalidation condition. Canonical lifecycle changes require corroborating evidence or moderation.
+
+The implemented OSM workflow automatically publishes only first-seen records with a usable category. Ambiguous categories and changes to already-linked source records remain staged with a `moderate` action. Publication creates a complete immutable release, switches the single active release in one transaction, and is idempotent for the same source checksum and adapter version.
 
 ### Source precedence
 

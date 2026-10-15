@@ -413,7 +413,7 @@ Adapters must not write directly to public canonical tables.
 
 ### Initial sources
 
-OpenStreetMap is the initial baseline. The exact permitted extraction mechanism is selected during Stage 0 based on returned-record quality, reliability, and usage policy; the production application does not query community map infrastructure on every page load.
+OpenStreetMap is the initial baseline. The selected extraction mechanism is an offline, checksummed Geofabrik Philippines snapshot filtered with a pinned Osmium container, clipped to the approved Tagum boundary, and normalized before staging. The production application does not query community map infrastructure on every page load.
 
 Foursquare remains a candidate enrichment adapter. It is disabled for production ingestion until a 25-record candidate-quality spot check confirms:
 
@@ -466,6 +466,8 @@ A batch must validate:
 - provider quota consumption.
 
 Valid data is staged before publication. A batch becomes visible atomically only after its quality checks pass. A failed batch leaves the last valid catalog intact and creates an operator-visible failure record.
+
+The current operator command separates `prepare`, `stage`, and `publish`. Preparation runs offline and reports only aggregate evidence. Staging and publication use service-role-only RPC entry points; the secret remains outside the repository and browser bundle. Repeating the same checksummed snapshot is idempotent. Publication copies the prior immutable release, overlays approved creates, and activates the replacement release in one database transaction.
 
 Compact batch metadata and changed source records are retained. Unlimited raw provider responses are not retained, especially where the license or storage policy does not permit it.
 
@@ -627,7 +629,7 @@ The system has three environments:
 - `staging`: production-like integration, migration, and deployment validation;
 - `production`: private-beta user environment.
 
-Staging and production use separate Supabase projects and configuration. Secrets and data must not be copied between them casually. Test fixtures must not contain real user information.
+Development and migration verification use the disposable local Supabase stack; the current hosted environment is the owner-approved production project. A separate hosted staging project is deferred until operational risk or team size justifies it. Secrets and production data must not be copied into local environments, and test fixtures must not contain real user information.
 
 ### Cloudflare deployment gate
 

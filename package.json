@@ -18,6 +18,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "audit:osm": "tsx validation/scripts/audit-osm-snapshot.ts",
+    "catalog:osm": "tsx validation/scripts/import-osm-catalog.ts",
     "dev:vinext": "vite dev --port 3001",
     "build:vinext": "vite build",
     "start:vinext": "vite preview",
