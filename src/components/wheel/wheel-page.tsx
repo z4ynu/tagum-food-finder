@@ -16,9 +16,13 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 import { MascotMark } from "@/components/brand/mascot-mark";
 import { DiscoveryNavigation } from "@/components/discovery/discovery-navigation";
-import { googleMapsDirectionsUrl } from "@/modules/discovery/external-navigation";
-import { findPlaceByProfileSlug, placeProfileSlug } from "@/modules/discovery/place-profile-path";
-import { PROTOTYPE_PLACES } from "@/modules/discovery/prototype-places";
+import type { DiscoveryPlace } from "@/modules/discovery/model";
+import { findPlaceByProfileSlug } from "@/modules/discovery/place-profile-path";
+import {
+  defaultWheelEntries,
+  type WheelEntry,
+  wheelEntryDestination,
+} from "@/modules/wheel/catalog-wheel-entries";
 import { nextWheelRotation, wheelIndexFromUint32 } from "@/modules/wheel/wheel-selection";
 
 import styles from "./wheel.module.css";
@@ -26,27 +30,11 @@ import styles from "./wheel.module.css";
 const STORAGE_KEY = "tagum-food-finder.anonymous-wheel.v1";
 const MAX_WHEEL_ENTRIES = 50;
 const WHEEL_COLORS = ["#ffffff", "#dcefdc", "#a5d6a7", "#4caf50", "#256628"];
-const DEFAULT_PLACE_NAMES = [
-  "Sarah's Delicious Mami",
-  "The Palm City Food Park",
-  "Tagum Pie",
-  "Pizza Treat",
-  "Pizzakaya",
-] as const;
 
-type WheelEntry = Readonly<{
-  id: string;
-  label: string;
-  placeSlug: string | null;
+type WheelPageProps = Readonly<{
+  catalogStatus: "live" | "unavailable";
+  places: readonly DiscoveryPlace[];
 }>;
-
-const DEFAULT_ENTRIES: readonly WheelEntry[] = DEFAULT_PLACE_NAMES.map((name) => {
-  const place = PROTOTYPE_PLACES.find((candidate) => candidate.name === name);
-  if (!place) {
-    throw new Error(`Missing prototype place: ${name}`);
-  }
-  return { id: place.id, label: place.name, placeSlug: placeProfileSlug(place) };
-});
 
 function isWheelEntry(value: unknown): value is WheelEntry {
   if (!value || typeof value !== "object") {
@@ -62,18 +50,18 @@ function isWheelEntry(value: unknown): value is WheelEntry {
   );
 }
 
-function readStoredEntries() {
+function readStoredEntries(defaultEntries: readonly WheelEntry[]) {
   try {
     const stored = window.localStorage.getItem(STORAGE_KEY);
     if (!stored) {
-      return [...DEFAULT_ENTRIES];
+      return [...defaultEntries];
     }
     const parsed: unknown = JSON.parse(stored);
     return Array.isArray(parsed)
       ? parsed.filter(isWheelEntry).slice(0, MAX_WHEEL_ENTRIES)
-      : [...DEFAULT_ENTRIES];
+      : [...defaultEntries];
   } catch {
-    return [...DEFAULT_ENTRIES];
+    return [...defaultEntries];
   }
 }
 
@@ -105,15 +93,9 @@ function wheelBackground(entryCount: number) {
   return `conic-gradient(from 0deg, ${stops.join(", ")})`;
 }
 
-function destinationUrl(entry: WheelEntry) {
-  const place = entry.placeSlug ? findPlaceByProfileSlug(PROTOTYPE_PLACES, entry.placeSlug) : null;
-  return place
-    ? googleMapsDirectionsUrl(place.coordinates)
-    : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${entry.label}, Tagum City`)}`;
-}
-
-export function WheelPage() {
-  const [entries, setEntries] = useState<WheelEntry[]>([...DEFAULT_ENTRIES]);
+export function WheelPage({ catalogStatus, places }: WheelPageProps) {
+  const defaultEntries = useMemo(() => defaultWheelEntries(places), [places]);
+  const [entries, setEntries] = useState<WheelEntry[]>([...defaultEntries]);
   const [draftLabel, setDraftLabel] = useState("");
   const [hydrated, setHydrated] = useState(false);
   const [isSpinning, setIsSpinning] = useState(false);
@@ -123,11 +105,9 @@ export function WheelPage() {
   const spinTimer = useRef<number | null>(null);
 
   useEffect(() => {
-    const storedEntries = readStoredEntries();
+    const storedEntries = readStoredEntries(defaultEntries);
     const requestedSlug = new URLSearchParams(window.location.search).get("place");
-    const requestedPlace = requestedSlug
-      ? findPlaceByProfileSlug(PROTOTYPE_PLACES, requestedSlug)
-      : null;
+    const requestedPlace = requestedSlug ? findPlaceByProfileSlug(places, requestedSlug) : null;
 
     if (requestedPlace && !storedEntries.some((entry) => entry.placeSlug === requestedSlug)) {
       storedEntries.push({
@@ -139,7 +119,7 @@ export function WheelPage() {
 
     setEntries(storedEntries.slice(0, MAX_WHEEL_ENTRIES));
     setHydrated(true);
-  }, []);
+  }, [defaultEntries, places]);
 
   useEffect(() => {
     if (hydrated) {
@@ -301,7 +281,9 @@ export function WheelPage() {
 
             <p className={styles.deviceNote}>
               <InfoIcon aria-hidden="true" className={styles.deviceNoteIcon} weight="fill" />
-              One phone controls this wheel.
+              {catalogStatus === "live"
+                ? "One phone controls this wheel."
+                : "Live places are unavailable, but choices saved on this device still work."}
             </p>
           </section>
 
@@ -349,7 +331,11 @@ export function WheelPage() {
                 <span className={styles.resultEyebrow}>The wheel chose</span>
                 <strong>{selectedEntry.label}</strong>
                 <div>
-                  <a href={destinationUrl(selectedEntry)} rel="noreferrer" target="_blank">
+                  <a
+                    href={wheelEntryDestination(selectedEntry, places)}
+                    rel="noreferrer"
+                    target="_blank"
+                  >
                     <NavigationArrowIcon
                       aria-hidden="true"
                       className={styles.resultIcon}

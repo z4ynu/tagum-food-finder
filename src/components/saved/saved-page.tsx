@@ -25,10 +25,11 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 import { MascotMark } from "@/components/brand/mascot-mark";
 import { DiscoveryNavigation } from "@/components/discovery/discovery-navigation";
+import { distanceInKilometers, formatDistance } from "@/modules/discovery/distance";
 import { googleMapsDirectionsUrl } from "@/modules/discovery/external-navigation";
 import type { DiscoveryPlace } from "@/modules/discovery/model";
 import { placeProfilePath, placeProfileSlug } from "@/modules/discovery/place-profile-path";
-import { PROTOTYPE_PLACES } from "@/modules/discovery/prototype-places";
+import { TAGUM_CITY_CENTER } from "@/modules/discovery/prototype-places";
 
 import styles from "./saved.module.css";
 
@@ -42,47 +43,56 @@ type WheelList = Readonly<{
   id: string;
   name: string;
   placeCount: number;
-  placeSlug: string;
+  placeSlug: string | null;
+}>;
+
+type SavedPageProps = Readonly<{
+  catalogStatus: "live" | "unavailable";
+  places: readonly DiscoveryPlace[];
 }>;
 
 type MobileView = "places" | "wheels";
 type ListDialog = Readonly<{ mode: "create" }> | Readonly<{ listId: string; mode: "rename" }>;
 
 const SAVED_PLACE_FIXTURES = [
-  { distanceLabel: "0.8 km", icon: ForkKnifeIcon, name: "Big Fat Tummy" },
-  { distanceLabel: "1.4 km", icon: CoffeeIcon, name: "The Turq Cafe" },
-  { distanceLabel: "2.1 km", icon: BowlFoodIcon, name: "Sarah's Delicious Mami" },
+  { icon: ForkKnifeIcon, name: "Big Fat Tummy" },
+  { icon: CoffeeIcon, name: "The Turq Cafe" },
+  { icon: BowlFoodIcon, name: "Sarah's Delicious Mami" },
 ] as const;
 
-const INITIAL_WHEEL_LISTS: readonly WheelList[] = [
-  {
-    id: "friday-food-trip",
-    name: "Friday food trip",
-    placeCount: 5,
-    placeSlug: "big-fat-tummy-1266659558",
-  },
-  {
-    id: "date-night-picks",
-    name: "Date night picks",
-    placeCount: 4,
-    placeSlug: "the-turq-cafe-11359696569",
-  },
-];
-
-function prototypeSavedPlaces(): SavedPlace[] {
-  return SAVED_PLACE_FIXTURES.map(({ distanceLabel, icon, name }) => {
-    const place = PROTOTYPE_PLACES.find((candidate) => candidate.name === name);
-    if (!place) {
-      throw new Error(`Missing prototype place: ${name}`);
-    }
-    return { distanceLabel, icon, place };
+function initialSavedPlaces(places: readonly DiscoveryPlace[]): SavedPlace[] {
+  return SAVED_PLACE_FIXTURES.flatMap(({ icon, name }) => {
+    const place = places.find((candidate) => candidate.name === name);
+    return place
+      ? [
+          {
+            distanceLabel: formatDistance(
+              distanceInKilometers(TAGUM_CITY_CENTER, place.coordinates),
+            ),
+            icon,
+            place,
+          },
+        ]
+      : [];
   });
 }
 
-export function SavedPage() {
-  const initialPlaces = useMemo(prototypeSavedPlaces, []);
+function initialWheelLists(places: readonly DiscoveryPlace[]): WheelList[] {
+  const fixtures = [
+    { id: "friday-food-trip", name: "Friday food trip", placeCount: 5, placeName: "Big Fat Tummy" },
+    { id: "date-night-picks", name: "Date night picks", placeCount: 4, placeName: "The Turq Cafe" },
+  ] as const;
+
+  return fixtures.flatMap((fixture) => {
+    const place = places.find((candidate) => candidate.name === fixture.placeName);
+    return place ? [{ ...fixture, placeSlug: placeProfileSlug(place) }] : [];
+  });
+}
+
+export function SavedPage({ catalogStatus, places }: SavedPageProps) {
+  const initialPlaces = useMemo(() => initialSavedPlaces(places), [places]);
   const [savedPlaces, setSavedPlaces] = useState(initialPlaces);
-  const [wheelLists, setWheelLists] = useState<WheelList[]>([...INITIAL_WHEEL_LISTS]);
+  const [wheelLists, setWheelLists] = useState<WheelList[]>(() => initialWheelLists(places));
   const [mobileView, setMobileView] = useState<MobileView>("places");
   const [removedPlace, setRemovedPlace] = useState<{ item: SavedPlace; index: number } | null>(
     null,
@@ -172,7 +182,7 @@ export function SavedPage() {
           id: window.crypto.randomUUID(),
           name: name.slice(0, 40),
           placeCount: 0,
-          placeSlug: placeProfileSlug(PROTOTYPE_PLACES[0]),
+          placeSlug: places[0] ? placeProfileSlug(places[0]) : null,
         },
       ]);
     } else {
@@ -223,7 +233,7 @@ export function SavedPage() {
       {!online ? (
         <div className={styles.offlineBanner} role="status">
           <InfoIcon aria-hidden="true" weight="fill" />
-          You are offline. Showing the last available prototype content.
+          You are offline. Showing locally available session content.
         </div>
       ) : null}
 
@@ -329,8 +339,14 @@ export function SavedPage() {
             ) : (
               <div className={styles.emptyState}>
                 <BookmarkSimpleIcon aria-hidden="true" className={styles.emptyIcon} />
-                <h3>No saved places yet</h3>
-                <p>Save a place from its details page and it will appear here.</p>
+                <h3>
+                  {catalogStatus === "live" ? "No saved places yet" : "Places are unavailable"}
+                </h3>
+                <p>
+                  {catalogStatus === "live"
+                    ? "Save a place from its details page and it will appear here."
+                    : "We could not reach the live catalog. Try again when your connection is available."}
+                </p>
                 <Link className={styles.emptyAction} href="/#discovery-results">
                   Find places
                 </Link>
@@ -382,7 +398,13 @@ export function SavedPage() {
                     <div className={styles.listDetails}>
                       <strong>{list.name}</strong>
                       <small>{list.placeCount} places</small>
-                      <Link href={`/wheel?place=${encodeURIComponent(list.placeSlug)}`}>
+                      <Link
+                        href={
+                          list.placeSlug
+                            ? `/wheel?place=${encodeURIComponent(list.placeSlug)}`
+                            : "/wheel"
+                        }
+                      >
                         <CompassIcon aria-hidden="true" className={styles.openWheelIcon} />
                         Open wheel
                       </Link>
@@ -426,7 +448,8 @@ export function SavedPage() {
 
             <p className={styles.prototypeNote}>
               <InfoIcon aria-hidden="true" className={styles.prototypeIcon} weight="fill" />
-              Prototype changes stay in this session. Cloud sync starts after Supabase is connected.
+              Saved places and lists on this page are still local to this session. Account sync is
+              next.
             </p>
           </section>
         </div>
