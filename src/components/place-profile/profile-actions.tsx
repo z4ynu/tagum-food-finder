@@ -22,6 +22,10 @@ import styles from "./profile.module.css";
 
 export function ProfileActions({ place }: Readonly<{ place: DiscoveryPlace }>) {
   const [shareStatus, setShareStatus] = useState("");
+  const profileSlug = placeProfileSlug(place);
+  const suggestUpdateHref = `/places/${profileSlug}/suggest-update${
+    process.env.NODE_ENV === "production" ? "" : "?preview=signed-in"
+  }`;
 
   const share = async () => {
     const shareData = { title: place.name, url: window.location.href };
@@ -72,21 +76,16 @@ export function ProfileActions({ place }: Readonly<{ place: DiscoveryPlace }>) {
 
       <Link
         className={styles.wideSecondaryAction}
-        href={`/wheel?place=${encodeURIComponent(placeProfileSlug(place))}`}
+        href={`/wheel?place=${encodeURIComponent(profileSlug)}`}
       >
         <CompassIcon aria-hidden="true" className={styles.actionIcon} />
         Add to wheel
       </Link>
 
-      <button
-        className={styles.suggestAction}
-        disabled
-        title="Community updates will be added after accounts"
-        type="button"
-      >
+      <Link className={styles.suggestAction} href={suggestUpdateHref}>
         <PencilSimpleIcon aria-hidden="true" className={styles.actionIcon} />
         <span>Suggest an update</span>
-      </button>
+      </Link>
 
       <p aria-live="polite" className={styles.shareStatus}>
         {shareStatus}

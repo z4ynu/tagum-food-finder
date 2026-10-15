@@ -391,6 +391,8 @@
   border: 0;
   border-top: 1px solid #dde5dd;
   border-radius: 0;
+  cursor: pointer;
+  text-decoration: none;
 }
 
 .shareStatus {

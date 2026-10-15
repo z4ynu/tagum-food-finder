@@ -377,7 +377,10 @@ function DialogContent({
       <>
         <FileTextIcon aria-hidden="true" className={styles.dialogHeroIcon} />
         <h2 id="account-dialog-title">No submitted updates yet</h2>
-        <p>When community corrections are available, you can track their review status here.</p>
+        <p>
+          Submitted updates will appear here once secure submission storage and review tracking are
+          connected.
+        </p>
         <button className={styles.dialogPrimary} onClick={onClose} type="button">
           Got it
         </button>

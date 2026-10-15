@@ -1,8 +1,8 @@
 # Suggest an update page
 
-Status: **AWAITING OWNER APPROVAL**
+Status: **APPROVED AND IMPLEMENTED**
 
-No Suggest an update UI implementation should begin until the owner explicitly approves these mockups or requests revisions.
+The owner approved this direction on 2026-10-15. The responsive prototype is implemented at `/places/[placeSlug]/suggest-update`, with a development-only signed-in preview query.
 
 ## Design read
 
@@ -27,17 +27,18 @@ This is a short, trust-first correction flow for registered users who notice mis
 - Do not promise a public response time or automatic approval.
 - Use the existing mobile back-stack pattern and desktop top header. Do not add a desktop sidebar.
 
-## Planned implementation states
+## Implemented prototype states
 
 - Authenticated issue selection
 - Signed-out handoff that returns to the selected place and issue
 - Corrected-detail forms tailored to each supported issue type
 - Required and optional evidence states
-- Upload validation, progress, retry, and removal
+- Local file validation and removal for JPEG, PNG, and WebP evidence
 - Review and rights confirmation
-- Submission success with a private reference
-- Offline, validation, rate-limit, and server-error states
-- Abandoned drafts kept privately for up to 30 days when backend persistence is available
+- Offline and validation states
+- Honest unavailable-submission state that sends nothing and creates no reference
+
+Secure uploads, persisted drafts, rate limiting, moderation, status tracking, and successful submission references remain backend work. The prototype does not retain selected files or form data after navigation or refresh.
 
 ## Mockups
 
