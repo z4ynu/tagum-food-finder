@@ -2,8 +2,8 @@
 
 ## Document control
 
-- Status: Ready to execute
-- Date: 2026-10-13
+- Status: In progress; hosting decision revised
+- Date: 2026-10-15
 - Scope: Provider, deployment, data, cost, and experience validation before the private-beta MVP
 - Inputs: `prd.md`, `architecture.md`, `data.md`, `security.md`, and current official provider documentation
 
@@ -15,9 +15,9 @@ The Stage 1 MVP may begin only when every blocking gate in this document has pas
 
 ## Current recommendation
 
-Proceed with Stage 0 using the approved Next.js, Cloudflare, Supabase, PostGIS, and MapLibre direction, with these refinements:
+Proceed with Stage 0 using the approved Next.js, Vercel, Supabase, PostGIS, and MapLibre direction, with these refinements:
 
-1. Treat Cloudflare's `vinext` path as an experimental deployment candidate, not a settled adapter. The official guide currently recommends it for new Next.js applications but labels it beta. Test it against the required feature matrix before selecting it.
+1. Use Vercel's native Next.js runtime for the private beta. The owner approved this revision on 2026-10-15, superseding the experimental Cloudflare adapter evaluation.
 2. Use Foursquare Open Source Places and an OpenStreetMap regional extract as the first catalog candidates. Do not make the paid Foursquare Places API a runtime dependency.
 3. Test a Tagum or Davao del Norte PMTiles archive on Cloudflare R2 as the preferred long-term basemap path. Keep MapTiler only as a time-boxed evaluation fallback when its terms allow the intended use.
 4. Keep Google, Facebook, and personal-email magic-link sign-in in scope.
@@ -29,12 +29,12 @@ This snapshot records time-sensitive facts checked on 2026-10-13. Recheck them b
 
 ### Application hosting
 
-- Cloudflare currently recommends `vinext` for new Next.js applications and describes it as beta.
-- Cloudflare documents the OpenNext adapter as the maintenance path for existing applications and recommends migration to `vinext` where possible.
-- Workers Free currently allows 100,000 requests per day, 10 ms CPU time per invocation, 128 MB memory, and 50 subrequests per invocation.
-- Workers Paid currently starts at USD 5 per month and must not be enabled without owner approval.
+- Vercel provides a native Next.js deployment path and preview deployments without an application adapter.
+- Vercel Hobby is limited to personal, noncommercial use. The private beta may use it only while that qualification remains true.
+- Commercial use or limits that exceed Hobby require an owner-approved plan change.
+- The removed Cloudflare/vinext spike remains historical research, not an active deployment requirement.
 
-Conclusion: Cloudflare remains plausible, but framework-adapter compatibility is a blocking technical spike.
+Conclusion: Vercel is the approved private-beta host. A preview deployment and the feature matrix remain launch gates, but adapter selection is no longer a blocker.
 
 ### Database and authentication
 
@@ -97,15 +97,15 @@ A minimal, disposable deployment spike containing only the features needed to te
 | Error reporting | Scrubbed synthetic client and server failures | Event contains no email, precise location, token, or evidence URL |
 | Browser baseline | Android Chrome and iPhone Safari smoke test | Core shell, location prompt, and auth redirect remain usable |
 
-### Adapter decision
+### Deployment decision
 
-Test `vinext` first because it is Cloudflare's current recommendation for new Next.js applications. If any required behavior fails, test the current OpenNext adapter against the same matrix. Select the path with the fewest unsupported behaviors and document its constraints.
+Use Vercel's native Next.js runtime without an application adapter. Test the matrix in a Vercel preview using non-production data and credentials, then repeat the critical cache, authentication, and PWA checks on the owner-approved production hostname before invitations.
 
-Do not preserve two deployment adapters in the application. If neither passes, stop and request approval to change hosting or framework.
+If a required behavior is unsupported or unreliable, stop and request approval before changing hosting, framework, or adding provider-specific workarounds.
 
 ### Exit gate
 
-Stage 0A passes when the matrix has evidence for every row, deployment is reproducible from a clean checkout, and the selected adapter is recorded in an architecture decision record.
+Stage 0A passes when the matrix has evidence for every row, deployment is reproducible from a clean checkout, and the Vercel configuration and constraints are recorded in the deployment report.
 
 ## Stage 0B: Place-data audit
 
@@ -215,7 +215,7 @@ Provider secrets must exist only in password managers and provider configuration
 
 ### Cost envelope
 
-Maintain a live monthly forecast with three columns: free allowance, expected beta usage, and paid threshold. Include Cloudflare, Supabase, map delivery, transactional email, monitoring, CI, domain, backups, and place data.
+Maintain a live monthly forecast with three columns: free allowance, expected beta usage, and paid threshold. Include Vercel, Supabase, map delivery, transactional email, monitoring, CI, domain, backups, and place data.
 
 Annual fees such as the domain must be shown separately and as a monthly equivalent. Currency conversion must use the amount charged at purchase time plus a contingency; this document does not fix an exchange rate.
 
@@ -255,7 +255,7 @@ Each report records:
 
 Stop and request a decision if any of these occurs:
 
-- neither supported Cloudflare adapter can run a required feature reliably;
+- Vercel cannot run a required feature reliably without an unapproved workaround or plan change;
 - returned place-data quality misses the PRD gate;
 - required source rights do not permit the canonical catalog or public display;
 - no compliant basemap path fits the approved ceiling;
@@ -268,7 +268,7 @@ Stop and request a decision if any of these occurs:
 Stage 0 is not complete on the date of this document. Research is complete enough to begin the controlled spikes. The following evidence remains required:
 
 - [ ] Deployment compatibility report
-- [ ] Adapter architecture decision record
+- [ ] Vercel deployment report
 - [ ] 25-record candidate-quality report
 - [ ] Source license and attribution record
 - [ ] PMTiles versus eligible hosted-map benchmark
@@ -280,10 +280,9 @@ Stage 0 is not complete on the date of this document. Research is complete enoug
 
 ## Official references
 
-- [Cloudflare: Next.js on Workers](https://developers.cloudflare.com/workers/framework-guides/web-apps/nextjs/)
-- [Cloudflare: OpenNext adapter](https://developers.cloudflare.com/workers/framework-guides/web-apps/opennext/)
-- [Cloudflare: Workers pricing](https://developers.cloudflare.com/workers/platform/pricing/)
-- [Cloudflare: Workers limits](https://developers.cloudflare.com/workers/platform/limits/)
+- [Vercel: Next.js](https://vercel.com/docs/frameworks/full-stack/nextjs)
+- [Vercel: Hobby plan](https://vercel.com/docs/plans/hobby)
+- [Vercel: Pro plan](https://vercel.com/docs/plans/pro-plan)
 - [Cloudflare: R2 pricing](https://developers.cloudflare.com/r2/pricing/)
 - [Supabase: Billing and usage](https://supabase.com/docs/guides/platform/billing-on-supabase)
 - [Supabase: Production checklist](https://supabase.com/docs/guides/deployment/going-into-prod)

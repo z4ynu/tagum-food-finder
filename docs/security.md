@@ -41,7 +41,7 @@ The implementation also uses:
 
 - the OWASP Cheat Sheet Series for authentication, sessions, uploads, logging, input validation, and incident response;
 - official Supabase guidance for authentication, multi-factor authentication, row-level security, storage access, and production hardening;
-- official Cloudflare guidance for Workers, security headers, rate limiting, and Turnstile;
+- official Vercel guidance for deployments, security headers, and runtime controls, plus the guidance for any separately enabled challenge provider;
 - the Philippine Data Privacy Act of 2012, its Implementing Rules and Regulations, and current National Privacy Commission issuances.
 
 References must be reviewed again before beta because platform behavior and regulatory guidance can change.
@@ -50,7 +50,7 @@ References must be reviewed again before beta because platform behavior and regu
 
 ### Controller and accountability
 
-The person or registered business operating Asa Ta Mangaon? is the Personal Information Controller for app-controlled processing. Supabase, Cloudflare, Sentry, authentication providers, email services, GitHub, map services, and other vendors are processors, independent controllers, or service providers according to their actual role and terms.
+The person or registered business operating Asa Ta Mangaon? is the Personal Information Controller for app-controlled processing. Supabase, Vercel, Sentry, authentication providers, email services, GitHub, map services, and other enabled vendors are processors, independent controllers, or service providers according to their actual role and terms.
 
 The product owner is initially accountable for privacy and performs the DPO or equivalent compliance function unless professional advice requires a separate appointment. A dedicated public privacy contact using the product domain must exist before external beta invitations.
 
@@ -200,7 +200,7 @@ A STRIDE-style threat-model review is complete before authenticated, upload, and
 ```mermaid
 flowchart LR
     browser[Untrusted browser]
-    edge[Cloudflare edge and Next.js application]
+    edge[Vercel edge and Next.js application]
     auth[Supabase Auth]
     db[(PostgreSQL with RLS)]
     storage[Private Storage]
@@ -344,7 +344,7 @@ Local, staging, and production have separate:
 - Supabase projects and keys;
 - OAuth applications and callback origins;
 - storage buckets;
-- Cloudflare configuration;
+- Vercel configuration;
 - Sentry projects or environments;
 - email credentials;
 - import credentials;
@@ -369,7 +369,7 @@ The device used for production access requires:
 - automatic screen lock;
 - a non-shared OS account;
 - password-manager-protected credentials;
-- MFA on GitHub, Cloudflare, Supabase, domain, email, Google, Facebook, Sentry, and backup accounts;
+- MFA on GitHub, Vercel, Supabase, domain, email, Google, Facebook, Sentry, and backup accounts;
 - minimal browser extensions for the administrative profile.
 
 Production dashboard access is reviewed quarterly.
@@ -391,7 +391,7 @@ Offline caching remains disabled. The service worker is deliberately network-onl
 - logout and deployment tests prove that no private or stale account data survives in Cache Storage;
 - real-device update, rollback, storage-pressure, and offline tests pass.
 
-HSTS is deferred until the production hostname and every intended subdomain are confirmed HTTPS-only. CAPTCHA is deferred until a production Turnstile site and secret exist. Database network restrictions are deferred until a stable deployment and emergency-administration access path is documented, to avoid locking out recovery access.
+HSTS is deferred until the production hostname and every intended subdomain are confirmed HTTPS-only. CAPTCHA is deferred until a production challenge provider and secret exist. Database network restrictions are deferred until a stable deployment and emergency-administration access path is documented, to avoid locking out recovery access.
 
 ### Transport and headers
 
@@ -408,7 +408,7 @@ Required response policy includes:
 - exact CORS origins, methods, and headers;
 - no wildcard origin with credentials.
 
-Turnstile origins are added to CSP only when the challenge is enabled.
+Challenge-provider origins are added to CSP only when the challenge is enabled.
 
 ### Request and output safety
 
@@ -511,7 +511,7 @@ Rate limits combine endpoint, account, rotating network signal, session, and glo
 | Deletion requests | Idempotent workflow with recent authentication |
 | Administrative sign-in | Strict provider limits, conditional challenge, alerting, and no permanent network-only block |
 
-Submissions use a hidden honeypot, duplicate payload and evidence-hash checks, transactional quotas, and conditional Turnstile only after suspicious behavior. Normal discovery does not show a CAPTCHA.
+Submissions use a hidden honeypot, duplicate payload and evidence-hash checks, transactional quotas, and a conditional managed challenge only after suspicious behavior. Normal discovery does not show a CAPTCHA.
 
 Public facts cannot be made impossible to copy. The service controls abusive load, protects restricted provider data, and prohibits unauthorized bulk reuse in the terms. It does not collect invasive device fingerprints or create cross-site tracking identifiers.
 
@@ -528,7 +528,7 @@ Security logging includes:
 - authorization and RLS denial categories;
 - administrator actions and role changes;
 - submission and upload validation failure categories;
-- rate-limit and Turnstile outcomes;
+- rate-limit and managed-challenge outcomes;
 - import validation and publication;
 - retention and account-deletion jobs;
 - secret, provider, deployment, and backup configuration changes;
@@ -692,7 +692,7 @@ Automated dependency updates are reviewed weekly.
 
 If an update cannot be applied safely within the target, document compensating controls, owner, expiry, and verification.
 
-The 2026-10-15 dependency audit identifies transitive advisories in the experimental Cloudflare/vinext deployment toolchain. The affected packages are build-time dependencies and are not required by the current Next.js runtime path, but npm does not currently offer a compatible automatic remediation. Before production deployment, either remove that unused adapter, replace it with a maintained deployment path, or upgrade to a release whose dependency tree passes the production audit. A forced downgrade is not an accepted remediation.
+On 2026-10-15, the owner selected Vercel's native Next.js deployment path for the private beta. The experimental Cloudflare/vinext adapter and its transitive dependency advisories were removed. Production dependency audits must continue to pass before deployment; a forced downgrade is not an accepted remediation.
 
 ### Testing
 

@@ -1,7 +1,7 @@
 # Dependencies and framework output
 node_modules/
 .next/
-.vinext/
+.vercel/
 dist/
 coverage/
 *.tsbuildinfo
@@ -11,7 +11,6 @@ coverage/
 .env.*
 !.env.example
 .dev.vars
-.wrangler/
 
 # Generated and restricted validation data
 validation/reports/generated/
@@ -25,4 +24,3 @@ Thumbs.db
 
 # Local AI skill installations
 .claude/skills/
-.cloudflare/

@@ -2,7 +2,7 @@
 
 ## Run control
 
-- Status: In progress
+- Status: Superseded by the owner-approved Vercel hosting decision on 2026-10-15
 - Date: 2026-10-13
 - Commit tested before vinext initialization: `70b50ec`
 - Host: Windows, Node.js 22.18.0, npm 10.9.3
@@ -14,6 +14,8 @@
 ## Scope of this increment
 
 This report tracks whether the current Cloudflare-recommended `vinext` adapter can compile and serve the minimal Stage 0 Next.js harness. It does not approve the adapter for production. Supabase client boundaries, the static authentication-callback contract, PWA resource delivery, and error scrubbing now have partial evidence. Local PostGIS execution is verified; live Supabase sessions, browser PWA behavior, image optimization, persistent caching, Sentry transport, and real-device browsers remain unverified.
+
+This report is retained as historical evidence only. The adapter, configuration files, scripts, and dependency chain have been removed; current deployment verification targets Vercel's native Next.js runtime.
 
 ## Configuration decision
 

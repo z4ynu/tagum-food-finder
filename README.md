@@ -1,6 +1,6 @@
 # Asa Ta Mangaon?
 
-Tagum Food Finder is a location-aware food-discovery PWA for Tagum City. The repository is currently in Stage 0 validation; it is not yet a production application.
+Tagum Food Finder is a location-aware food-discovery PWA for Tagum City. The application is being prepared for a controlled private beta and is not yet ready for public production use.
 
 ## Prerequisites
 
@@ -24,7 +24,13 @@ Start the local Next.js compatibility harness with:
 npm run dev
 ```
 
-The root screen and `/api/health` exist only to exercise Stage 0 platform behavior. User-facing pages require approved mobile and desktop mockups before implementation.
+## Deployment
+
+Vercel is the approved application host for the private beta. The repository uses the native Next.js build and does not require a hosting adapter or `vercel.json`. Connect the repository in Vercel, keep production deployment approval manual, and configure environment variables in the Vercel dashboard rather than committing them.
+
+The Vercel Hobby plan may be used only while the beta qualifies for its personal, noncommercial terms. Review the current plan terms before invitations or monetization.
+
+User-facing page changes still require approved mobile and desktop mockups before implementation.
 
 ## Documentation
 

@@ -51,9 +51,6 @@ jobs:
       - name: Build Next.js application
         run: npm run build
 
-      - name: Build Cloudflare compatibility output
-        run: npm run build:vinext
-
   secrets:
     name: Secret scan
     runs-on: ubuntu-latest

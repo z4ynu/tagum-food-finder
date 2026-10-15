@@ -24,12 +24,11 @@
   },
   "include": [
     "next-env.d.ts",
-    ".cloudflare/types/**/*.d.ts",
     "**/*.ts",
     "**/*.tsx",
     "**/*.mts",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
   ],
-  "exclude": ["node_modules", ".next", ".vinext", ".cloudflare/output"]
+  "exclude": ["node_modules", ".next"]
 }

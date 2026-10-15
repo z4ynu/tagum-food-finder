@@ -56,7 +56,7 @@ Production approval still requires the planned comparison of self-hosted PMTiles
 - Price, cuisine, occasion, hours, lifecycle, and accessibility evidence are incomplete by design.
 - No listing images are shown because the current source set does not supply approved reusable media.
 - Dark mode uses the same light basemap under a restrained application overlay; a production dark style remains a provider decision.
-- The current dependency audit still reports four moderate and six high advisories in the existing experimental vinext adapter chain. No forced major downgrade was accepted.
+- The experimental vinext adapter chain was removed after the Vercel hosting decision. The production dependency audit reports zero known vulnerabilities as of 2026-10-15.
 
 ## Remaining Stage 0C work
 

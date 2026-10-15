@@ -2,7 +2,7 @@
 
 ## Status
 
-Partial pass. The framework boundaries compile and the unauthenticated callback response is verified locally. A real session exchange has not been run because no disposable hosted Supabase project or OAuth/email provider is configured.
+Partial pass. The framework boundaries compile and the unauthenticated callback response is verified locally. A real session exchange has not been run. The historical Cloudflare adapter result below is retained as superseded evidence; current deployment verification targets Vercel's native Next.js runtime.
 
 ## Implemented compatibility surface
 
@@ -20,7 +20,7 @@ Partial pass. The framework boundaries compile and the unauthenticated callback 
 | --- | --- |
 | Unit contract | Pass: 30 repository tests, including callback, trusted-user, and origin-validation cases |
 | Next.js production compilation | Pass: `/auth/callback` emitted as a dynamic route |
-| Cloudflare adapter compilation | Pass: `/auth/callback` emitted as a Worker route |
+| Cloudflare adapter compilation | Historical pass; adapter removed after the Vercel decision |
 | Missing-code HTTP response | Pass: HTTP 400 with generic JSON, `private, no-store`, and `no-cache` headers |
 | Server action static boundary | Pass: typed and compiled by the repository checks |
 | Server action transport | Not tested: no approved page may invoke the action yet |

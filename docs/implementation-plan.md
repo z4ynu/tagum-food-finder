@@ -101,7 +101,7 @@ Deliverables:
 - selected PWA manifest and service-worker approach;
 - Supabase browser and server client boundaries using non-production configuration;
 - migration proving PostGIS boundary and nearest-place behavior with synthetic fixtures;
-- Cloudflare preview and staging configuration;
+- Vercel preview and production configuration;
 - synthetic, scrubbed error-reporting test;
 - deployment report and architecture decision record.
 
@@ -114,14 +114,14 @@ Constraints:
 
 Decision:
 
-- test the current `vinext` path first;
-- test OpenNext only if the required matrix exposes a blocker;
-- retain one adapter after the decision;
-- stop for owner approval if neither path passes.
+- use Vercel's native Next.js runtime without an application adapter;
+- verify the required matrix in a Vercel preview before private-beta invitations;
+- keep production deployment owner-approved;
+- stop for owner approval if a required feature cannot run reliably on Vercel.
 
 Suggested commit sequence:
 
-1. `spike: verify nextjs cloudflare runtime`
+1. `spike: verify nextjs vercel runtime`
 2. `spike: verify supabase and postgis boundaries`
 3. `spike: verify pwa and monitoring behavior`
 4. `docs: record deployment feasibility decision`
@@ -475,7 +475,7 @@ These are evidence-dependent decisions, not forgotten requirements:
 
 | Decision | Evidence needed | Deadline |
 | --- | --- | --- |
-| Cloudflare adapter | Stage 0A matrix | Before stable scaffold |
+| Vercel deployment | Stage 0A matrix | Before private-beta invitations |
 | Catalog source mix | 25-record source-quality check | Before catalog migrations are finalized |
 | Production basemap | PMTiles/hosted benchmark, rights, and cost | Before external beta |
 | Transactional email provider | delivery and quota test | Before external sign-in |

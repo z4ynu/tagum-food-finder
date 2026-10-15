@@ -8,7 +8,7 @@
 | Descriptor | Tagum Food Finder |
 | Document status | Approved |
 | Discovery status | Complete |
-| Last updated | 2026-10-13 |
+| Last updated | 2026-10-15 |
 | Approved | 2026-10-13 |
 | Target milestone | Private beta in February 2027 |
 | Product owner | Repository owner |
@@ -43,7 +43,7 @@ The beta posture is:
 - replaceable providers rather than provider-specific domain models;
 - free or low-cost plans during validation, with explicit production-readiness gates.
 
-Scaling should be driven by measured load. The first upgrade path is vertical and managed: move Supabase to Pro, raise Cloudflare limits, and adopt a paid or self-hosted map-tile plan. Splitting the application into microservices is not an anticipated early scaling step.
+Scaling should be driven by measured load. The first upgrade path is vertical and managed: move Supabase to Pro, move Vercel to a suitable paid plan when its terms or limits require it, and adopt a paid or self-hosted map-tile plan. Splitting the application into microservices is not an anticipated early scaling step.
 
 ## Approved technology stack
 
@@ -51,7 +51,7 @@ Scaling should be driven by measured load. The first upgrade path is vertical an
 | --- | --- | --- |
 | Web application | Next.js with TypeScript | PWA delivery, public place pages, server rendering where useful, and shared types |
 | Application shape | Modular monolith in one repository | Lowest coordination and deployment burden for a solo developer |
-| Hosting | Cloudflare Workers | Commercially usable low-cost path; deployment compatibility must pass Stage 0 |
+| Hosting | Vercel with the native Next.js runtime | Lowest-friction private-beta path; plan eligibility and costs must be reviewed before commercial use |
 | Database | Supabase PostgreSQL | Managed relational store with authentication and storage integration |
 | Geospatial data | PostGIS | Boundary checks, distance sorting, nearby queries, and geospatial indexes |
 | Authentication | Supabase Auth | Personal-email magic link plus Google and Facebook sign-in |
@@ -64,9 +64,9 @@ Scaling should be driven by measured load. The first upgrade path is vertical an
 | Scheduled ingestion | GitHub Actions invoking protected ingestion jobs | Observable, versioned, and inexpensive weekly automation |
 | Error monitoring | Sentry free tier | Actionable client/server errors with required data scrubbing |
 | Product analytics | Minimal first-party events in PostgreSQL | Purpose-limited measurement and direct retention control |
-| Bot protection | Rate limits, honeypot, and conditional Cloudflare Turnstile | Low-friction normal use with escalation for suspicious activity |
+| Bot protection | Rate limits, honeypot, and a conditional managed challenge | Low-friction normal use with escalation for suspicious activity |
 
-Dependency versions are not frozen in this document. Exact versions must be selected from current stable releases when the application is scaffolded, recorded in the package and lock files, and verified against Cloudflare's supported Next.js deployment path.
+Dependency versions are not frozen in this document. Exact versions must be selected from current stable releases, recorded in the package and lock files, and verified against Vercel's native Next.js deployment path.
 
 ## High-level system
 
@@ -76,7 +76,7 @@ flowchart LR
     member[Registered user]
     admin[Administrator]
 
-    app[Next.js PWA on Cloudflare Workers]
+    app[Next.js PWA on Vercel]
     map[MapLibre map]
     db[(Supabase PostgreSQL and PostGIS)]
     auth[Supabase Auth]
@@ -631,9 +631,9 @@ The system has three environments:
 
 Development and migration verification use the disposable local Supabase stack; the current hosted environment is the owner-approved production project. A separate hosted staging project is deferred until operational risk or team size justifies it. Secrets and production data must not be copied into local environments, and test fixtures must not contain real user information.
 
-### Cloudflare deployment gate
+### Vercel deployment gate
 
-Before application scaffolding is considered stable, a deployment spike must verify the current Cloudflare-supported Next.js path for:
+Before private-beta invitations, a Vercel preview deployment must verify the native Next.js path for:
 
 - App Router behavior;
 - server rendering and route handlers used by the design;
@@ -643,7 +643,7 @@ Before application scaffolding is considered stable, a deployment spike must ver
 - caching semantics;
 - image handling;
 - error reporting;
-- local production-runtime preview.
+- local production-runtime preview and Vercel preview behavior.
 
 If a required feature is unsupported or unreliable, the owner must approve a hosting or framework change. The implementation must not silently accumulate provider-specific workarounds.
 
@@ -786,7 +786,7 @@ The monthly infrastructure ceiling is ₱3,000. No paid upgrade or provider with
 
 | Service | Initial posture | Cost control |
 | --- | --- | --- |
-| Cloudflare Workers | Free allocation if compatibility and limits suffice | Request monitoring; paid plan requires approval |
+| Vercel | Hobby only while the beta qualifies for its personal, noncommercial terms; otherwise an owner-approved paid plan | Usage monitoring; no automatic paid upgrade |
 | Supabase | Free staging and production projects | Capacity monitoring; external encrypted backups |
 | MapTiler | Evaluation use only when eligible | Hard usage limit; confirm terms before invitations |
 | Foursquare | Audit usage only until approved | Call cap, field minimization, and no production dependency |
@@ -813,7 +813,7 @@ All providers with overage billing must use spend caps, quota alerts, or fail-cl
 
 Verify:
 
-- Next.js deployment on Cloudflare;
+- native Next.js deployment on Vercel;
 - PWA behavior on representative mobile browsers;
 - Supabase authentication callbacks;
 - PostGIS availability and query behavior;
@@ -890,8 +890,9 @@ Before moving beyond a controlled evaluation beta, confirm:
 
 Provider capabilities, prices, quotas, and terms can change. Recheck these official sources at the deployment and public-readiness gates:
 
-- [Cloudflare Next.js deployment documentation](https://developers.cloudflare.com/workers/framework-guides/web-apps/nextjs/)
-- [Cloudflare Workers pricing](https://developers.cloudflare.com/workers/platform/pricing/)
+- [Vercel Next.js documentation](https://vercel.com/docs/frameworks/full-stack/nextjs)
+- [Vercel Hobby plan](https://vercel.com/docs/plans/hobby)
+- [Vercel Pro plan](https://vercel.com/docs/plans/pro-plan)
 - [Supabase pricing](https://supabase.com/pricing)
 - [Supabase billing documentation](https://supabase.com/docs/guides/platform/billing-on-supabase)
 - [MapTiler Cloud pricing](https://www.maptiler.com/cloud/pricing/)
@@ -901,15 +902,14 @@ Provider capabilities, prices, quotas, and terms can change. Recheck these offic
 - [Foursquare Places API overview](https://docs.foursquare.com/fsq-developers-places/reference/places-api-overview)
 - [Foursquare Place Search](https://docs.foursquare.com/fsq-developers-places/reference/place-search)
 - [Protomaps basemap downloads and licensing](https://docs.protomaps.com/basemaps/downloads)
-- [Protomaps Cloudflare deployment](https://docs.protomaps.com/deploy/cloudflare)
-- [Vercel Hobby plan restrictions](https://vercel.com/docs/plans/hobby)
+- [Protomaps deployment documentation](https://docs.protomaps.com/deploy/)
 
 ## Architecture acceptance criteria
 
 This architecture is ready for approval when the product owner confirms that:
 
 1. the modular-monolith and managed-service approach is acceptable;
-2. Cloudflare, Supabase, MapLibre, and the replaceable map-provider boundary are acceptable;
+2. Vercel, Supabase, MapLibre, and the replaceable map-provider boundary are acceptable;
 3. the Stage 0 deployment and 25-record data-quality checks remain mandatory gates;
 4. the price, provenance, moderation, privacy, backup, and cost decisions match the intended product;
 5. no MVP implementation begins until the remaining required documents are completed and approved in sequence.
