@@ -10,6 +10,10 @@ function slugify(value: string) {
 }
 
 export function placeProfileSlug(place: DiscoveryPlace) {
+  if (place.profileSlug) {
+    return place.profileSlug;
+  }
+
   const sourceId = place.id.split("/").at(-1);
   return `${slugify(place.name)}-${sourceId ?? slugify(place.id)}`;
 }

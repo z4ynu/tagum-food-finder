@@ -19,6 +19,7 @@ import styles from "./discovery.module.css";
 
 type PlaceResultsProps = Readonly<{
   activeFilters: boolean;
+  catalogUnavailable?: boolean;
   onSelect: (placeId: string) => void;
   results: readonly RankedPlace[];
   selectedPlaceId: string | null;
@@ -113,6 +114,7 @@ function PlaceRow({
 
 export function PlaceResults({
   activeFilters,
+  catalogUnavailable = false,
   onSelect,
   results,
   selectedPlaceId,
@@ -130,8 +132,16 @@ export function PlaceResults({
     return (
       <div className={styles.emptyState}>
         <MapPinIcon aria-hidden="true" />
-        <h2>No places match that search</h2>
-        <p>Try a shorter place name or clear one filter. Your selections have not been removed.</p>
+        <h2>
+          {catalogUnavailable
+            ? "Places are temporarily unavailable"
+            : "No places match that search"}
+        </h2>
+        <p>
+          {catalogUnavailable
+            ? "We could not reach the live catalog. Check your connection and try again shortly."
+            : "Try a shorter place name or clear one filter. Your selections have not been removed."}
+        </p>
       </div>
     );
   }

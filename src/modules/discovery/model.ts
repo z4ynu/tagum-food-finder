@@ -26,7 +26,8 @@ export type DiscoveryPlace = Readonly<{
   name: string;
   occasions: EvidenceValues<string>;
   price: PriceEvidence;
-  sourceLabel: "OpenStreetMap";
+  profileSlug?: string;
+  sourceLabel: string;
 }>;
 
 export type DiscoveryFilters = Readonly<{

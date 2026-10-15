@@ -15,12 +15,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { rankPlaces } from "@/modules/discovery/filter-places";
 import { MascotMark } from "@/components/brand/mascot-mark";
-import type { Coordinates, DiscoveryFilters } from "@/modules/discovery/model";
-import {
-  MANUAL_LOCATIONS,
-  PROTOTYPE_PLACES,
-  TAGUM_CITY_CENTER,
-} from "@/modules/discovery/prototype-places";
+import type { Coordinates, DiscoveryFilters, DiscoveryPlace } from "@/modules/discovery/model";
+import { MANUAL_LOCATIONS, TAGUM_CITY_CENTER } from "@/modules/discovery/prototype-places";
 
 import { DiscoveryNavigation } from "./discovery-navigation";
 import styles from "./discovery.module.css";
@@ -45,6 +41,11 @@ const DEFAULT_FILTERS: DiscoveryFilters = {
 
 type SheetPosition = "collapsed" | "half" | "full";
 
+type DiscoveryShellProps = Readonly<{
+  catalogStatus: "live" | "unavailable";
+  places: readonly DiscoveryPlace[];
+}>;
+
 function hasStructuredFilters(filters: DiscoveryFilters) {
   return filters.budgetMaximumPhp !== null || filters.craving !== null || filters.occasion !== null;
 }
@@ -57,7 +58,7 @@ function activeFilterLabels(filters: DiscoveryFilters) {
   ].filter((label): label is string => label !== null);
 }
 
-export function DiscoveryShell() {
+export function DiscoveryShell({ catalogStatus, places }: DiscoveryShellProps) {
   const [filters, setFilters] = useState<DiscoveryFilters>(DEFAULT_FILTERS);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [location, setLocation] = useState<Coordinates>(TAGUM_CITY_CENTER);
@@ -69,10 +70,7 @@ export function DiscoveryShell() {
   const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null);
   const [sheetPosition, setSheetPosition] = useState<SheetPosition>("half");
 
-  const results = useMemo(
-    () => rankPlaces(PROTOTYPE_PLACES, location, filters),
-    [filters, location],
-  );
+  const results = useMemo(() => rankPlaces(places, location, filters), [filters, location, places]);
   const selectedPlace = results.find((result) => result.place.id === selectedPlaceId) ?? results[0];
   const filterLabels = activeFilterLabels(filters);
   const structuredFiltersActive = hasStructuredFilters(filters);
@@ -178,8 +176,8 @@ export function DiscoveryShell() {
   };
 
   const previewCount = useCallback(
-    (draft: DiscoveryFilters) => rankPlaces(PROTOTYPE_PLACES, location, draft).length,
-    [location],
+    (draft: DiscoveryFilters) => rankPlaces(places, location, draft).length,
+    [location, places],
   );
 
   return (
@@ -301,8 +299,9 @@ export function DiscoveryShell() {
             <div className={styles.catalogNotice}>
               <MapPinIcon aria-hidden="true" weight="fill" />
               <span>
-                Prototype catalog from approved OSM records. Coverage and place details are
-                incomplete.
+                {catalogStatus === "live"
+                  ? "Live catalog from approved OSM records. Coverage and place details remain incomplete."
+                  : "The live place catalog could not be loaded. Try again shortly."}
               </span>
             </div>
           </header>
@@ -310,6 +309,7 @@ export function DiscoveryShell() {
           <div className={styles.resultsScroll}>
             <PlaceResults
               activeFilters={structuredFiltersActive}
+              catalogUnavailable={catalogStatus === "unavailable"}
               onSelect={setSelectedPlaceId}
               results={results}
               selectedPlaceId={selectedPlace?.place.id ?? null}

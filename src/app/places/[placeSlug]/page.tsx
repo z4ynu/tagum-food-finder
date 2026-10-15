@@ -2,21 +2,17 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { PlaceProfileView } from "@/components/place-profile/place-profile-view";
+import { getCatalogPlaceBySlug } from "@/modules/discovery/catalog";
 import { distanceInKilometers, formatDistance } from "@/modules/discovery/distance";
-import { findPlaceByProfileSlug, placeProfileSlug } from "@/modules/discovery/place-profile-path";
-import { PROTOTYPE_PLACES, TAGUM_CITY_CENTER } from "@/modules/discovery/prototype-places";
+import { TAGUM_CITY_CENTER } from "@/modules/discovery/prototype-places";
 
 type PlacePageProps = Readonly<{
   params: Promise<{ placeSlug: string }>;
 }>;
 
-export function generateStaticParams() {
-  return PROTOTYPE_PLACES.map((place) => ({ placeSlug: placeProfileSlug(place) }));
-}
-
 export async function generateMetadata({ params }: PlacePageProps): Promise<Metadata> {
   const { placeSlug } = await params;
-  const place = findPlaceByProfileSlug(PROTOTYPE_PLACES, placeSlug);
+  const place = await getCatalogPlaceBySlug(placeSlug);
 
   if (!place) {
     return { title: "Place not found | Asa Ta Mangaon?" };
@@ -30,7 +26,7 @@ export async function generateMetadata({ params }: PlacePageProps): Promise<Meta
 
 export default async function PlacePage({ params }: PlacePageProps) {
   const { placeSlug } = await params;
-  const place = findPlaceByProfileSlug(PROTOTYPE_PLACES, placeSlug);
+  const place = await getCatalogPlaceBySlug(placeSlug);
 
   if (!place) {
     notFound();

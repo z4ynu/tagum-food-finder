@@ -3,8 +3,7 @@ import { notFound } from "next/navigation";
 
 import { AccountSignIn } from "@/components/account/account-sign-in";
 import { SuggestUpdateFlow } from "@/components/community-corrections/suggest-update-flow";
-import { findPlaceByProfileSlug } from "@/modules/discovery/place-profile-path";
-import { PROTOTYPE_PLACES } from "@/modules/discovery/prototype-places";
+import { getCatalogPlaceBySlug } from "@/modules/discovery/catalog";
 import { createServerSupabaseClient } from "@/platform/supabase/server";
 
 export const metadata: Metadata = {
@@ -33,7 +32,7 @@ async function hasAuthenticatedUser() {
 
 export default async function SuggestUpdatePage({ params, searchParams }: SuggestUpdatePageProps) {
   const [{ placeSlug }, parameters] = await Promise.all([params, searchParams]);
-  const place = findPlaceByProfileSlug(PROTOTYPE_PLACES, placeSlug);
+  const place = await getCatalogPlaceBySlug(placeSlug);
 
   if (!place) {
     notFound();
