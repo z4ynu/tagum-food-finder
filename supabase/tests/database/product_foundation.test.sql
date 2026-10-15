@@ -1,10 +1,11 @@
 begin;
 
 create extension if not exists pgtap with schema extensions;
-select plan(31);
+select plan(32);
 
 select has_schema('catalog', 'Canonical catalog schema exists');
 select has_schema('app_private', 'Private workflow schema exists');
+select hasnt_schema('stage0_geo', 'Disposable Stage 0 schema is absent from the product database');
 
 select has_table('catalog', 'sources', 'Source registry exists');
 select has_table('catalog', 'city_boundaries', 'Reviewed boundaries exist');
