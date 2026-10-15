@@ -25,10 +25,11 @@ const PlaceMap = dynamic(() => import("./place-map").then((module) => module.Pla
 
 type PlaceProfileViewProps = Readonly<{
   distanceLabel: string;
+  initiallySaved: boolean;
   place: DiscoveryPlace;
 }>;
 
-export function PlaceProfileView({ distanceLabel, place }: PlaceProfileViewProps) {
+export function PlaceProfileView({ distanceLabel, initiallySaved, place }: PlaceProfileViewProps) {
   const address = place.address
     ? `${place.address}, Tagum City, Davao del Norte`
     : "Tagum City, Davao del Norte";
@@ -98,7 +99,7 @@ export function PlaceProfileView({ distanceLabel, place }: PlaceProfileViewProps
               <p>{address}</p>
             </div>
             <PlaceMap coordinates={place.coordinates} />
-            <ProfileActions place={place} />
+            <ProfileActions initiallySaved={initiallySaved} place={place} />
             <p className={styles.sourceNote}>Place source: {place.sourceLabel}</p>
           </aside>
         </div>

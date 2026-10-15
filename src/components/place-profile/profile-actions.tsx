@@ -9,8 +9,10 @@ import {
   ShareNetworkIcon,
 } from "@phosphor-icons/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+import { setFavoriteAction } from "@/app/actions/saved-library";
 import {
   googleMapsDirectionsUrl,
   wazeDirectionsUrl,
@@ -20,9 +22,19 @@ import { placeProfileSlug } from "@/modules/discovery/place-profile-path";
 
 import styles from "./profile.module.css";
 
-export function ProfileActions({ place }: Readonly<{ place: DiscoveryPlace }>) {
+type ProfileActionsProps = Readonly<{
+  initiallySaved: boolean;
+  place: DiscoveryPlace;
+}>;
+
+export function ProfileActions({ initiallySaved, place }: ProfileActionsProps) {
+  const router = useRouter();
   const [shareStatus, setShareStatus] = useState("");
+  const [saveStatus, setSaveStatus] = useState("");
+  const [saved, setSaved] = useState(initiallySaved);
+  const [saving, setSaving] = useState(false);
   const profileSlug = placeProfileSlug(place);
+  const profilePath = `/places/${profileSlug}`;
   const suggestUpdateHref = `/places/${profileSlug}/suggest-update${
     process.env.NODE_ENV === "production" ? "" : "?preview=signed-in"
   }`;
@@ -42,6 +54,33 @@ export function ProfileActions({ place }: Readonly<{ place: DiscoveryPlace }>) {
       }
       setShareStatus("Could not share this link");
     }
+  };
+
+  const toggleSaved = async () => {
+    const nextSaved = !saved;
+    setSaving(true);
+    setSaveStatus("");
+    setSaved(nextSaved);
+
+    const result = await setFavoriteAction({
+      placeId: place.id,
+      placeSlug: profileSlug,
+      saved: nextSaved,
+    });
+    setSaving(false);
+
+    if (result.status === "authentication-required") {
+      setSaved(saved);
+      router.push(`/account?returnTo=${encodeURIComponent(profilePath)}`);
+      return;
+    }
+    if (result.status === "error") {
+      setSaved(saved);
+      setSaveStatus("Could not update Saved. Please try again.");
+      return;
+    }
+
+    setSaveStatus(nextSaved ? "Saved to your account" : "Removed from Saved");
   };
 
   return (
@@ -64,9 +103,13 @@ export function ProfileActions({ place }: Readonly<{ place: DiscoveryPlace }>) {
       </details>
 
       <div className={styles.actionPair}>
-        <button disabled title="Saving places will be added with accounts" type="button">
-          <BookmarkSimpleIcon aria-hidden="true" className={styles.actionIcon} />
-          Save
+        <button aria-pressed={saved} disabled={saving} onClick={toggleSaved} type="button">
+          <BookmarkSimpleIcon
+            aria-hidden="true"
+            className={styles.actionIcon}
+            weight={saved ? "fill" : "regular"}
+          />
+          {saving ? "Saving…" : saved ? "Saved" : "Save"}
         </button>
         <button onClick={share} type="button">
           <ShareNetworkIcon aria-hidden="true" className={styles.actionIcon} />
@@ -88,7 +131,7 @@ export function ProfileActions({ place }: Readonly<{ place: DiscoveryPlace }>) {
       </Link>
 
       <p aria-live="polite" className={styles.shareStatus}>
-        {shareStatus}
+        {saveStatus || shareStatus}
       </p>
     </div>
   );

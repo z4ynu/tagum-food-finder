@@ -20,9 +20,16 @@ import {
   XIcon,
 } from "@phosphor-icons/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import type { FormEvent } from "react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
+import {
+  createWheelListAction,
+  deleteWheelListAction,
+  renameWheelListAction,
+  setFavoriteAction,
+} from "@/app/actions/saved-library";
 import { MascotMark } from "@/components/brand/mascot-mark";
 import { DiscoveryNavigation } from "@/components/discovery/discovery-navigation";
 import { distanceInKilometers, formatDistance } from "@/modules/discovery/distance";
@@ -30,76 +37,43 @@ import { googleMapsDirectionsUrl } from "@/modules/discovery/external-navigation
 import type { DiscoveryPlace } from "@/modules/discovery/model";
 import { placeProfilePath, placeProfileSlug } from "@/modules/discovery/place-profile-path";
 import { TAGUM_CITY_CENTER } from "@/modules/discovery/prototype-places";
+import type { SavedWheelList } from "@/modules/saved/saved-library";
 
 import styles from "./saved.module.css";
 
-type SavedPlace = Readonly<{
-  distanceLabel: string;
-  icon: typeof ForkKnifeIcon;
-  place: DiscoveryPlace;
-}>;
-
-type WheelList = Readonly<{
-  id: string;
-  name: string;
-  placeCount: number;
-  placeSlug: string | null;
-}>;
-
 type SavedPageProps = Readonly<{
-  catalogStatus: "live" | "unavailable";
-  places: readonly DiscoveryPlace[];
+  dataStatus: "ready" | "unavailable";
+  initialPlaces: readonly DiscoveryPlace[];
+  initialWheelLists: readonly SavedWheelList[];
 }>;
 
 type MobileView = "places" | "wheels";
 type ListDialog = Readonly<{ mode: "create" }> | Readonly<{ listId: string; mode: "rename" }>;
 
-const SAVED_PLACE_FIXTURES = [
-  { icon: ForkKnifeIcon, name: "Big Fat Tummy" },
-  { icon: CoffeeIcon, name: "The Turq Cafe" },
-  { icon: BowlFoodIcon, name: "Sarah's Delicious Mami" },
-] as const;
-
-function initialSavedPlaces(places: readonly DiscoveryPlace[]): SavedPlace[] {
-  return SAVED_PLACE_FIXTURES.flatMap(({ icon, name }) => {
-    const place = places.find((candidate) => candidate.name === name);
-    return place
-      ? [
-          {
-            distanceLabel: formatDistance(
-              distanceInKilometers(TAGUM_CITY_CENTER, place.coordinates),
-            ),
-            icon,
-            place,
-          },
-        ]
-      : [];
-  });
+function placeIcon(place: DiscoveryPlace) {
+  const category = place.category.toLocaleLowerCase("en");
+  if (category.includes("cafe") || category.includes("coffee")) {
+    return CoffeeIcon;
+  }
+  if (category.includes("restaurant") || category.includes("food")) {
+    return BowlFoodIcon;
+  }
+  return ForkKnifeIcon;
 }
 
-function initialWheelLists(places: readonly DiscoveryPlace[]): WheelList[] {
-  const fixtures = [
-    { id: "friday-food-trip", name: "Friday food trip", placeCount: 5, placeName: "Big Fat Tummy" },
-    { id: "date-night-picks", name: "Date night picks", placeCount: 4, placeName: "The Turq Cafe" },
-  ] as const;
-
-  return fixtures.flatMap((fixture) => {
-    const place = places.find((candidate) => candidate.name === fixture.placeName);
-    return place ? [{ ...fixture, placeSlug: placeProfileSlug(place) }] : [];
-  });
-}
-
-export function SavedPage({ catalogStatus, places }: SavedPageProps) {
-  const initialPlaces = useMemo(() => initialSavedPlaces(places), [places]);
-  const [savedPlaces, setSavedPlaces] = useState(initialPlaces);
-  const [wheelLists, setWheelLists] = useState<WheelList[]>(() => initialWheelLists(places));
+export function SavedPage({ dataStatus, initialPlaces, initialWheelLists }: SavedPageProps) {
+  const router = useRouter();
+  const [savedPlaces, setSavedPlaces] = useState<readonly DiscoveryPlace[]>(initialPlaces);
+  const [wheelLists, setWheelLists] = useState<readonly SavedWheelList[]>(initialWheelLists);
   const [mobileView, setMobileView] = useState<MobileView>("places");
-  const [removedPlace, setRemovedPlace] = useState<{ item: SavedPlace; index: number } | null>(
+  const [removedPlace, setRemovedPlace] = useState<{ item: DiscoveryPlace; index: number } | null>(
     null,
   );
   const [dialog, setDialog] = useState<ListDialog | null>(null);
   const [draftName, setDraftName] = useState("");
   const [online, setOnline] = useState(true);
+  const [mutationMessage, setMutationMessage] = useState("");
+  const [pendingMutation, setPendingMutation] = useState<string | null>(null);
   const dialogInputRef = useRef<HTMLInputElement>(null);
   const dialogTriggerRef = useRef<HTMLElement | null>(null);
 
@@ -133,25 +107,65 @@ export function SavedPage({ catalogStatus, places }: SavedPageProps) {
     };
   }, [dialog]);
 
-  const removePlace = (placeId: string) => {
-    const index = savedPlaces.findIndex(({ place }) => place.id === placeId);
+  const handleAuthenticationRequired = () => {
+    router.push("/account?returnTo=%2Fsaved");
+  };
+
+  const removePlace = async (placeId: string) => {
+    const index = savedPlaces.findIndex((place) => place.id === placeId);
     if (index < 0) {
       return;
     }
-    setRemovedPlace({ index, item: savedPlaces[index] });
-    setSavedPlaces((current) => current.filter(({ place }) => place.id !== placeId));
+    const place = savedPlaces[index];
+    setPendingMutation(`favorite:${placeId}`);
+    setMutationMessage("");
+    setRemovedPlace({ index, item: place });
+    setSavedPlaces((current) => current.filter((candidate) => candidate.id !== placeId));
+    const result = await setFavoriteAction({
+      placeId,
+      placeSlug: placeProfileSlug(place),
+      saved: false,
+    });
+    setPendingMutation(null);
+    if (result.status === "authentication-required") {
+      handleAuthenticationRequired();
+      return;
+    }
+    if (result.status === "error") {
+      setSavedPlaces((current) => {
+        const restored = [...current];
+        restored.splice(index, 0, place);
+        return restored;
+      });
+      setRemovedPlace(null);
+      setMutationMessage("We could not remove that place. Please try again.");
+    }
   };
 
-  const undoRemove = () => {
+  const undoRemove = async () => {
     if (!removedPlace) {
       return;
     }
+    const place = removedPlace.item;
     setSavedPlaces((current) => {
       const restored = [...current];
-      restored.splice(removedPlace.index, 0, removedPlace.item);
+      restored.splice(removedPlace.index, 0, place);
       return restored;
     });
     setRemovedPlace(null);
+    setPendingMutation(`favorite:${place.id}`);
+    const result = await setFavoriteAction({
+      placeId: place.id,
+      placeSlug: placeProfileSlug(place),
+      saved: true,
+    });
+    setPendingMutation(null);
+    if (result.status === "authentication-required") {
+      handleAuthenticationRequired();
+    } else if (result.status === "error") {
+      setSavedPlaces((current) => current.filter((candidate) => candidate.id !== place.id));
+      setMutationMessage("We could not restore that place. Please try saving it again.");
+    }
   };
 
   const openCreateDialog = () => {
@@ -161,34 +175,48 @@ export function SavedPage({ catalogStatus, places }: SavedPageProps) {
     setDialog({ mode: "create" });
   };
 
-  const openRenameDialog = (list: WheelList) => {
+  const openRenameDialog = (list: SavedWheelList) => {
     dialogTriggerRef.current =
       document.activeElement instanceof HTMLElement ? document.activeElement : null;
     setDraftName(list.name);
     setDialog({ listId: list.id, mode: "rename" });
   };
 
-  const saveList = (event: FormEvent<HTMLFormElement>) => {
+  const saveList = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const name = draftName.trim();
     if (!name || !dialog) {
       return;
     }
 
+    setPendingMutation(dialog.mode === "create" ? "list:create" : `list:${dialog.listId}`);
+    setMutationMessage("");
     if (dialog.mode === "create") {
-      setWheelLists((current) => [
-        ...current,
-        {
-          id: window.crypto.randomUUID(),
-          name: name.slice(0, 40),
-          placeCount: 0,
-          placeSlug: places[0] ? placeProfileSlug(places[0]) : null,
-        },
-      ]);
+      const result = await createWheelListAction(name);
+      setPendingMutation(null);
+      if (result.status !== "ok") {
+        if (result.status === "authentication-required") {
+          handleAuthenticationRequired();
+        } else {
+          setMutationMessage("We could not save that list. Please try again.");
+        }
+        return;
+      }
+      setWheelLists((current) => [...current, result.data]);
     } else {
+      const result = await renameWheelListAction(dialog.listId, name);
+      setPendingMutation(null);
+      if (result.status !== "ok") {
+        if (result.status === "authentication-required") {
+          handleAuthenticationRequired();
+        } else {
+          setMutationMessage("We could not save that list. Please try again.");
+        }
+        return;
+      }
       setWheelLists((current) =>
         current.map((list) =>
-          list.id === dialog.listId ? { ...list, name: name.slice(0, 40) } : list,
+          list.id === dialog.listId ? { ...list, name: result.data.name } : list,
         ),
       );
     }
@@ -196,8 +224,22 @@ export function SavedPage({ catalogStatus, places }: SavedPageProps) {
     setDraftName("");
   };
 
-  const deleteList = (listId: string) => {
+  const deleteList = async (listId: string) => {
+    const removedList = wheelLists.find((list) => list.id === listId);
+    if (!removedList) {
+      return;
+    }
     setWheelLists((current) => current.filter((list) => list.id !== listId));
+    setPendingMutation(`list:${listId}`);
+    setMutationMessage("");
+    const result = await deleteWheelListAction(listId);
+    setPendingMutation(null);
+    if (result.status === "authentication-required") {
+      handleAuthenticationRequired();
+    } else if (result.status === "error") {
+      setWheelLists((current) => [...current, removedList]);
+      setMutationMessage("We could not delete that list. Please try again.");
+    }
   };
 
   return (
@@ -291,59 +333,66 @@ export function SavedPage({ catalogStatus, places }: SavedPageProps) {
 
             {savedPlaces.length > 0 ? (
               <ul className={styles.placeList}>
-                {savedPlaces.map(({ distanceLabel, icon: Icon, place }) => (
-                  <li key={place.id}>
-                    <Link
-                      aria-label={`Open ${place.name}`}
-                      className={styles.placeIllustration}
-                      href={placeProfilePath(place)}
-                    >
-                      <Icon aria-hidden="true" />
-                    </Link>
-                    <div className={styles.placeDetails}>
-                      <Link href={placeProfilePath(place)}>{place.name}</Link>
-                      <p>
-                        {place.category} <span aria-hidden="true">·</span> {distanceLabel}
-                      </p>
-                      <a
-                        className={styles.directionsAction}
-                        href={googleMapsDirectionsUrl(place.coordinates)}
-                        rel="noreferrer"
-                        target="_blank"
+                {savedPlaces.map((place) => {
+                  const Icon = placeIcon(place);
+                  const distanceLabel = formatDistance(
+                    distanceInKilometers(TAGUM_CITY_CENTER, place.coordinates),
+                  );
+                  return (
+                    <li key={place.id}>
+                      <Link
+                        aria-label={`Open ${place.name}`}
+                        className={styles.placeIllustration}
+                        href={placeProfilePath(place)}
                       >
-                        <NavigationArrowIcon aria-hidden="true" weight="fill" />
-                        Directions
-                      </a>
-                    </div>
-                    <div className={styles.placeActions}>
-                      <BookmarkSimpleIcon aria-label="Saved" weight="fill" />
-                      <details>
-                        <summary aria-label={`More actions for ${place.name}`}>
-                          <DotsThreeVerticalIcon aria-hidden="true" weight="bold" />
-                        </summary>
-                        <div className={styles.menuPopover}>
-                          <button
-                            className={styles.menuAction}
-                            onClick={() => removePlace(place.id)}
-                            type="button"
-                          >
-                            <TrashIcon aria-hidden="true" className={styles.menuActionIcon} />
-                            Remove from Saved
-                          </button>
-                        </div>
-                      </details>
-                    </div>
-                  </li>
-                ))}
+                        <Icon aria-hidden="true" />
+                      </Link>
+                      <div className={styles.placeDetails}>
+                        <Link href={placeProfilePath(place)}>{place.name}</Link>
+                        <p>
+                          {place.category} <span aria-hidden="true">·</span> {distanceLabel}
+                        </p>
+                        <a
+                          className={styles.directionsAction}
+                          href={googleMapsDirectionsUrl(place.coordinates)}
+                          rel="noreferrer"
+                          target="_blank"
+                        >
+                          <NavigationArrowIcon aria-hidden="true" weight="fill" />
+                          Directions
+                        </a>
+                      </div>
+                      <div className={styles.placeActions}>
+                        <BookmarkSimpleIcon aria-label="Saved" weight="fill" />
+                        <details>
+                          <summary aria-label={`More actions for ${place.name}`}>
+                            <DotsThreeVerticalIcon aria-hidden="true" weight="bold" />
+                          </summary>
+                          <div className={styles.menuPopover}>
+                            <button
+                              className={styles.menuAction}
+                              disabled={pendingMutation === `favorite:${place.id}`}
+                              onClick={() => removePlace(place.id)}
+                              type="button"
+                            >
+                              <TrashIcon aria-hidden="true" className={styles.menuActionIcon} />
+                              Remove from Saved
+                            </button>
+                          </div>
+                        </details>
+                      </div>
+                    </li>
+                  );
+                })}
               </ul>
             ) : (
               <div className={styles.emptyState}>
                 <BookmarkSimpleIcon aria-hidden="true" className={styles.emptyIcon} />
                 <h3>
-                  {catalogStatus === "live" ? "No saved places yet" : "Places are unavailable"}
+                  {dataStatus === "ready" ? "No saved places yet" : "Saved data is unavailable"}
                 </h3>
                 <p>
-                  {catalogStatus === "live"
+                  {dataStatus === "ready"
                     ? "Save a place from its details page and it will appear here."
                     : "We could not reach the live catalog. Try again when your connection is available."}
                 </p>
@@ -382,7 +431,12 @@ export function SavedPage({ catalogStatus, places }: SavedPageProps) {
               <h2 id="wheel-lists-title">
                 Wheel lists <span className={styles.sectionCount}>({wheelLists.length})</span>
               </h2>
-              <button className={styles.newListButton} onClick={openCreateDialog} type="button">
+              <button
+                className={styles.newListButton}
+                disabled={pendingMutation === "list:create"}
+                onClick={openCreateDialog}
+                type="button"
+              >
                 <PlusIcon aria-hidden="true" className={styles.newListIcon} />
                 New list
               </button>
@@ -416,6 +470,7 @@ export function SavedPage({ catalogStatus, places }: SavedPageProps) {
                       <div className={`${styles.menuPopover} ${styles.listMenuPopover}`}>
                         <button
                           className={styles.menuAction}
+                          disabled={pendingMutation === `list:${list.id}`}
                           onClick={() => openRenameDialog(list)}
                           type="button"
                         >
@@ -424,6 +479,7 @@ export function SavedPage({ catalogStatus, places }: SavedPageProps) {
                         </button>
                         <button
                           className={styles.menuAction}
+                          disabled={pendingMutation === `list:${list.id}`}
                           onClick={() => deleteList(list.id)}
                           type="button"
                         >
@@ -448,8 +504,10 @@ export function SavedPage({ catalogStatus, places }: SavedPageProps) {
 
             <p className={styles.prototypeNote}>
               <InfoIcon aria-hidden="true" className={styles.prototypeIcon} weight="fill" />
-              Saved places and lists on this page are still local to this session. Account sync is
-              next.
+              Saved places and wheel lists are private to your signed-in account.
+            </p>
+            <p aria-live="polite" className={styles.prototypeNote} role="status">
+              {mutationMessage}
             </p>
           </section>
         </div>
@@ -461,8 +519,13 @@ export function SavedPage({ catalogStatus, places }: SavedPageProps) {
 
       {removedPlace ? (
         <div aria-live="polite" className={styles.undoToast} role="status">
-          <span className={styles.undoText}>{removedPlace.item.place.name} removed</span>
-          <button className={styles.undoButton} onClick={undoRemove} type="button">
+          <span className={styles.undoText}>{removedPlace.item.name} removed</span>
+          <button
+            className={styles.undoButton}
+            disabled={pendingMutation === `favorite:${removedPlace.item.id}`}
+            onClick={undoRemove}
+            type="button"
+          >
             <ArrowCounterClockwiseIcon aria-hidden="true" className={styles.undoIcon} />
             Undo
           </button>
@@ -512,7 +575,7 @@ export function SavedPage({ catalogStatus, places }: SavedPageProps) {
                 <button onClick={() => setDialog(null)} type="button">
                   Cancel
                 </button>
-                <button disabled={!draftName.trim()} type="submit">
+                <button disabled={!draftName.trim() || pendingMutation !== null} type="submit">
                   {dialog.mode === "create" ? "Create list" : "Save name"}
                 </button>
               </div>
