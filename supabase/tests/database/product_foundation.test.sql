@@ -1,7 +1,7 @@
 begin;
 
 create extension if not exists pgtap with schema extensions;
-select plan(32);
+select plan(38);
 
 select has_schema('catalog', 'Canonical catalog schema exists');
 select has_schema('app_private', 'Private workflow schema exists');
@@ -80,6 +80,31 @@ select policies_are(
   'submissions',
   array['submissions_select_own'],
   'Corrections are read-only to their owner until server workflows are added'
+);
+
+select ok(
+  has_column_privilege('anon', 'catalog.catalog_releases', 'id', 'select'),
+  'Anonymous discovery can read the release identifier required by public views'
+);
+select ok(
+  not has_column_privilege('anon', 'catalog.catalog_releases', 'validation_result', 'select'),
+  'Anonymous discovery cannot read internal release validation metadata'
+);
+select ok(
+  not has_column_privilege('anon', 'catalog.catalog_releases', 'published_by', 'select'),
+  'Anonymous discovery cannot read the publishing user identifier'
+);
+select ok(
+  has_column_privilege('authenticated', 'catalog.catalog_release_places', 'place_id', 'select'),
+  'Authenticated discovery can read public place projection columns'
+);
+select ok(
+  not has_table_privilege('anon', 'catalog.catalog_releases', 'select'),
+  'Anonymous discovery does not have table-wide release access'
+);
+select ok(
+  not has_table_privilege('authenticated', 'catalog.catalog_release_places', 'select'),
+  'Authenticated discovery does not have table-wide release-place access'
 );
 
 select * from finish();

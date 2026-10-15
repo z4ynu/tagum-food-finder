@@ -8,7 +8,7 @@
 | Descriptor | Tagum Food Finder |
 | Document status | Approved |
 | Discovery status | Complete |
-| Last updated | 2026-10-13 |
+| Last updated | 2026-10-15 |
 | Approved | 2026-10-13 |
 | Target milestone | Private beta in February 2027 |
 | Product owner | Repository owner |
@@ -376,6 +376,21 @@ Production dashboard access is reviewed quarterly.
 
 ## Web and PWA controls
 
+### Implementation status before offline enablement
+
+As of 2026-10-15, the production database enforces SSL, the production email provider requires confirmed addresses and stronger reauthentication, and the repository mirrors the approved password, OTP, and email rate-limit settings. Public catalog access is limited to the columns required by the security-invoker discovery views; internal release validation data and publisher identifiers are not granted to browser roles. The application sends an enforced baseline CSP, clickjacking protection, MIME-sniffing protection, a constrained referrer policy, and a permissions policy that limits geolocation to the app origin while denying camera and microphone access.
+
+Offline caching remains disabled. The service worker is deliberately network-only until all of the following gates pass:
+
+- the production domain and exact Supabase redirect allowlist are configured;
+- authenticated routes are verified to return private, no-store cache policy through the production CDN;
+- the offline fallback design is approved and implemented;
+- the cache allowlist contains only versioned static assets and explicitly approved public catalog data;
+- logout and deployment tests prove that no private or stale account data survives in Cache Storage;
+- real-device update, rollback, storage-pressure, and offline tests pass.
+
+HSTS is deferred until the production hostname and every intended subdomain are confirmed HTTPS-only. CAPTCHA is deferred until a production Turnstile site and secret exist. Database network restrictions are deferred until a stable deployment and emergency-administration access path is documented, to avoid locking out recovery access.
+
 ### Transport and headers
 
 Production is HTTPS-only. HTTP redirects to HTTPS. HSTS starts with a short monitored duration, increases to at least one year after verification, and adds subdomains or preload only after every relevant hostname is ready.
@@ -674,6 +689,8 @@ Automated dependency updates are reviewed weekly.
 | Low | Track and address based on exposure and maintenance value |
 
 If an update cannot be applied safely within the target, document compensating controls, owner, expiry, and verification.
+
+The 2026-10-15 dependency audit identifies transitive advisories in the experimental Cloudflare/vinext deployment toolchain. The affected packages are build-time dependencies and are not required by the current Next.js runtime path, but npm does not currently offer a compatible automatic remediation. Before production deployment, either remove that unused adapter, replace it with a maintained deployment path, or upgrade to a release whose dependency tree passes the production audit. A forced downgrade is not an accepted remediation.
 
 ### Testing
 

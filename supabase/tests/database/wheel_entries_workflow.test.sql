@@ -9,13 +9,15 @@ select has_function(
   'Authenticated wheel replacement entry point exists'
 );
 
-select
+select ok(
   not has_function_privilege('anon', 'public.replace_wheel_entries(uuid, jsonb)', 'execute'),
-  'Anonymous users cannot replace saved wheel entries';
+  'Anonymous users cannot replace saved wheel entries'
+);
 
-select
+select ok(
   has_function_privilege('authenticated', 'public.replace_wheel_entries(uuid, jsonb)', 'execute'),
-  'Authenticated users can invoke the owner-scoped wheel workflow';
+  'Authenticated users can invoke the owner-scoped wheel workflow'
+);
 
 select * from finish();
 
