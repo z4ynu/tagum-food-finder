@@ -380,6 +380,8 @@ Production dashboard access is reviewed quarterly.
 
 As of 2026-10-15, the production database enforces SSL, the production email provider requires confirmed addresses and stronger reauthentication, and the repository mirrors the approved password, OTP, and email rate-limit settings. Public catalog access is limited to the columns required by the security-invoker discovery views; internal release validation data and publisher identifiers are not granted to browser roles. The application sends an enforced baseline CSP, clickjacking protection, MIME-sniffing protection, a constrained referrer policy, and a permissions policy that limits geolocation to the app origin while denying camera and microphone access.
 
+Private `correction-evidence-quarantine` and `correction-evidence` Storage buckets enforce a 5 MiB per-object limit and accept only JPEG, PNG, or WebP content types. Browser roles cannot read either bucket. Authenticated users may upload only UUID-named objects inside the prefix for their own draft submission, with no more than five quarantine objects per draft, and may delete those objects only while the submission remains a draft. Moving, reading, validating, or publishing evidence remains reserved for a future trusted processing workflow; the correction form must not claim that evidence was submitted until that workflow is operational.
+
 Offline caching remains disabled. The service worker is deliberately network-only until all of the following gates pass:
 
 - the production domain and exact Supabase redirect allowlist are configured;
