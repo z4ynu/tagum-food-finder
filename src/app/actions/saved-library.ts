@@ -71,7 +71,6 @@ export async function createWheelListAction(nameInput: string): Promise<
     id: string;
     name: string;
     placeCount: number;
-    placeSlug: null;
   }>
 > {
   const name = normalizeWheelListName(nameInput);
@@ -112,7 +111,7 @@ export async function createWheelListAction(nameInput: string): Promise<
 
   revalidatePath("/saved");
   return {
-    data: { id: data.id, name: data.name, placeCount: 0, placeSlug: null },
+    data: { id: data.id, name: data.name, placeCount: 0 },
     status: "ok",
   };
 }

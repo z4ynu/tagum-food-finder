@@ -27,16 +27,8 @@ describe("buildSavedLibrary", () => {
       ],
       [{ id: "81b32b3b-7e4b-4444-ac1f-13fc00de9ddd", name: "Friday", sort_position: 0 }],
       [
-        {
-          place_id: null,
-          position: 0,
-          wheel_list_id: "81b32b3b-7e4b-4444-ac1f-13fc00de9ddd",
-        },
-        {
-          place_id: PLACE.id,
-          position: 1,
-          wheel_list_id: "81b32b3b-7e4b-4444-ac1f-13fc00de9ddd",
-        },
+        { wheel_list_id: "81b32b3b-7e4b-4444-ac1f-13fc00de9ddd" },
+        { wheel_list_id: "81b32b3b-7e4b-4444-ac1f-13fc00de9ddd" },
       ],
     );
 
@@ -46,7 +38,6 @@ describe("buildSavedLibrary", () => {
         id: "81b32b3b-7e4b-4444-ac1f-13fc00de9ddd",
         name: "Friday",
         placeCount: 2,
-        placeSlug: "tagum-cafe-10",
       },
     ]);
   });

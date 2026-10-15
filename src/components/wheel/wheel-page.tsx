@@ -11,9 +11,11 @@ import {
   PlusIcon,
   SpinnerGapIcon,
 } from "@phosphor-icons/react";
+import { useRouter } from "next/navigation";
 import type { CSSProperties, FormEvent } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 
+import { saveWheelEntriesAction } from "@/app/actions/wheel-lists";
 import { MascotMark } from "@/components/brand/mascot-mark";
 import { DiscoveryNavigation } from "@/components/discovery/discovery-navigation";
 import type { DiscoveryPlace } from "@/modules/discovery/model";
@@ -23,16 +25,29 @@ import {
   type WheelEntry,
   wheelEntryDestination,
 } from "@/modules/wheel/catalog-wheel-entries";
+import {
+  MAX_WHEEL_ENTRIES,
+  wheelEntriesFromPersistence,
+  wheelEntryMutations,
+} from "@/modules/wheel/wheel-persistence";
 import { nextWheelRotation, wheelIndexFromUint32 } from "@/modules/wheel/wheel-selection";
 
 import styles from "./wheel.module.css";
 
 const STORAGE_KEY = "tagum-food-finder.anonymous-wheel.v1";
-const MAX_WHEEL_ENTRIES = 50;
 const WHEEL_COLORS = ["#ffffff", "#dcefdc", "#a5d6a7", "#4caf50", "#256628"];
 
 type WheelPageProps = Readonly<{
   catalogStatus: "live" | "unavailable";
+  initialEntries: readonly WheelEntry[];
+  persistence:
+    | Readonly<{ mode: "local" }>
+    | Readonly<{
+        dataStatus: "ready" | "unavailable";
+        listId: string | null;
+        listName: string | null;
+        mode: "account";
+      }>;
   places: readonly DiscoveryPlace[];
 }>;
 
@@ -93,39 +108,83 @@ function wheelBackground(entryCount: number) {
   return `conic-gradient(from 0deg, ${stops.join(", ")})`;
 }
 
-export function WheelPage({ catalogStatus, places }: WheelPageProps) {
+export function WheelPage({ catalogStatus, initialEntries, persistence, places }: WheelPageProps) {
+  const router = useRouter();
   const defaultEntries = useMemo(() => defaultWheelEntries(places), [places]);
-  const [entries, setEntries] = useState<WheelEntry[]>([...defaultEntries]);
+  const [entries, setEntries] = useState<WheelEntry[]>(
+    persistence.mode === "account" ? [...initialEntries] : [...defaultEntries],
+  );
+  const [activeListId, setActiveListId] = useState(
+    persistence.mode === "account" ? persistence.listId : null,
+  );
   const [draftLabel, setDraftLabel] = useState("");
   const [hydrated, setHydrated] = useState(false);
   const [isSpinning, setIsSpinning] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [rotation, setRotation] = useState(0);
+  const [saveStatus, setSaveStatus] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [showResult, setShowResult] = useState(false);
+  const initializationRef = useRef(false);
   const spinTimer = useRef<number | null>(null);
 
   useEffect(() => {
-    const storedEntries = readStoredEntries(defaultEntries);
+    if (initializationRef.current) {
+      return;
+    }
+    initializationRef.current = true;
+
+    const startingEntries =
+      persistence.mode === "local" ? readStoredEntries(defaultEntries) : [...initialEntries];
     const requestedSlug = new URLSearchParams(window.location.search).get("place");
     const requestedPlace = requestedSlug ? findPlaceByProfileSlug(places, requestedSlug) : null;
+    let requestedPlaceAdded = false;
 
-    if (requestedPlace && !storedEntries.some((entry) => entry.placeSlug === requestedSlug)) {
-      storedEntries.push({
+    if (
+      requestedPlace &&
+      startingEntries.length < MAX_WHEEL_ENTRIES &&
+      !startingEntries.some((entry) => entry.placeSlug === requestedSlug)
+    ) {
+      startingEntries.push({
         id: requestedPlace.id,
         label: requestedPlace.name,
         placeSlug: requestedSlug,
       });
+      requestedPlaceAdded = true;
     }
 
-    setEntries(storedEntries.slice(0, MAX_WHEEL_ENTRIES));
+    const nextEntries = startingEntries.slice(0, MAX_WHEEL_ENTRIES);
+    setEntries(nextEntries);
     setHydrated(true);
-  }, [defaultEntries, places]);
+
+    if (persistence.mode === "account" && requestedPlaceAdded) {
+      setIsSaving(true);
+      void saveWheelEntriesAction({
+        entries: wheelEntryMutations(nextEntries, places),
+        listId: persistence.listId,
+      }).then((result) => {
+        setIsSaving(false);
+        if (result.status !== "ok") {
+          if (result.status === "authentication-required") {
+            router.push("/account?returnTo=%2Fwheel");
+          } else {
+            setEntries([...initialEntries]);
+            setSaveStatus("Could not add that place to your wheel. Please try again.");
+          }
+          return;
+        }
+        setActiveListId(result.data.listId);
+        setEntries(wheelEntriesFromPersistence(result.data.entries, places));
+        setSaveStatus("Wheel saved to your account.");
+      });
+    }
+  }, [defaultEntries, initialEntries, persistence, places, router]);
 
   useEffect(() => {
-    if (hydrated) {
+    if (hydrated && persistence.mode === "local") {
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
     }
-  }, [entries, hydrated]);
+  }, [entries, hydrated, persistence.mode]);
 
   useEffect(
     () => () => {
@@ -140,39 +199,74 @@ export function WheelPage({ catalogStatus, places }: WheelPageProps) {
   const displayLabels = entries.length <= 12;
   const background = useMemo(() => wheelBackground(entries.length), [entries.length]);
 
-  const addEntry = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const label = draftLabel.trim();
-    if (!label || entries.length >= MAX_WHEEL_ENTRIES) {
-      return;
+  const persistEntries = async (nextEntries: WheelEntry[], previousEntries: WheelEntry[]) => {
+    setEntries(nextEntries);
+    if (persistence.mode === "local") {
+      return true;
     }
-    setEntries((current) => [
-      ...current,
-      { id: window.crypto.randomUUID(), label: label.slice(0, 80), placeSlug: null },
-    ]);
-    setDraftLabel("");
-    setShowResult(false);
+
+    setIsSaving(true);
+    setSaveStatus("");
+    const result = await saveWheelEntriesAction({
+      entries: wheelEntryMutations(nextEntries, places),
+      listId: activeListId,
+    });
+    setIsSaving(false);
+    if (result.status !== "ok") {
+      setEntries(previousEntries);
+      if (result.status === "authentication-required") {
+        router.push("/account?returnTo=%2Fwheel");
+      } else {
+        setSaveStatus("Could not save your wheel. Your last change was restored.");
+      }
+      return false;
+    }
+
+    setActiveListId(result.data.listId);
+    setEntries(wheelEntriesFromPersistence(result.data.entries, places));
+    setSaveStatus("Wheel saved to your account.");
+    return true;
   };
 
-  const removeEntry = (entryId: string) => {
-    setEntries((current) => current.filter((entry) => entry.id !== entryId));
+  const addEntry = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const label = draftLabel.trim();
+    if (!label || entries.length >= MAX_WHEEL_ENTRIES || isSaving) {
+      return;
+    }
+    const previousEntries = entries;
+    const nextEntries = [
+      ...entries,
+      { id: window.crypto.randomUUID(), label: label.slice(0, 80), placeSlug: null },
+    ];
+    setDraftLabel("");
+    setShowResult(false);
+    await persistEntries(nextEntries, previousEntries);
+  };
+
+  const removeEntry = async (entryId: string) => {
+    if (isSaving) {
+      return;
+    }
+    const previousEntries = entries;
+    const nextEntries = entries.filter((entry) => entry.id !== entryId);
     if (selectedId === entryId) {
       setSelectedId(null);
       setShowResult(false);
     }
+    await persistEntries(nextEntries, previousEntries);
   };
 
-  const moveEntry = (index: number, direction: -1 | 1) => {
+  const moveEntry = async (index: number, direction: -1 | 1) => {
     const target = index + direction;
-    if (target < 0 || target >= entries.length) {
+    if (target < 0 || target >= entries.length || isSaving) {
       return;
     }
-    setEntries((current) => {
-      const next = [...current];
-      [next[index], next[target]] = [next[target], next[index]];
-      return next;
-    });
+    const previousEntries = entries;
+    const nextEntries = [...entries];
+    [nextEntries[index], nextEntries[target]] = [nextEntries[target], nextEntries[index]];
     setShowResult(false);
+    await persistEntries(nextEntries, previousEntries);
   };
 
   const spin = () => {
@@ -224,7 +318,7 @@ export function WheelPage({ catalogStatus, places }: WheelPageProps) {
                     <div className={styles.orderActions}>
                       <button
                         aria-label={`Move ${entry.label} up`}
-                        disabled={index === 0 || isSpinning}
+                        disabled={index === 0 || isSpinning || isSaving}
                         onClick={() => moveEntry(index, -1)}
                         type="button"
                       >
@@ -232,7 +326,7 @@ export function WheelPage({ catalogStatus, places }: WheelPageProps) {
                       </button>
                       <button
                         aria-label={`Move ${entry.label} down`}
-                        disabled={index === entries.length - 1 || isSpinning}
+                        disabled={index === entries.length - 1 || isSpinning || isSaving}
                         onClick={() => moveEntry(index, 1)}
                         type="button"
                       >
@@ -240,7 +334,7 @@ export function WheelPage({ catalogStatus, places }: WheelPageProps) {
                       </button>
                       <button
                         aria-label={`Remove ${entry.label}`}
-                        disabled={isSpinning}
+                        disabled={isSpinning || isSaving}
                         onClick={() => removeEntry(entry.id)}
                         type="button"
                       >
@@ -254,7 +348,11 @@ export function WheelPage({ catalogStatus, places }: WheelPageProps) {
               <div className={styles.emptyEntries}>
                 <ForkKnifeIcon aria-hidden="true" className={styles.emptyIcon} />
                 <strong>Add places to start</strong>
-                <span className={styles.emptyCopy}>Your choices stay on this device.</span>
+                <span className={styles.emptyCopy}>
+                  {persistence.mode === "account"
+                    ? "Add a place to create your private account wheel."
+                    : "Your choices stay on this device."}
+                </span>
               </div>
             )}
 
@@ -262,14 +360,14 @@ export function WheelPage({ catalogStatus, places }: WheelPageProps) {
               <label htmlFor="wheel-place">Add another place</label>
               <div>
                 <input
-                  disabled={entries.length >= MAX_WHEEL_ENTRIES || isSpinning}
+                  disabled={entries.length >= MAX_WHEEL_ENTRIES || isSpinning || isSaving}
                   id="wheel-place"
                   maxLength={80}
                   onChange={(event) => setDraftLabel(event.target.value)}
                   placeholder="Type a food place"
                   value={draftLabel}
                 />
-                <button disabled={!draftLabel.trim() || isSpinning} type="submit">
+                <button disabled={!draftLabel.trim() || isSpinning || isSaving} type="submit">
                   <PlusIcon aria-hidden="true" />
                   Add
                 </button>
@@ -279,11 +377,18 @@ export function WheelPage({ catalogStatus, places }: WheelPageProps) {
               ) : null}
             </form>
 
-            <p className={styles.deviceNote}>
+            <p aria-live="polite" className={styles.deviceNote}>
               <InfoIcon aria-hidden="true" className={styles.deviceNoteIcon} weight="fill" />
-              {catalogStatus === "live"
-                ? "One phone controls this wheel."
-                : "Live places are unavailable, but choices saved on this device still work."}
+              {isSaving
+                ? "Saving wheel to your account…"
+                : saveStatus ||
+                  (persistence.mode === "account"
+                    ? persistence.dataStatus === "unavailable"
+                      ? "Your account wheel is temporarily unavailable."
+                      : `Changes sync to ${persistence.listName ?? "My wheel"} in your private account.`
+                    : catalogStatus === "live"
+                      ? "One phone controls this wheel."
+                      : "Live places are unavailable, but choices saved on this device still work.")}
             </p>
           </section>
 
@@ -344,7 +449,11 @@ export function WheelPage({ catalogStatus, places }: WheelPageProps) {
                     Directions
                     <ArrowSquareOutIcon aria-hidden="true" className={styles.resultIcon} />
                   </a>
-                  <button onClick={() => removeEntry(selectedEntry.id)} type="button">
+                  <button
+                    disabled={isSaving}
+                    onClick={() => removeEntry(selectedEntry.id)}
+                    type="button"
+                  >
                     <MinusIcon aria-hidden="true" className={styles.resultIcon} />
                     Remove
                   </button>
@@ -354,7 +463,7 @@ export function WheelPage({ catalogStatus, places }: WheelPageProps) {
 
             <button
               className={styles.spinButton}
-              disabled={entries.length < 2 || isSpinning}
+              disabled={entries.length < 2 || isSpinning || isSaving}
               onClick={spin}
               type="button"
             >

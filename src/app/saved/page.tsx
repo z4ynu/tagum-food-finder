@@ -33,7 +33,7 @@ export default async function SavedRoute() {
         .eq("profile_id", userData.user.id)
         .order("sort_position", { ascending: true })
         .order("created_at", { ascending: true }),
-      supabase.from("wheel_entries").select("wheel_list_id, place_id, position"),
+      supabase.from("wheel_entries").select("wheel_list_id"),
     ]);
 
     if (favoritesResult.error || listsResult.error || entriesResult.error) {

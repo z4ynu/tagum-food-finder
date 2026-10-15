@@ -1260,6 +1260,10 @@ export type Database = {
     };
     Functions: {
       publish_osm_import: { Args: { p_batch_id: string }; Returns: Json };
+      replace_wheel_entries: {
+        Args: { p_entries: Json; p_wheel_list_id: string };
+        Returns: Database["public"]["Tables"]["wheel_entries"]["Row"][];
+      };
       stage_osm_import: { Args: { p_payload: Json }; Returns: Json };
     };
     Enums: {

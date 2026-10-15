@@ -1,10 +1,7 @@
 import type { DiscoveryPlace } from "../discovery/model";
-import { placeProfileSlug } from "../discovery/place-profile-path";
 
 export type FavoriteRow = Readonly<{ created_at: string; place_id: string }>;
 export type WheelEntryRow = Readonly<{
-  place_id: string | null;
-  position: number;
   wheel_list_id: string;
 }>;
 export type WheelListRow = Readonly<{
@@ -17,7 +14,6 @@ export type SavedWheelList = Readonly<{
   id: string;
   name: string;
   placeCount: number;
-  placeSlug: string | null;
 }>;
 
 export type SavedLibrary = Readonly<{
@@ -47,18 +43,10 @@ export function buildSavedLibrary(
   return {
     places,
     wheelLists: wheelLists.map((list) => {
-      const entries = (entriesByList.get(list.id) ?? []).sort(
-        (first, second) => first.position - second.position,
-      );
-      const firstCatalogPlace = entries.reduce<DiscoveryPlace | null>((match, entry) => {
-        return match ?? (entry.place_id ? (placesById.get(entry.place_id) ?? null) : null);
-      }, null);
-
       return {
         id: list.id,
         name: list.name,
-        placeCount: entries.length,
-        placeSlug: firstCatalogPlace ? placeProfileSlug(firstCatalogPlace) : null,
+        placeCount: (entriesByList.get(list.id) ?? []).length,
       };
     }),
   };

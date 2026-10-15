@@ -452,13 +452,7 @@ export function SavedPage({ dataStatus, initialPlaces, initialWheelLists }: Save
                     <div className={styles.listDetails}>
                       <strong>{list.name}</strong>
                       <small>{list.placeCount} places</small>
-                      <Link
-                        href={
-                          list.placeSlug
-                            ? `/wheel?place=${encodeURIComponent(list.placeSlug)}`
-                            : "/wheel"
-                        }
-                      >
+                      <Link href={`/wheel?list=${encodeURIComponent(list.id)}`}>
                         <CompassIcon aria-hidden="true" className={styles.openWheelIcon} />
                         Open wheel
                       </Link>
