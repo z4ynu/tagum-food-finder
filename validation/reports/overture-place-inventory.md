@@ -58,4 +58,8 @@ The verified workflow migration was applied to the production Supabase project. 
 
 Post-publication verification found one active release, 117 public Overture rows, no missing Overture attribution, and no public row for the manually held record.
 
-The production Vercel response was then checked over HTTPS. It returned `200` and serialized 174 OpenStreetMap records, 117 Overture records, and 291 price-unavailable states. These independent response markers total the expected 291 public places and confirm that the deployed application reads the published release.
+The production Vercel response was then checked over HTTPS. It returned `200` and serialized 174 OpenStreetMap records, 117 Overture records, and 291 price-unavailable states. These independent response markers total the expected 291 public places and confirm that the deployed application reads the initial published release.
+
+## Operator moderation follow-up
+
+On 2026-10-17, a service-role-only moderation transaction recorded seven approvals and five rejections from the 19 held records carrying private Foursquare references. Immutable release `ccc58cbc-0121-4bba-bd06-c85666d847ae` became release number `3`, publishing the seven approved places while retaining the original batch and private decision evidence. The active catalog now contains 298 places. A fresh production HTTPS response returned `200`, contained all seven new canonical slugs, and serialized 298 price-unavailable states.

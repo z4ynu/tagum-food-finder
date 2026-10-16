@@ -42,9 +42,9 @@ References:
 
 ## Production identifier audit
 
-The active 291-place production release was audited before implementing persistence or an enrichment job. None of the 117 published Overture places has a retained Foursquare identifier. The published Overture import contains 19 other in-boundary records with Foursquare identifiers, but every one remains private in the moderation queue because its Overture confidence is `0.77`, below the approved `0.8` automatic-publication threshold.
+The initial 291-place production release was audited before implementing persistence or an enrichment job. None of the 117 automatically published Overture places had a retained Foursquare identifier. The published Overture import contained 19 other in-boundary records with private Foursquare references, all initially held because their Overture confidence was `0.77`, below the approved `0.8` automatic-publication threshold.
 
-Therefore, the current details-only boundary has zero valid public targets. Enrichment must not bypass place matching. The next safe step is to manually review and link or publish an explicitly approved subset of those 19 records, or separately approve a paid Foursquare search-and-match workflow. A service key is still required before either path can make provider calls.
+On 2026-10-17, operator moderation approved seven of those places, rejected five, and left seven unresolved. The source payloads retain their provider references privately, but the approved places do not receive a canonical Foursquare external identifier from that reference alone. Enrichment must still not bypass explicit provider-place relationship review. The details-only boundary therefore remains inactive.
 
 No Foursquare request was made during this audit and no provider quota was consumed.
 

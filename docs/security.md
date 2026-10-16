@@ -323,6 +323,8 @@ The implemented catalog importer follows this boundary: public RPC wrappers are 
 
 The Overture supplement uses the same service-role boundary and adds server-side confidence, operating-status, category-usability, and current-boundary checks. Possible exact-name duplicates within 100 metres remain private for review. Publication serializes catalog releases with a transaction advisory lock and repeats the proximity check before creating a place.
 
+Held Overture records can be finalized only through the service-role moderation-release transaction. The transaction accepts only records marked for moderation in a published origin batch, permits only explicit approve-create or reject outcomes, validates any accepted field overrides, blocks duplicate source identities and nearby same-name places, records immutable decisions and evidence, and activates a complete replacement release under the same publication lock. Browser roles cannot execute the function or read the private decision tables.
+
 The optional Foursquare service key is server-only and has no public-prefixed equivalent. The integration remains disabled when the key is absent, requests an explicit minimal field set with `no-store`, uses a bounded timeout without automatic retries, and converts provider and quota failures into typed non-secret results. It does not expose raw responses or credentials to client code.
 
 ### Policy testing

@@ -4,7 +4,7 @@
 
 The 19 Overture records with retained Foursquare identifiers must not be published as one group. After local operator review, the recommendations are seven new-place approvals, five rejections, five link-or-update investigations against existing public places, and two continued holds.
 
-No production record was changed by this review. The Foursquare Places API was unavailable, so decisions use the checksummed Overture record, the active catalog, current public corroboration, and local operator confirmations supplied on 2026-10-17. Provider IDs remain private.
+The review itself did not change production. The Foursquare Places API was unavailable, so decisions use the checksummed Overture record, the active catalog, current public corroboration, and local operator confirmations supplied on 2026-10-17. Provider IDs remain private. The finalized approve and reject decisions were subsequently applied through the audited production workflow described below.
 
 ## Review method
 
@@ -60,6 +60,8 @@ The local operator also identified active places that are not represented by the
 
 These must enter through a separate discovery and staging record. They must not be synthesized by changing the branch identity of an unrelated held record.
 
-## Required next step
+## Production outcome
 
-The seven approved candidates still require explicit moderation records and a new immutable catalog release. Correct Blugré's branch identity before publication. The five link-or-update candidates require branch matching before any canonical record or coordinate changes. Reject the two closed branches without deleting historical audit data. Keep Fruitas and Goodyear Kitchenette held. The current published import batch must not be edited in place.
+On 2026-10-17, production release `ccc58cbc-0121-4bba-bd06-c85666d847ae` recorded seven approvals and five rejections. It published the seven approved places, corrected Blugré to Weekly Market at `7.445063, 125.807438`, retained the original import batch, and increased the public catalog from 291 to 298 places. A live HTTPS response returned `200` and contained all seven new canonical slugs.
+
+The remaining work is to resolve the five link-or-update candidates without creating duplicates and keep Fruitas and Goodyear Kitchenette held until stronger branch evidence exists. Dunkin' Robinsons and the newer KFC near St. Mary's College require separate discovery records.

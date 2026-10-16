@@ -324,11 +324,13 @@ The implemented baseline importer accepts only the approved, checksummed GeoJSON
 
 The implemented Overture supplement accepts only a pinned, checksummed JSON Lines extraction and the same approved Tagum boundary checksum. It proposes creation only for usable categories with source confidence of at least `0.8`, excludes records reported permanently closed, and sends exact-name matches within 100 metres of an active place to moderation. Its release, content hashes, source timestamps, licensing classification, and attribution remain attached to the import. Overture does not establish current PHP menu prices, so the supplement does not infer price ranges.
 
-The first production Overture batch published 117 reviewed creates and retained 594 records for moderation. Together with the 174-place OpenStreetMap baseline, the active immutable release exposes 291 attributed places. One obvious name/category contradiction was manually held before publication.
+The first production Overture batch published 117 reviewed creates and retained 594 records for moderation. Together with the 174-place OpenStreetMap baseline, that initial immutable release exposed 291 attributed places. One obvious name/category contradiction was manually held before publication.
+
+On 2026-10-17, an operator-reviewed moderation release approved seven additional active places and recorded five rejections without editing the original import batch. Release `ccc58cbc-0121-4bba-bd06-c85666d847ae` is release number `3` and exposes 298 public places. The release records accepted field overrides, including the corrected Weekly Market location for Blugré Coffee, and preserves both source-record and moderation-decision provenance.
 
 An inactive Foursquare server boundary can normalize an attributed description, price tier, refresh date, and up to five photo references for an already-known Foursquare place identifier. It does not search, persist, cache, download photos, or publish these fields until an account-specific terms review and public presentation design are approved. Foursquare tiers never become exact PHP prices.
 
-A production identifier audit found no known Foursquare identifier among the 117 published Overture places. Nineteen private Overture moderation records have identifiers, but each remains below the approved automatic-publication confidence threshold. The system must not attach those provider details to a public place until the place relationship is explicitly reviewed.
+The initial production identifier audit found no known Foursquare identifier among the 117 automatically published Overture places. Nineteen held Overture source records contained private Foursquare references. Seven of those records were later published through operator moderation, five were rejected, and seven remain unresolved. The provider references remain private source evidence and are not attached as canonical external identifiers or used for enrichment.
 
 ### `source_records`
 
@@ -475,6 +477,8 @@ Accepted evidence never becomes a public place image automatically.
 Append-only record of the moderator, submission change, decision type, public reason, private note, before and after value hashes, supporting evidence, and decision time. Decisions include approve, edit-and-approve, reject, request information, mark duplicate, merge, and insufficient evidence.
 
 Direct administrative canonical edits create the same style of decision and provenance record. Published catalog state cannot be changed through an unaudited admin write.
+
+The implemented Overture moderation path currently supports finalized `approve_create` and `reject` outcomes. Its service-role-only transaction validates the held source record, boundary, category, slug, coordinates, active-release duplicates, and external identity; records the immutable decision and evidence; links accepted fields to the decision; copies the prior release; and activates the replacement release atomically. An identical decision payload is idempotent.
 
 ### `submission_status_events`
 
