@@ -2,9 +2,9 @@
 
 ## Decision
 
-The 19 Overture records with retained Foursquare identifiers must not be published as one group. Manual review recommends one new-place approval, three rejections for source-location conflicts, five link-or-update investigations against existing public places, and ten continued holds.
+The 19 Overture records with retained Foursquare identifiers must not be published as one group. After local operator review, the recommendations are seven new-place approvals, five rejections, five link-or-update investigations against existing public places, and two continued holds.
 
-No production record was changed by this review. The Foursquare Places API was unavailable, so decisions use the checksummed Overture record, the active catalog, and current public corroboration. Provider IDs remain private.
+No production record was changed by this review. The Foursquare Places API was unavailable, so decisions use the checksummed Overture record, the active catalog, current public corroboration, and local operator confirmations supplied on 2026-10-17. Provider IDs remain private.
 
 ## Review method
 
@@ -13,30 +13,31 @@ No production record was changed by this review. The Foursquare Places API was u
 - Reject records whose stated locality conflicts materially with their Tagum coordinates.
 - Avoid publishing a chain outlet when an existing same-name record could represent the same branch.
 - Require current outlet-level evidence before approving a new place.
+- Treat local operator confirmations as moderation evidence while preserving their provenance separately from provider or first-party evidence.
 
 ## Recommendations
 
 | Candidate | Recommendation | Reason |
 | --- | --- | --- |
-| Blugré Coffee | Hold | The Nicole's 22nd Strip address is corroborated by public directories, but the current ordering listing refers to a Weekly Market outlet. Current outlet identity needs confirmation. |
+| Blugré Coffee | Approve new with correction | The local operator confirms that Blugré Coffee is an establishment inside Weekly Market. Publish it as the Weekly Market outlet rather than retaining the conflicting Nicole's 22nd Strip identity. |
 | Chowking — Malaybalay address | Reject | The source address says Malaybalay, Bukidnon while the coordinates are inside Tagum. |
-| Chowking — Tagum City | Link or update | Two Chowking places are already public; the candidate is 434 metres from the nearest same-name place and has no branch-specific address. |
-| Dunkin' — Gaisano Mall of Tagum | Hold | Multiple public listings corroborate a GMall Tagum outlet, but no current first-party locator result was found. |
-| Dunkin' — Gaisano Grand of Tagum | Hold | Historical store lists corroborate the outlet, but current outlet status and exact coordinates remain unverified. |
+| Chowking — Tagum City | Link or update | The local operator confirms that Tagum has two Chowking branches, and two Chowking places are already public. Reconcile the branchless candidate with those records instead of creating a third place. |
+| Dunkin' — Gaisano Mall of Tagum | Approve new | The local operator confirms the active GMall Tagum outlet. |
+| Dunkin' — Gaisano Grand of Tagum | Approve new | The local operator confirms the active Gaisano outlet. A separate Robinsons outlet is also reported but is not represented by this candidate and requires its own source record. |
 | Fruitas | Hold | No branch address or current outlet-level evidence is present. |
-| Gerry's Grill — Robinsons Place Tagum | Link or update | Gerry's official locator confirms the branch, and the public catalog already contains a same-name Robinsons Place record. The candidate is about two kilometres from that record and must not become a duplicate. |
+| Gerry's Grill — Robinsons Place Tagum | Link or update | The local operator and Gerry's official locator confirm the Robinsons branch. The public catalog already contains a same-name Robinsons Place record, so reconcile coordinates rather than create a duplicate. |
 | Goodyear Kitchenette | Hold | The local address is plausible but no sufficiently reliable current public source was found. |
 | Jollibee — Valencia City address | Reject | The source address says Valencia City, Bukidnon while the coordinates are inside Tagum. |
-| Jollibee — Robinsons | Link or update | Jollibee's official locator confirms Robinsons Place Tagum, and a public Jollibee record already exists near the mall. |
-| Jollibee — Gaisano Mall of Tagum | Link or update | Jollibee's official locator confirms Tagum mall outlets, while five same-name places are already public. Branch identity and coordinates need reconciliation. |
-| KFC — Gaisano Mall of Tagum | Hold | Historical evidence exists, but KFC's current official locator did not return a Tagum outlet. |
-| Mang Inasal — Central Warehouse | Hold | Mang Inasal officially lists Tagum Downtown, CityMall Tagum, and GMall Tagum, but not this branch label; three same-name places are already public. |
-| McDonald's — Tagum City | Link or update | Three McDonald's places are already public and the candidate has no branch-specific address. |
+| Jollibee — Robinsons | Link or update | The local operator and Jollibee's official locator confirm the Robinsons branch, and a public Jollibee record already exists near the mall. |
+| Jollibee — Gaisano Mall of Tagum | Link or update | The local operator confirms a Gaisano branch and Jollibee's official locator confirms Tagum mall outlets. Five same-name places are already public, so reconcile branch identity and coordinates. |
+| KFC — Gaisano Mall of Tagum | Reject as closed | The local operator confirms that the Gaisano outlet is no longer operating. A newer KFC near St. Mary's College is outside this candidate and requires a separate verified source record. |
+| Mang Inasal — Central Warehouse | Reject as closed | The local operator confirms that the Central Warehouse outlet is no longer operating. Downtown and CityMall outlets remain active and should be reconciled with the three public same-name records. |
+| McDonald's — Tagum City | Link or update | The local operator confirms three current McDonald's branches, matching the three public records. The branchless candidate should be reconciled, not created as a fourth place. |
 | Pizza Hut — SM City Davao address | Reject | The source address says SM City Davao while the coordinates are inside Tagum. |
 | Potato Corner — Robinsons Place Tagum | Approve new | Potato Corner's current official campaign store list includes `Robinsons Place Tagum- G/F`, and no Potato Corner place is public. The candidate address identifies that outlet. |
-| Red Ribbon — Gaisano Mall of Tagum | Hold | The candidate is plausible but lacks current outlet-level corroboration. |
-| Red Ribbon — Gaisano Grand Tagum | Hold | The candidate is plausible but lacks current outlet-level corroboration. |
-| Waffle Time — NCCC Mall of Tagum | Hold | The candidate has a specific mall address but lacks current outlet-level corroboration. |
+| Red Ribbon — Gaisano Mall of Tagum | Approve new | The local operator confirms the active Gaisano Mall outlet. |
+| Red Ribbon — Gaisano Grand Tagum | Approve new | The local operator confirms the active Gaisano Grand outlet. |
+| Waffle Time — NCCC Mall of Tagum | Approve new | The local operator confirms the active NCCC outlet. |
 
 ## Evidence
 
@@ -48,8 +49,17 @@ No production record was changed by this review. The Foursquare Places API was u
 - [KFC official store locator](https://www.kfc.com.ph/en/store-locator)
 - [Chowking official store locator](https://www.chowking.ph/location)
 
-Third-party results for Blugré and Dunkin' were treated as corroboration only and were not sufficient for automatic approval.
+Local operator confirmations supplied on 2026-10-17 are first-hand moderation input, not provider or first-party directory verification. They support the updated decisions above but must retain `operator-confirmed` provenance in any moderation audit trail.
+
+## Additional discovery follow-ups
+
+The local operator also identified active places that are not represented by the reviewed candidates:
+
+- Dunkin' — Robinsons Place Tagum
+- KFC — near St. Mary's College of Tagum
+
+These must enter through a separate discovery and staging record. They must not be synthesized by changing the branch identity of an unrelated held record.
 
 ## Required next step
 
-The one approved candidate still requires an explicit moderation decision and a new immutable catalog release. The five link-or-update candidates require branch matching before any canonical record or coordinate changes. The current published import batch must not be edited in place.
+The seven approved candidates still require explicit moderation records and a new immutable catalog release. Correct Blugré's branch identity before publication. The five link-or-update candidates require branch matching before any canonical record or coordinate changes. Reject the two closed branches without deleting historical audit data. Keep Fruitas and Goodyear Kitchenette held. The current published import batch must not be edited in place.
