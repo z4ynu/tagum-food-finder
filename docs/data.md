@@ -324,6 +324,8 @@ The implemented baseline importer accepts only the approved, checksummed GeoJSON
 
 The implemented Overture supplement accepts only a pinned, checksummed JSON Lines extraction and the same approved Tagum boundary checksum. It proposes creation only for usable categories with source confidence of at least `0.8`, excludes records reported permanently closed, and sends exact-name matches within 100 metres of an active place to moderation. Its release, content hashes, source timestamps, licensing classification, and attribution remain attached to the import. Overture does not establish current PHP menu prices, so the supplement does not infer price ranges.
 
+An inactive Foursquare server boundary can normalize an attributed description, price tier, refresh date, and up to five photo references for an already-known Foursquare place identifier. It does not search, persist, cache, download photos, or publish these fields until an account-specific terms review and public presentation design are approved. Foursquare tiers never become exact PHP prices.
+
 ### `source_records`
 
 Stores normalized provider data separately from canonical places. Important fields are source, external record key, normalized payload, payload schema version, retrieval time, source update time, content hash, licensing classification, raw-payload expiry, and latest-seen batch. A changed content hash creates a new source-record version; it does not rewrite evidence already referenced by published provenance.

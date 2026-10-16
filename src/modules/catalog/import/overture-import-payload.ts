@@ -42,6 +42,7 @@ type ImportRecord = Readonly<{
     name: string;
     operatingStatus: string | null;
     placeSlug: string;
+    providerReferences: readonly Readonly<{ externalKey: string; provider: string }>[];
     socialUrls: readonly string[];
     sourceCategoryLabels: readonly string[];
     sourceUpdatedAt: string | null;
@@ -162,6 +163,22 @@ function cuisineLabels(record: OverturePlaceRecord): string[] {
   );
 }
 
+function providerReferences(record: OverturePlaceRecord) {
+  if (!Array.isArray(record.sources)) return [];
+  const references = record.sources.flatMap((value) => {
+    if (!value || typeof value !== "object" || Array.isArray(value)) return [];
+    const source = value as Readonly<Record<string, unknown>>;
+    const provider = typeof source.dataset === "string" ? source.dataset.trim().toLowerCase() : "";
+    const externalKey = typeof source.record_id === "string" ? source.record_id.trim() : "";
+    return provider && externalKey ? [{ externalKey, provider }] : [];
+  });
+  return [
+    ...new Map(
+      references.map((reference) => [`${reference.provider}:${reference.externalKey}`, reference]),
+    ).values(),
+  ];
+}
+
 function displayAddress(candidate: ReturnType<typeof normalizeOverturePlace>) {
   if (candidate.outcome === "rejected" || !candidate.candidate.address) return null;
   const address = candidate.candidate.address;
@@ -255,6 +272,7 @@ export function buildOvertureCatalogImport({
       name: candidate.name,
       operatingStatus,
       placeSlug: `${slugify(candidate.name) || "food-place"}-${idSuffix}`,
+      providerReferences: providerReferences(record),
       socialUrls: candidate.contacts.social,
       sourceCategoryLabels: candidate.sourceCategoryLabels,
       sourceUpdatedAt: candidate.sourceUpdatedAt,

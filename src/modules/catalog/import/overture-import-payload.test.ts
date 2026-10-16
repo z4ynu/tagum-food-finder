@@ -13,6 +13,9 @@ function record(
   primary: string,
   confidence: number,
   coordinates: readonly [number, number] = [125.807, 7.447],
+  sources: readonly Readonly<Record<string, unknown>>[] = [
+    { dataset: "meta", update_time: "2026-09-01" },
+  ],
 ) {
   return JSON.stringify({
     addresses: [{ country: "PH", freeform: "Tagum City", locality: "Tagum" }],
@@ -21,7 +24,7 @@ function record(
     id,
     names: { primary: name },
     socials: [`https://www.facebook.com/${id}`],
-    sources: [{ dataset: "meta", update_time: "2026-09-01" }],
+    sources,
     taxonomy: { hierarchy: ["food_and_drink", primary], primary },
     websites: [`https://${id}.example.test`],
   });
@@ -93,7 +96,10 @@ describe("buildOvertureCatalogImport", () => {
   it("builds deterministic publishable and review-only records", () => {
     const snapshot = Buffer.from(
       [
-        record("gers-1", "Tagum Kitchen", "filipino_restaurant", 0.91),
+        record("gers-1", "Tagum Kitchen", "filipino_restaurant", 0.91, undefined, [
+          { dataset: "meta", update_time: "2026-09-01" },
+          { dataset: "foursquare", record_id: "fsq-123", update_time: "2026-09-02" },
+        ]),
         record("gers-2", "Night Bar", "bar", 0.95),
         record("gers-3", "Low Confidence Cafe", "cafe", 0.4),
       ].join("\n"),
@@ -124,6 +130,7 @@ describe("buildOvertureCatalogImport", () => {
         confidence: 0.91,
         cuisineLabels: ["Filipino"],
         placeSlug: "tagum-kitchen-gers-1",
+        providerReferences: [{ externalKey: "fsq-123", provider: "foursquare" }],
       },
     });
     expect(first.records[0].contentHash).toMatch(/^[a-f0-9]{64}$/);
