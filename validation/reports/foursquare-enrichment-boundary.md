@@ -47,3 +47,9 @@ The active 291-place production release was audited before implementing persiste
 Therefore, the current details-only boundary has zero valid public targets. Enrichment must not bypass place matching. The next safe step is to manually review and link or publish an explicitly approved subset of those 19 records, or separately approve a paid Foursquare search-and-match workflow. A service key is still required before either path can make provider calls.
 
 No Foursquare request was made during this audit and no provider quota was consumed.
+
+## Sandbox activation check
+
+On 2026-10-16, the owner created a dedicated `Tagum Food Finder` Foursquare Developer Console project in Sandbox mode with no credit card attached and stored a Service API Key only in the ignored local environment file. The first corrected details request returned `429 rate-limited`; the console Usage page simultaneously reported zero calls for the project. No response fields were accepted or persisted, and the client did not retry.
+
+This result does not indicate exhausted monthly usage. It indicates that the new Sandbox project currently has no usable Places request allocation or is still awaiting provider-side activation. Enrichment remains disabled until the console exposes an active allocation or Foursquare support clarifies the project state. Adding a payment method is not authorized by this validation.
