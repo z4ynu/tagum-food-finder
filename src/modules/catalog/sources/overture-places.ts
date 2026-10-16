@@ -19,10 +19,12 @@ type OvertureGeometry = Readonly<{ coordinates?: unknown; type?: unknown }>;
 
 export type OverturePlaceRecord = Readonly<{
   addresses?: unknown;
+  confidence?: unknown;
   emails?: unknown;
   geometry?: OvertureGeometry;
   id?: unknown;
   names?: OvertureNames;
+  operating_status?: unknown;
   phones?: unknown;
   socials?: unknown;
   sources?: unknown;

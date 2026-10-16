@@ -9,6 +9,7 @@ This directory contains reproducible Stage 0 fixtures, scripts, and reports.
 - Keep large source snapshots outside Git.
 - Identify each external snapshot in its report by source, version, retrieval date, license, and checksum.
 - Write generated reports to `reports/generated/`; the directory is ignored.
+- Keep generated Overture JSONL snapshots and manifests under `snapshots/`; they are ignored and must be regenerated from a pinned public release.
 
 ## Reproducibility
 
