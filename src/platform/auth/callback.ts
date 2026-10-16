@@ -1,4 +1,5 @@
 export type AuthCodeExchange = (code: string) => Promise<{ error: unknown | null }>;
+export type EmailOtpVerification = (tokenHash: string) => Promise<{ error: unknown | null }>;
 
 export type AuthCallbackDecision = Readonly<
   { outcome: "success" } | { outcome: "invalid"; reason: "missing-code" | "exchange-failed" }
@@ -14,6 +15,28 @@ export async function evaluateAuthCallback(
 
   try {
     const { error } = await exchangeCode(code);
+
+    if (error) {
+      return { outcome: "invalid", reason: "exchange-failed" };
+    }
+
+    return { outcome: "success" };
+  } catch {
+    return { outcome: "invalid", reason: "exchange-failed" };
+  }
+}
+
+export async function evaluateEmailOtpCallback(
+  tokenHash: string | null,
+  type: string | null,
+  verifyEmailOtp: EmailOtpVerification,
+): Promise<AuthCallbackDecision> {
+  if (!tokenHash || type !== "email") {
+    return { outcome: "invalid", reason: "missing-code" };
+  }
+
+  try {
+    const { error } = await verifyEmailOtp(tokenHash);
 
     if (error) {
       return { outcome: "invalid", reason: "exchange-failed" };

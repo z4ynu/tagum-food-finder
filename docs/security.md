@@ -242,6 +242,8 @@ Provider identities are not automatically linked merely because email strings ma
 - Request responses do not reveal whether an account exists.
 - Redirect destinations use an exact environment allowlist.
 - Production does not use wildcard callback origins.
+- Email templates direct a `token_hash` and `type=email` to the production callback for server-side verification; raw token hashes are never persisted or logged by the application.
+- OAuth callbacks retain the PKCE authorization-code exchange and its same-browser verifier protection.
 - Magic-link parameters are excluded from logs and monitoring.
 - Repeated requests are rate-limited by provider, account target, and network signal.
 
@@ -748,7 +750,8 @@ Critical launch blockers cannot be waived for private beta:
 - [ ] Complete NPC registration or the applicable declaration.
 - [ ] Publish standard and child-readable layered privacy notices.
 - [ ] Publish terms and evidence-rights language.
-- [ ] Configure personal-email magic link, Google, and Facebook callback allowlists.
+- [x] Configure the production application origin and exact authentication callback allowlist.
+- [ ] Configure Google and Facebook provider credentials and callback URLs before enabling them.
 - [ ] Verify OAuth scopes request no social graph, contacts, birthday, or unnecessary profile data.
 - [ ] Enforce dedicated administrator identity and AAL2.
 - [ ] Test every RLS and Storage policy using the role matrix.

@@ -535,6 +535,8 @@ Supabase Auth provides:
 - managed sessions;
 - account identity for cloud-owned data and submissions.
 
+Email templates send a single-use `token_hash` and `type=email` to the exact production callback. The server verifies that token hash with Supabase Auth and stores the resulting session in secure cookies, so a link can be completed even when the email opens in a different browser from the one that requested it. OAuth providers continue to use the PKCE authorization-code exchange.
+
 The application requests only the minimum provider scopes required for authentication. It collects only the account information required for authentication, saved data, moderation follow-up, and account operations. It does not import social graphs, contacts, birthdays, or provider profile content.
 
 The product does not impose an age gate or collect birth dates. Minors may use anonymous and registered features. Privacy explanations are written so younger users can understand them, and the beta launch remains gated on a Philippine privacy review of child-accessible processing.

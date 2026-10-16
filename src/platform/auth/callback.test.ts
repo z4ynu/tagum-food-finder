@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { evaluateAuthCallback } from "./callback";
+import { evaluateAuthCallback, evaluateEmailOtpCallback } from "./callback";
 
 describe("evaluateAuthCallback", () => {
   it("rejects a callback without an authorization code", async () => {
@@ -39,5 +39,37 @@ describe("evaluateAuthCallback", () => {
       outcome: "invalid",
       reason: "exchange-failed",
     });
+  });
+});
+
+describe("evaluateEmailOtpCallback", () => {
+  it("accepts an email token hash after verification succeeds", async () => {
+    const verifyEmailOtp = vi.fn().mockResolvedValue({ error: null });
+
+    await expect(
+      evaluateEmailOtpCallback("one-time-token-hash", "email", verifyEmailOtp),
+    ).resolves.toEqual({ outcome: "success" });
+    expect(verifyEmailOtp).toHaveBeenCalledExactlyOnceWith("one-time-token-hash");
+  });
+
+  it("rejects missing or unsupported email verification parameters", async () => {
+    const verifyEmailOtp = vi.fn();
+
+    await expect(evaluateEmailOtpCallback(null, "email", verifyEmailOtp)).resolves.toEqual({
+      outcome: "invalid",
+      reason: "missing-code",
+    });
+    await expect(
+      evaluateEmailOtpCallback("one-time-token-hash", "recovery", verifyEmailOtp),
+    ).resolves.toEqual({ outcome: "invalid", reason: "missing-code" });
+    expect(verifyEmailOtp).not.toHaveBeenCalled();
+  });
+
+  it("returns a generic failure when token verification fails", async () => {
+    const verifyEmailOtp = vi.fn().mockResolvedValue({ error: new Error("provider details") });
+
+    await expect(
+      evaluateEmailOtpCallback("expired-token-hash", "email", verifyEmailOtp),
+    ).resolves.toEqual({ outcome: "invalid", reason: "exchange-failed" });
   });
 });
