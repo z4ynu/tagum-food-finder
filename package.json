@@ -19,6 +19,7 @@
     "test:watch": "vitest",
     "audit:osm": "tsx validation/scripts/audit-osm-snapshot.ts",
     "catalog:osm": "tsx validation/scripts/import-osm-catalog.ts",
+    "catalog:overture": "tsx validation/scripts/import-overture-catalog.ts",
     "db:start": "supabase start",
     "db:stop": "supabase stop",
     "db:reset": "supabase db reset",

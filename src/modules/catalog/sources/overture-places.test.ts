@@ -41,10 +41,7 @@ describe("normalizeOverturePlace", () => {
       source: { recordId: "gers-123", slug: "overture-places" },
       sourceUpdatedAt: "2026-09-02T00:00:00.000Z",
     });
-    expect(result.candidate.sourceCategoryLabels).toEqual([
-      "taxonomy:cafe",
-      "taxonomy:bakery",
-    ]);
+    expect(result.candidate.sourceCategoryLabels).toEqual(["taxonomy:cafe", "taxonomy:bakery"]);
     expect(result.candidate.contacts.social).toEqual(["https://www.facebook.com/example"]);
   });
 

@@ -7,10 +7,7 @@ import {
   clipCandidatesToBoundary,
 } from "../audit/boundary";
 import { assessSourceCategory } from "../audit/source-category";
-import {
-  normalizeOverturePlace,
-  type OverturePlaceRecord,
-} from "../sources/overture-places";
+import { normalizeOverturePlace, type OverturePlaceRecord } from "../sources/overture-places";
 
 export const overtureImportSchemaVersion = 1 as const;
 export const overtureAdapterVersion = "overture-places-jsonl-v1" as const;
@@ -157,13 +154,11 @@ function confidence(value: unknown): number | null {
 
 function cuisineLabels(record: OverturePlaceRecord): string[] {
   const primary =
-    record.taxonomy && typeof record.taxonomy.primary === "string"
-      ? record.taxonomy.primary
-      : "";
+    record.taxonomy && typeof record.taxonomy.primary === "string" ? record.taxonomy.primary : "";
   const match = /^(.+)_restaurant$/.exec(primary);
   if (!match || ["fast_food", "theme", "breakfast_and_brunch"].includes(match[1])) return [];
-  return [labelFromSlug(match[1].replaceAll("_", "-"))].filter(
-    (value): value is string => Boolean(value),
+  return [labelFromSlug(match[1].replaceAll("_", "-"))].filter((value): value is string =>
+    Boolean(value),
   );
 }
 
@@ -202,20 +197,31 @@ export function buildOvertureCatalogImport({
     record,
   }));
   const accepted = normalized.filter(
-    (entry): entry is typeof entry & { normalized: { outcome: "accepted"; candidate: NonNullable<Extract<typeof entry.normalized, { outcome: "accepted" }>["candidate"]> } } =>
-      entry.normalized.outcome === "accepted",
+    (
+      entry,
+    ): entry is typeof entry & {
+      normalized: {
+        outcome: "accepted";
+        candidate: NonNullable<
+          Extract<typeof entry.normalized, { outcome: "accepted" }>["candidate"]
+        >;
+      };
+    } => entry.normalized.outcome === "accepted",
   );
   const clipped = clipCandidatesToBoundary(
     accepted.map((entry) => entry.normalized.candidate),
     boundary.geometry,
   );
   const insideKeys = new Set(clipped.accepted.map((candidate) => candidate.candidateKey));
-  const inside = accepted.filter((entry) => insideKeys.has(entry.normalized.candidate.candidateKey));
+  const inside = accepted.filter((entry) =>
+    insideKeys.has(entry.normalized.candidate.candidateKey),
+  );
 
   const usability = { "review-required": 0, unmapped: 0, usable: 0 };
   let autoPublishEligible = 0;
   const records = inside.map(({ normalized: { candidate }, record }): ImportRecord => {
-    if (!candidate.coordinates) throw new Error("An in-boundary Overture candidate has no coordinates.");
+    if (!candidate.coordinates)
+      throw new Error("An in-boundary Overture candidate has no coordinates.");
     const assessment = assessSourceCategory(candidate);
     usability[assessment.usability] += 1;
     const normalizedConfidence = confidence(record.confidence);
@@ -230,7 +236,9 @@ export function buildOvertureCatalogImport({
       autoPublishEligible += 1;
     }
 
-    const idSuffix = slugify(candidate.source.recordId).slice(0, 12) || sha256(candidate.source.recordId).slice(0, 12);
+    const idSuffix =
+      slugify(candidate.source.recordId).slice(0, 12) ||
+      sha256(candidate.source.recordId).slice(0, 12);
     const normalizedPayload = {
       addressLine: candidate.address?.addressLine ?? null,
       category: {

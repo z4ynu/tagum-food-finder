@@ -321,6 +321,8 @@ Privileged `security definer` functions live in an unexposed schema, set an empt
 
 The implemented catalog importer follows this boundary: public RPC wrappers are executable only by `service_role`, delegate to narrowly scoped functions in `app_private`, and cannot be invoked by `anon` or `authenticated`. The staging transaction validates schema version, checksums, record limits, coordinates, and identifiers before writing. The publication transaction accepts only an awaiting-review batch and never publishes records marked for moderation.
 
+The Overture supplement uses the same service-role boundary and adds server-side confidence, operating-status, category-usability, and current-boundary checks. Possible exact-name duplicates within 100 metres remain private for review. Publication serializes catalog releases with a transaction advisory lock and repeats the proximity check before creating a place.
+
 ### Policy testing
 
 Every policy or role change tests:

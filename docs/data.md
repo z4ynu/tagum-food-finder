@@ -322,6 +322,8 @@ If the project publicly uses or distributes an adapted OSM database, that adapte
 
 The implemented baseline importer accepts only the approved, checksummed GeoJSON sequence and Tagum boundary fixture. It records the OSM snapshot version, SHA-256 checksum, adapter version, normalized content hash, boundary version, and ODbL classification. The first verified snapshot contains 176 in-boundary candidates: 174 usable-category records and two records held for category review. No price is inferred from OSM data.
 
+The implemented Overture supplement accepts only a pinned, checksummed JSON Lines extraction and the same approved Tagum boundary checksum. It proposes creation only for usable categories with source confidence of at least `0.8`, excludes records reported permanently closed, and sends exact-name matches within 100 metres of an active place to moderation. Its release, content hashes, source timestamps, licensing classification, and attribution remain attached to the import. Overture does not establish current PHP menu prices, so the supplement does not infer price ranges.
+
 ### `source_records`
 
 Stores normalized provider data separately from canonical places. Important fields are source, external record key, normalized payload, payload schema version, retrieval time, source update time, content hash, licensing classification, raw-payload expiry, and latest-seen batch. A changed content hash creates a new source-record version; it does not rewrite evidence already referenced by published provenance.
