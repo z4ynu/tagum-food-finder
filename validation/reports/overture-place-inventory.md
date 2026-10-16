@@ -57,3 +57,5 @@ The verified workflow migration was applied to the production Supabase project. 
 - Public catalog after publication: 291 places
 
 Post-publication verification found one active release, 117 public Overture rows, no missing Overture attribution, and no public row for the manually held record.
+
+The production Vercel response was then checked over HTTPS. It returned `200` and serialized 174 OpenStreetMap records, 117 Overture records, and 291 price-unavailable states. These independent response markers total the expected 291 public places and confirm that the deployed application reads the published release.

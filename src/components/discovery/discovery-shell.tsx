@@ -300,7 +300,7 @@ export function DiscoveryShell({ catalogStatus, places }: DiscoveryShellProps) {
               <MapPinIcon aria-hidden="true" weight="fill" />
               <span>
                 {catalogStatus === "live"
-                  ? "Live catalog from approved OSM records. Coverage and place details remain incomplete."
+                  ? "Live catalog from approved public sources. Coverage and place details remain incomplete."
                   : "The live place catalog could not be loaded. Try again shortly."}
               </span>
             </div>
