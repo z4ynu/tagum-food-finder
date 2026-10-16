@@ -8,7 +8,7 @@
 | Descriptor | Tagum Food Finder |
 | Document status | Approved |
 | Discovery status | Complete |
-| Last updated | 2026-10-13 |
+| Last updated | 2026-10-17 |
 | Approved | 2026-10-13 |
 | Target milestone | Private beta in February 2027 |
 | Product owner | Repository owner |
@@ -488,9 +488,11 @@ Append-only history of submission state transitions with actor, time, reason cod
 
 ### `place_media`
 
-Public media is separate from submission evidence. Each record contains place, private original key, public optimized variant keys, media type, pixel dimensions, rights basis, source URL, attribution, alt text, sort order, publication state, and takedown time.
+Public media is separate from submission evidence. The implemented beta record contains place, one public processed-object key, media type, pixel dimensions, byte size, SHA-256 content hash, rights basis and reference, optional source and license fields, attribution, alt text, sort order, publication state, confirmation time, and takedown details.
 
-Originals remain private. The application serves generated responsive variants in approved formats. Media can be withdrawn without deleting its rights and moderation history. External images are not hotlinked unless the source explicitly allows that use and reliability risk is accepted.
+Source originals remain outside this public catalog and must stay private when the project receives them. The `place-media` bucket accepts only JPEG or WebP public variants up to 2 MiB and 2,560 pixels on either axis. A service-role-only publication boundary verifies the active place, safe object path, MIME type, stored byte size, rights metadata, alt text, and confirmation time before recording publication. Open-license media additionally requires its source, license name, license link, and attribution.
+
+The anonymous view exposes only published media for places in the active catalog release. Browser roles cannot insert, update, publish, or withdraw media. Withdrawal requires the public Storage object to be removed or archived first, then retains the rights record, reason, and time for audit. External images are not hotlinked unless the source explicitly allows that use and reliability risk is accepted.
 
 The absence of media produces a neutral designed fallback, never a stock or generated food image presented as the real place.
 

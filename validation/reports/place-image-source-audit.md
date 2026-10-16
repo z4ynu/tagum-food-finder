@@ -42,6 +42,8 @@ Every published file must retain a rights basis, rights reference, source URL wh
 - [Google Places API policies and attribution](https://developers.google.com/maps/documentation/places/web-service/policies)
 - [Google Place Photos caching and attribution requirements](https://developers.google.com/maps/documentation/places/web-service/place-photos)
 
-## Next implementation step
+## Implementation status
 
-Add the restricted media catalog and service-role publication boundary first. After that database contract passes locally, prepare mobile and desktop mockups showing real-image, missing-image, attribution, loading, and error states. Do not change the public page UI until the owner approves those mockups.
+The restricted media catalog and service-role publication boundary were deployed on 2026-10-17. The production public view returned `200` with zero media records, which is the expected honest starting state, and an anonymous publication probe was denied with PostgreSQL code `42501`.
+
+The next step is to prepare mobile and desktop mockups showing real-image, missing-image, attribution, loading, and error states. Do not change the public page UI until the owner approves those mockups.

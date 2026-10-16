@@ -8,7 +8,7 @@
 | Descriptor | Tagum Food Finder |
 | Document status | Approved |
 | Discovery status | Complete |
-| Last updated | 2026-10-16 |
+| Last updated | 2026-10-17 |
 | Approved | 2026-10-13 |
 | Target milestone | Private beta in February 2027 |
 | Product owner | Repository owner |
@@ -389,6 +389,8 @@ Production dashboard access is reviewed quarterly.
 As of 2026-10-15, the production database enforces SSL, the production email provider requires confirmed addresses and stronger reauthentication, and the repository mirrors the approved password, OTP, and email rate-limit settings. Public catalog access is limited to the columns required by the security-invoker discovery views; internal release validation data and publisher identifiers are not granted to browser roles. The application sends an enforced baseline CSP, clickjacking protection, MIME-sniffing protection, a constrained referrer policy, and a permissions policy that limits geolocation to the app origin while denying camera and microphone access.
 
 Private `correction-evidence-quarantine` and `correction-evidence` Storage buckets enforce a 5 MiB per-object limit and accept only JPEG, PNG, or WebP content types. Browser roles cannot read either bucket. Authenticated users may upload only UUID-named objects inside the prefix for their own draft submission, with no more than five quarantine objects per draft, and may delete those objects only while the submission remains a draft. Moving, reading, validating, or publishing evidence remains reserved for a future trusted processing workflow; the correction form must not claim that evidence was submitted until that workflow is operational.
+
+The public `place-media` bucket is restricted to processed JPEG and WebP variants no larger than 2 MiB. It has no browser upload, update, or delete policy. Publication and withdrawal RPCs are executable only by `service_role`; anonymous and authenticated callers receive no execution privilege. Publication verifies an active catalog place, UUID-based path under that place, object existence, stored MIME type and size, dimensions, content hash, alt text, and a documented rights basis. Open-license records require source, license, and attribution fields. The public security-invoker view returns only published media attached to the active release and omits private rights references and hashes. Takedown removes or archives the public object before preserving the withdrawal reason and time in the private catalog record.
 
 Offline caching remains disabled. The service worker is deliberately network-only until all of the following gates pass:
 
