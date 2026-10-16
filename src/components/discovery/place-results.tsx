@@ -1,3 +1,5 @@
+"use client";
+
 import {
   ArrowSquareOutIcon,
   ForkKnifeIcon,
@@ -5,8 +7,11 @@ import {
   MapPinIcon,
   NavigationArrowIcon,
 } from "@phosphor-icons/react";
+import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 
+import { MascotMark } from "@/components/brand/mascot-mark";
 import { formatDistance } from "@/modules/discovery/distance";
 import {
   googleMapsDirectionsUrl,
@@ -68,6 +73,34 @@ function DirectionsMenu({ result }: Readonly<{ result: RankedPlace }>) {
   );
 }
 
+function PlaceMediaPreview({ result }: Readonly<{ result: RankedPlace }>) {
+  const [state, setState] = useState<"loading" | "ready" | "failed">("loading");
+  const media = result.place.media;
+
+  if (!media || state === "failed") {
+    return (
+      <span className={styles.placeMediaFallback}>
+        <MascotMark />
+        <small>{state === "failed" ? "Photo could not load" : "Photo not available"}</small>
+      </span>
+    );
+  }
+
+  return (
+    <span className={styles.placeMedia}>
+      <Image
+        alt={media.altText}
+        className={state === "loading" ? styles.placeMediaImageLoading : styles.placeMediaImage}
+        fill
+        onError={() => setState("failed")}
+        onLoad={() => setState("ready")}
+        sizes="(min-width: 1024px) 144px, 104px"
+        src={media.url}
+      />
+    </span>
+  );
+}
+
 function PlaceRow({
   result,
   selected,
@@ -86,10 +119,7 @@ function PlaceRow({
         onClick={onSelect}
         type="button"
       >
-        <span className={styles.placeInitial} aria-hidden="true">
-          <ForkKnifeIcon weight="fill" />
-          <small>No photo</small>
-        </span>
+        <PlaceMediaPreview result={result} />
         <span className={styles.placeCopy}>
           <span className={styles.placeName}>{result.place.name}</span>
           <span className={styles.placeMeta}>
@@ -99,6 +129,16 @@ function PlaceRow({
           <EvidenceLabel result={result} />
         </span>
       </button>
+
+      {!result.place.media ? (
+        <Link
+          className={styles.mediaSuggestion}
+          href={`${placeProfilePath(result.place)}/suggest-update`}
+        >
+          <ForkKnifeIcon aria-hidden="true" weight="fill" />
+          Know this place? Suggest a photo
+        </Link>
+      ) : null}
 
       {selected ? (
         <div className={styles.selectedActions}>

@@ -16,6 +16,17 @@ export type PriceEvidence = Readonly<{
   minimumPerPersonPhp: number | null;
 }>;
 
+export type PlaceMedia = Readonly<{
+  altText: string;
+  attributionText: string | null;
+  height: number;
+  licenseName: string | null;
+  licenseUrl: string | null;
+  sourceUrl: string | null;
+  url: string;
+  width: number;
+}>;
+
 export type DiscoveryPlace = Readonly<{
   address: string | null;
   category: string;
@@ -27,6 +38,7 @@ export type DiscoveryPlace = Readonly<{
   occasions: EvidenceValues<string>;
   price: PriceEvidence;
   profileSlug?: string;
+  media?: PlaceMedia | null;
   sourceLabel: string;
 }>;
 

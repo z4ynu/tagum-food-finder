@@ -2,6 +2,23 @@ import type { NextConfig } from "next";
 
 const isDevelopment = process.env.NODE_ENV === "development";
 
+function placeMediaRemotePatterns() {
+  const configuredUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+
+  if (!configuredUrl) {
+    return [];
+  }
+
+  try {
+    const pattern = new URL(configuredUrl);
+    pattern.pathname = "/storage/v1/object/public/place-media/**";
+    pattern.search = "";
+    return [pattern];
+  } catch {
+    return [];
+  }
+}
+
 const contentSecurityPolicy = [
   "default-src 'self'",
   `script-src 'self' 'unsafe-inline'${isDevelopment ? " 'unsafe-eval'" : ""}`,
@@ -50,6 +67,9 @@ const nextConfig: NextConfig = {
         source: "/sw.js",
       },
     ];
+  },
+  images: {
+    remotePatterns: placeMediaRemotePatterns(),
   },
   poweredByHeader: false,
   reactStrictMode: true,
