@@ -66,6 +66,24 @@ describe("assessSourceCategory", () => {
     ).toEqual({ category: null, matchedLabel: null, usability: "unmapped" });
   });
 
+  it("maps Overture food taxonomies while rejecting non-food lookalikes", () => {
+    expect(
+      assessSourceCategory(createCandidate("overture-places", ["taxonomy:filipino_restaurant"])),
+    ).toEqual({
+      category: "restaurant",
+      matchedLabel: "taxonomy:filipino_restaurant",
+      usability: "usable",
+    });
+    expect(
+      assessSourceCategory(createCandidate("overture-places", ["taxonomy:internet_cafe"])),
+    ).toEqual({ category: null, matchedLabel: null, usability: "unmapped" });
+    expect(assessSourceCategory(createCandidate("overture-places", ["taxonomy:bar"]))).toEqual({
+      category: "bar-with-food",
+      matchedLabel: "taxonomy:bar",
+      usability: "review-required",
+    });
+  });
+
   it("keeps unknown providers and labels unmapped", () => {
     expect(assessSourceCategory(createCandidate("unknown", ["restaurant"]))).toEqual({
       category: null,

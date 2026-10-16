@@ -68,6 +68,37 @@ const foursquareRules: readonly Readonly<{
   },
 ];
 
+const overtureRules: readonly MappingRule[] = [
+  { category: "fast-food", label: "taxonomy:fast_food_restaurant", usability: "usable" },
+  { category: "food-stall", label: "taxonomy:food_truck_stand", usability: "usable" },
+  { category: "bakery", label: "taxonomy:bakery", usability: "usable" },
+  { category: "cafe", label: "taxonomy:cafe", usability: "usable" },
+  { category: "cafe", label: "taxonomy:coffee_shop", usability: "usable" },
+  { category: "cafe", label: "taxonomy:bubble_tea_shop", usability: "usable" },
+  { category: "cafe", label: "taxonomy:tea_room", usability: "usable" },
+  { category: "cafe", label: "taxonomy:smoothie_juice_bar", usability: "usable" },
+  { category: "dessert", label: "taxonomy:dessert_shop", usability: "usable" },
+  { category: "dessert", label: "taxonomy:ice_cream_shop", usability: "usable" },
+  { category: "dessert", label: "taxonomy:frozen_yogurt_shop", usability: "usable" },
+  { category: "dessert", label: "taxonomy:cupcake_shop", usability: "usable" },
+  { category: "dessert", label: "taxonomy:donut_shop", usability: "usable" },
+  {
+    category: "bar-with-food",
+    label: "taxonomy:bar_and_grill_restaurant",
+    usability: "usable",
+  },
+  {
+    category: "prepared-food-shop",
+    label: "taxonomy:delicatessen",
+    usability: "review-required",
+  },
+  { category: "dessert", label: "taxonomy:candy_store", usability: "review-required" },
+  { category: "bar-with-food", label: "taxonomy:bar", usability: "review-required" },
+  { category: "bar-with-food", label: "taxonomy:brewery", usability: "review-required" },
+  { category: "bar-with-food", label: "taxonomy:wine_bar", usability: "review-required" },
+  { category: "bar-with-food", label: "taxonomy:winery", usability: "review-required" },
+];
+
 function mapOsmLabels(labels: readonly string[]): SourceCategoryAssessment {
   for (const rule of osmRules) {
     if (labels.includes(rule.label)) {
@@ -89,6 +120,21 @@ function mapFoursquareLabels(labels: readonly string[]): SourceCategoryAssessmen
   return { category: null, matchedLabel: null, usability: "unmapped" };
 }
 
+function mapOvertureLabels(labels: readonly string[]): SourceCategoryAssessment {
+  for (const rule of overtureRules) {
+    if (labels.includes(rule.label)) {
+      return { category: rule.category, matchedLabel: rule.label, usability: rule.usability };
+    }
+  }
+
+  const restaurantLabel = labels.find(
+    (label) => label === "taxonomy:restaurant" || label.endsWith("_restaurant"),
+  );
+  return restaurantLabel
+    ? { category: "restaurant", matchedLabel: restaurantLabel, usability: "usable" }
+    : { category: null, matchedLabel: null, usability: "unmapped" };
+}
+
 export function assessSourceCategory(
   candidate: NormalizedPlaceCandidate,
 ): SourceCategoryAssessment {
@@ -98,6 +144,10 @@ export function assessSourceCategory(
 
   if (candidate.source.slug === "foursquare-os-places") {
     return mapFoursquareLabels(candidate.sourceCategoryLabels);
+  }
+
+  if (candidate.source.slug === "overture-places") {
+    return mapOvertureLabels(candidate.sourceCategoryLabels);
   }
 
   return { category: null, matchedLabel: null, usability: "unmapped" };
