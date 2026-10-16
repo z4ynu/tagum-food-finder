@@ -34,6 +34,37 @@ export type Database = {
           },
         ];
       };
+      catalog_release_moderation_decisions: {
+        Row: {
+          moderation_decision_id: string;
+          release_id: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          moderation_decision_id: string;
+          release_id: string;
+        };
+        Update: {
+          moderation_decision_id?: string;
+          release_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "catalog_release_moderation_decision_moderation_decision_id_fkey";
+            columns: ["moderation_decision_id"];
+            isOneToOne: true;
+            referencedRelation: "moderation_decisions";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "catalog_release_moderation_decisions_release_id_fkey";
+            columns: ["release_id"];
+            isOneToOne: false;
+            referencedRelation: "catalog_releases";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       catalog_release_places: {
         Row: {
           canonical_name: string;
@@ -285,6 +316,7 @@ export type Database = {
           entity_type: string;
           field_path: string;
           id: string;
+          moderation_decision_id: string | null;
           review_due_at: string | null;
           source_record_id: string | null;
           superseded_by_id: string | null;
@@ -302,6 +334,7 @@ export type Database = {
           entity_type: string;
           field_path: string;
           id?: string;
+          moderation_decision_id?: string | null;
           review_due_at?: string | null;
           source_record_id?: string | null;
           superseded_by_id?: string | null;
@@ -318,6 +351,7 @@ export type Database = {
           entity_type?: string;
           field_path?: string;
           id?: string;
+          moderation_decision_id?: string | null;
           review_due_at?: string | null;
           source_record_id?: string | null;
           superseded_by_id?: string | null;
@@ -331,6 +365,13 @@ export type Database = {
             columns: ["entity_id"];
             isOneToOne: false;
             referencedRelation: "places";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "field_provenance_moderation_decision_id_fkey";
+            columns: ["moderation_decision_id"];
+            isOneToOne: false;
+            referencedRelation: "moderation_decisions";
             referencedColumns: ["id"];
           },
           {
@@ -483,6 +524,74 @@ export type Database = {
           },
         ];
       };
+      moderation_decisions: {
+        Row: {
+          accepted_fields: NonNullable<Json>;
+          actor_type: string;
+          decided_at: string;
+          decided_by: string | null;
+          evidence: NonNullable<Json>;
+          id: string;
+          origin_batch_id: string;
+          outcome: string;
+          rationale: string;
+          reason_code: string;
+          source_record_id: string;
+          superseded_by_id: string | null;
+        };
+        ComputedFields: never;
+        Insert: {
+          accepted_fields?: NonNullable<Json>;
+          actor_type?: string;
+          decided_at?: string;
+          decided_by?: string | null;
+          evidence?: NonNullable<Json>;
+          id?: string;
+          origin_batch_id: string;
+          outcome: string;
+          rationale: string;
+          reason_code: string;
+          source_record_id: string;
+          superseded_by_id?: string | null;
+        };
+        Update: {
+          accepted_fields?: NonNullable<Json>;
+          actor_type?: string;
+          decided_at?: string;
+          decided_by?: string | null;
+          evidence?: NonNullable<Json>;
+          id?: string;
+          origin_batch_id?: string;
+          outcome?: string;
+          rationale?: string;
+          reason_code?: string;
+          source_record_id?: string;
+          superseded_by_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "moderation_decisions_origin_batch_id_fkey";
+            columns: ["origin_batch_id"];
+            isOneToOne: false;
+            referencedRelation: "import_batches";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "moderation_decisions_source_record_id_fkey";
+            columns: ["source_record_id"];
+            isOneToOne: false;
+            referencedRelation: "source_records";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "moderation_decisions_superseded_by_id_fkey";
+            columns: ["superseded_by_id"];
+            isOneToOne: false;
+            referencedRelation: "moderation_decisions";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       place_locations: {
         Row: {
           address_line: string | null;
@@ -527,6 +636,93 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "place_locations_place_id_fkey";
+            columns: ["place_id"];
+            isOneToOne: false;
+            referencedRelation: "places";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      place_media: {
+        Row: {
+          alt_text: string;
+          attribution_text: string | null;
+          bucket_id: string;
+          byte_size: number;
+          content_sha256: string;
+          created_at: string;
+          height: number;
+          id: string;
+          license_name: string | null;
+          license_url: string | null;
+          media_type: string;
+          object_path: string;
+          place_id: string;
+          publication_state: string;
+          published_at: string;
+          rights_basis: string;
+          rights_confirmed_at: string;
+          rights_reference: string;
+          sort_order: number;
+          source_url: string | null;
+          width: number;
+          withdrawal_reason: string | null;
+          withdrawn_at: string | null;
+        };
+        ComputedFields: never;
+        Insert: {
+          alt_text: string;
+          attribution_text?: string | null;
+          bucket_id?: string;
+          byte_size: number;
+          content_sha256: string;
+          created_at?: string;
+          height: number;
+          id?: string;
+          license_name?: string | null;
+          license_url?: string | null;
+          media_type: string;
+          object_path: string;
+          place_id: string;
+          publication_state?: string;
+          published_at?: string;
+          rights_basis: string;
+          rights_confirmed_at: string;
+          rights_reference: string;
+          sort_order?: number;
+          source_url?: string | null;
+          width: number;
+          withdrawal_reason?: string | null;
+          withdrawn_at?: string | null;
+        };
+        Update: {
+          alt_text?: string;
+          attribution_text?: string | null;
+          bucket_id?: string;
+          byte_size?: number;
+          content_sha256?: string;
+          created_at?: string;
+          height?: number;
+          id?: string;
+          license_name?: string | null;
+          license_url?: string | null;
+          media_type?: string;
+          object_path?: string;
+          place_id?: string;
+          publication_state?: string;
+          published_at?: string;
+          rights_basis?: string;
+          rights_confirmed_at?: string;
+          rights_reference?: string;
+          sort_order?: number;
+          source_url?: string | null;
+          width?: number;
+          withdrawal_reason?: string | null;
+          withdrawn_at?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "place_media_place_id_fkey";
             columns: ["place_id"];
             isOneToOne: false;
             referencedRelation: "places";
@@ -1257,16 +1453,79 @@ export type Database = {
         ComputedFields: never;
         Relationships: [];
       };
+      place_media: {
+        Row: {
+          alt_text: string | null;
+          attribution_text: string | null;
+          bucket_id: string | null;
+          height: number | null;
+          license_name: string | null;
+          license_url: string | null;
+          media_id: string | null;
+          media_type: string | null;
+          object_path: string | null;
+          place_id: string | null;
+          place_slug: string | null;
+          published_at: string | null;
+          sort_order: number | null;
+          source_url: string | null;
+          width: number | null;
+        };
+        ComputedFields: never;
+        Relationships: [];
+      };
     };
     Functions: {
-      publish_overture_import: { Args: { p_batch_id: string }; Returns: Json };
       publish_osm_import: { Args: { p_batch_id: string }; Returns: Json };
+      publish_overture_import: { Args: { p_batch_id: string }; Returns: Json };
+      publish_overture_moderation_release: {
+        Args: { p_origin_batch_id: string; p_payload: Json };
+        Returns: Json;
+      };
+      publish_place_media: {
+        Args: {
+          p_alt_text: string;
+          p_attribution_text: string;
+          p_byte_size: number;
+          p_content_sha256: string;
+          p_height: number;
+          p_license_name: string;
+          p_license_url: string;
+          p_media_type: string;
+          p_object_path: string;
+          p_place_slug: string;
+          p_rights_basis: string;
+          p_rights_confirmed_at: string;
+          p_rights_reference: string;
+          p_sort_order: number;
+          p_source_url: string;
+          p_width: number;
+        };
+        Returns: string;
+      };
       replace_wheel_entries: {
         Args: { p_entries: Json; p_wheel_list_id: string };
-        Returns: Database["public"]["Tables"]["wheel_entries"]["Row"][];
+        Returns: {
+          created_at: string;
+          duplicate_confirmed: boolean;
+          entry_kind: string;
+          id: string;
+          label_snapshot: string;
+          place_id: string | null;
+          position: number;
+          updated_at: string;
+          wheel_list_id: string;
+        }[];
+        SetofOptions: {
+          from: "*";
+          to: "wheel_entries";
+          isOneToOne: false;
+          isSetofReturn: true;
+        };
       };
-      stage_overture_import: { Args: { p_payload: Json }; Returns: Json };
       stage_osm_import: { Args: { p_payload: Json }; Returns: Json };
+      stage_overture_import: { Args: { p_payload: Json }; Returns: Json };
+      withdraw_place_media: { Args: { p_media_id: string; p_reason: string }; Returns: undefined };
     };
     Enums: {
       account_status: "active" | "deletion_requested" | "disabled" | "deleted";
