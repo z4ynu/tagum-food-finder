@@ -8,7 +8,7 @@
 | Descriptor | Tagum Food Finder |
 | Document status | Approved |
 | Discovery status | Complete |
-| Last updated | 2026-10-15 |
+| Last updated | 2026-10-16 |
 | Approved | 2026-10-13 |
 | Target milestone | Private beta in February 2027 |
 | Product owner | Repository owner |
@@ -657,6 +657,10 @@ The incident register includes suspected incidents even when notification is not
 
 ## Secure development lifecycle
 
+### Private-beta discoverability
+
+The private-beta deployment instructs standards-compliant search crawlers not to index or follow any route. This is enforced through the generated `robots.txt`, page-level robots metadata, and the `X-Robots-Tag` response header. These controls reduce accidental discovery but are not access control: invitations and authenticated features must still rely on authorization. Remove all three controls together only when the owner approves broad public discovery.
+
 ### Source and deployment controls
 
 - Production deploys originate from the protected main branch after required checks and explicit approval.
@@ -767,6 +771,7 @@ Critical launch blockers cannot be waived for private beta:
 - [ ] Exercise account export, deletion, and restored-data deletion handling.
 - [ ] Exercise one tabletop incident scenario and the 72-hour assessment workflow.
 - [ ] Verify provider, domain, repository, and production dashboards use MFA.
+- [x] Block standards-compliant search indexing for the private-beta deployment.
 
 ### Before broad public launch
 

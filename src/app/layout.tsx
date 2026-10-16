@@ -16,6 +16,16 @@ export const metadata: Metadata = {
     ],
   },
   manifest: "/manifest.webmanifest",
+  robots: {
+    follow: false,
+    googleBot: {
+      follow: false,
+      index: false,
+      noimageindex: true,
+    },
+    index: false,
+    nocache: true,
+  },
 };
 
 export const viewport: Viewport = {
