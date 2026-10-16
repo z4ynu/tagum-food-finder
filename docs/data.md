@@ -328,6 +328,8 @@ The first production Overture batch published 117 reviewed creates and retained 
 
 An inactive Foursquare server boundary can normalize an attributed description, price tier, refresh date, and up to five photo references for an already-known Foursquare place identifier. It does not search, persist, cache, download photos, or publish these fields until an account-specific terms review and public presentation design are approved. Foursquare tiers never become exact PHP prices.
 
+A production identifier audit found no known Foursquare identifier among the 117 published Overture places. Nineteen private Overture moderation records have identifiers, but each remains below the approved automatic-publication confidence threshold. The system must not attach those provider details to a public place until the place relationship is explicitly reviewed.
+
 ### `source_records`
 
 Stores normalized provider data separately from canonical places. Important fields are source, external record key, normalized payload, payload schema version, retrieval time, source update time, content hash, licensing classification, raw-payload expiry, and latest-seen batch. A changed content hash creates a new source-record version; it does not rewrite evidence already referenced by published provenance.
