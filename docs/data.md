@@ -324,6 +324,8 @@ The implemented baseline importer accepts only the approved, checksummed GeoJSON
 
 The implemented Overture supplement accepts only a pinned, checksummed JSON Lines extraction and the same approved Tagum boundary checksum. It proposes creation only for usable categories with source confidence of at least `0.8`, excludes records reported permanently closed, and sends exact-name matches within 100 metres of an active place to moderation. Its release, content hashes, source timestamps, licensing classification, and attribution remain attached to the import. Overture does not establish current PHP menu prices, so the supplement does not infer price ranges.
 
+The first production Overture batch published 117 reviewed creates and retained 594 records for moderation. Together with the 174-place OpenStreetMap baseline, the active immutable release exposes 291 attributed places. One obvious name/category contradiction was manually held before publication.
+
 An inactive Foursquare server boundary can normalize an attributed description, price tier, refresh date, and up to five photo references for an already-known Foursquare place identifier. It does not search, persist, cache, download photos, or publish these fields until an account-specific terms review and public presentation design are approved. Foursquare tiers never become exact PHP prices.
 
 ### `source_records`

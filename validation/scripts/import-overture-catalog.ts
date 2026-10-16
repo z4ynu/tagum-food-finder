@@ -1,6 +1,6 @@
 import { existsSync } from "node:fs";
-import { readFile } from "node:fs/promises";
-import { resolve } from "node:path";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { dirname, resolve } from "node:path";
 import { createClient } from "@supabase/supabase-js";
 
 import type { BoundaryFixture } from "../../src/modules/catalog/audit/boundary";
@@ -8,18 +8,20 @@ import {
   buildOvertureCatalogImport,
   type OvertureExtractionManifest,
 } from "../../src/modules/catalog/import/overture-import-payload";
+import { buildOvertureStageSql } from "../../src/modules/catalog/import/overture-stage-sql";
 import { parseDeploymentIdentity } from "../../src/platform/config/deployment-identity";
 
-type Command = "prepare" | "publish" | "stage";
+type Command = "prepare" | "prepare-sql" | "publish" | "stage";
 
 const defaultSnapshot = "validation/snapshots/overture-tagum-food-places.jsonl";
 const defaultManifest = "validation/snapshots/overture-tagum-food-places.manifest.json";
 const defaultBoundary = "validation/fixtures/tagum-boundary-osm-15986415-v8.json";
+const defaultStageSql = "validation/reports/generated/overture-stage.sql";
 const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 function usage(): never {
   throw new Error(
-    "Usage: npm run catalog:overture -- prepare|stage [snapshot manifest boundary] OR publish <batch-uuid>",
+    "Usage: npm run catalog:overture -- prepare|prepare-sql|stage [snapshot manifest boundary] OR publish <batch-uuid>",
   );
 }
 
@@ -73,7 +75,9 @@ async function payloadFromFiles(arguments_: readonly string[]) {
 }
 
 const [commandValue, ...arguments_] = process.argv.slice(2);
-if (!commandValue || !["prepare", "publish", "stage"].includes(commandValue)) usage();
+if (!commandValue || !["prepare", "prepare-sql", "publish", "stage"].includes(commandValue)) {
+  usage();
+}
 const command = commandValue as Command;
 
 if (command === "publish") {
@@ -108,5 +112,10 @@ if (command === "publish") {
     });
     if (error) throw new Error(`Catalog staging failed: ${error.message}`);
     console.log(JSON.stringify(data, null, 2));
+  } else if (command === "prepare-sql") {
+    const outputPath = resolve(defaultStageSql);
+    await mkdir(dirname(outputPath), { recursive: true });
+    await writeFile(outputPath, buildOvertureStageSql(payload), { encoding: "utf8", mode: 0o600 });
+    console.log(`Wrote ignored staging package to ${outputPath}`);
   }
 }

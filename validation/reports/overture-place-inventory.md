@@ -42,3 +42,18 @@ Across the 762 bounding-box records, 117 include at least one website, 760 inclu
 ## Cost and quota
 
 The Overture extraction reads the public release and incurred no metered application API calls. No Foursquare API call was made.
+
+## Production result
+
+The verified workflow migration was applied to the production Supabase project. The checksummed batch was staged through the authenticated Supabase Management API without handling a service API key.
+
+- Batch: `ce68b3a6-5df6-4691-a125-916b1211a37f`
+- Initial staging: 118 proposed creates and 593 moderation records
+- Automatic duplicate holds: 22 exact-name matches within 100 metres
+- Other moderation: 487 below the confidence threshold and 84 category-review or unmapped records
+- Manual review hold: `RAMEN JU Tagum & Panabo`, because the source classified it as an ice-cream shop and the normalized result was `dessert`
+- Published creates: 117
+- Published release: `c75cb817-55c9-40e7-96af-a242d2d5cd55`
+- Public catalog after publication: 291 places
+
+Post-publication verification found one active release, 117 public Overture rows, no missing Overture attribution, and no public row for the manually held record.
