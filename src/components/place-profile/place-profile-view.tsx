@@ -9,9 +9,12 @@ import {
   LeafIcon,
 } from "@phosphor-icons/react";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 
 import { DiscoveryNavigation } from "@/components/discovery/discovery-navigation";
+import { ProviderPlacePhoto } from "@/components/place-media/provider-place-photo";
 import type { DiscoveryPlace } from "@/modules/discovery/model";
 import { placeProfileSlug } from "@/modules/discovery/place-profile-path";
 
@@ -28,6 +31,59 @@ type PlaceProfileViewProps = Readonly<{
   initiallySaved: boolean;
   place: DiscoveryPlace;
 }>;
+
+function MediaFallback({ label }: Readonly<{ label: string }>) {
+  return (
+    <>
+      <ImageSquareIcon aria-hidden="true" />
+      <span>{label}</span>
+    </>
+  );
+}
+
+function PlaceProfileMedia({ place }: Readonly<{ place: DiscoveryPlace }>) {
+  const [catalogMediaFailed, setCatalogMediaFailed] = useState(false);
+
+  if (place.media && !catalogMediaFailed) {
+    return (
+      <div className={styles.profileMedia}>
+        <Image
+          alt={place.media.altText}
+          className={styles.profileMediaImage}
+          fill
+          onError={() => setCatalogMediaFailed(true)}
+          sizes="(min-width: 1024px) 52vw, (min-width: 768px) 54vw, 100vw"
+          src={place.media.url}
+        />
+        {place.media.attributionText ? (
+          place.media.sourceUrl ? (
+            <a
+              className={styles.profileMediaAttribution}
+              href={place.media.sourceUrl}
+              rel="noreferrer"
+              target="_blank"
+            >
+              {place.media.attributionText}
+            </a>
+          ) : (
+            <span className={styles.profileMediaAttribution}>{place.media.attributionText}</span>
+          )
+        ) : null}
+      </div>
+    );
+  }
+
+  return (
+    <ProviderPlacePhoto
+      className={styles.mediaPlaceholder}
+      failedFallback={<MediaFallback label="No photo available" />}
+      fallback={<MediaFallback label="Finding a current photo" />}
+      imageClassName={styles.profileMediaImage}
+      linkedAttribution
+      placeId={place.id}
+    />
+  );
+}
 
 export function PlaceProfileView({ distanceLabel, initiallySaved, place }: PlaceProfileViewProps) {
   const address = place.address
@@ -51,10 +107,7 @@ export function PlaceProfileView({ distanceLabel, initiallySaved, place }: Place
 
         <div className={styles.profileGrid}>
           <div className={styles.identityColumn}>
-            <div className={styles.mediaPlaceholder}>
-              <ImageSquareIcon aria-hidden="true" />
-              <span>No photo available</span>
-            </div>
+            <PlaceProfileMedia place={place} />
 
             <section className={styles.placeIdentity} aria-labelledby="place-name">
               <h2 id="place-name">{place.name}</h2>

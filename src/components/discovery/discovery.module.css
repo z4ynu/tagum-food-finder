@@ -460,6 +460,24 @@
   opacity: 0;
 }
 
+.placeMediaAttribution {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  left: 4px;
+  z-index: 1;
+  padding: 3px 5px;
+  overflow: hidden;
+  color: #ffffff;
+  font-size: 8px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  background: rgb(18 28 19 / 0.78);
+  border-radius: 5px;
+}
+
 .placeMediaFallback {
   flex-direction: column;
   gap: 3px;
@@ -468,7 +486,7 @@
   text-align: center;
 }
 
-.placeMediaFallback > img {
+.placeMediaMascot {
   width: 38px;
   height: 38px;
   object-fit: contain;

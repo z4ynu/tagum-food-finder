@@ -36,6 +36,8 @@ describe("placeMediaFromRow", () => {
   });
 
   it("rejects an incomplete public media row", () => {
-    expect(placeMediaFromRow({ ...ROW, alt_text: null }, "https://example.com/photo.webp")).toBeNull();
+    expect(
+      placeMediaFromRow({ ...ROW, alt_text: null }, "https://example.com/photo.webp"),
+    ).toBeNull();
   });
 });

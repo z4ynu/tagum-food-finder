@@ -494,7 +494,7 @@ Source originals remain outside this public catalog and must stay private when t
 
 The anonymous view exposes only published media for places in the active catalog release. Browser roles cannot insert, update, publish, or withdraw media. Withdrawal requires the public Storage object to be removed or archived first, then retains the rights record, reason, and time for audit. External images are not hotlinked unless the source explicitly allows that use and reliability risk is accepted.
 
-The absence of media produces a neutral designed fallback, never a stock or generated food image presented as the real place.
+The absence of owned or rights-confirmed media may trigger an on-demand Google Places photo lookup only when the image slot approaches the viewport. The lookup uses the canonical name and coordinates solely for matching, rejects weak or distant matches, and returns a short-lived signed proxy URL plus required attribution. Google photo names, image bytes, search responses, and Google-derived coordinates are not persisted. If no safe provider match exists, the interface keeps the neutral designed fallback and never presents a stock or generated food image as the real place.
 
 ## Analytics data
 

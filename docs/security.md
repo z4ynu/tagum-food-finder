@@ -327,6 +327,10 @@ Held Overture records can be finalized only through the service-role moderation-
 
 The optional Foursquare service key is server-only and has no public-prefixed equivalent. The integration remains disabled when the key is absent, requests an explicit minimal field set with `no-store`, uses a bounded timeout without automatic retries, and converts provider and quota failures into typed non-secret results. It does not expose raw responses or credentials to client code.
 
+The Google Places API key is also server-only and has no public-prefixed equivalent. The provider route requests only place identity, display name, location, and photo metadata for a visible catalog place. It rejects results outside the configured distance and name-match thresholds, creates a five-minute HMAC-signed photo token, and proxies only a validated Google photo resource. The proxy accepts only signed resource names, restricts image dimensions and response size, validates an image content type, applies bounded timeouts, and returns `private, no-store` with `nosniff`. Provider errors become non-secret unavailable states.
+
+The beta adds per-instance minute windows of 40 photo-metadata requests and 80 signed image requests per client network signal. These limits reduce accidental or simple abusive spend but are not globally consistent across serverless instances. Google API restrictions, provider-side quotas, and billing alerts are mandatory before the key is enabled in production. A distributed limiter is deferred until measured beta traffic justifies it.
+
 ### Policy testing
 
 Every policy or role change tests:
@@ -514,6 +518,8 @@ Rate limits combine endpoint, account, rotating network signal, session, and glo
 | Operation | Initial control |
 | --- | --- |
 | Public discovery | Generous burst allowance, cache protection, and progressive response to sustained automation |
+| Google place-photo metadata | 40 per minute per client network signal per application instance, plus provider quota |
+| Signed Google photo bytes | 80 per minute per client network signal per application instance, plus five-minute token expiry |
 | Account and magic-link requests | Supabase limits plus network and target-address throttling |
 | Correction submissions | 5 per hour and 20 per day per account |
 | Evidence files | 20 per day per account in addition to submission limits |
@@ -594,7 +600,7 @@ Before production use, each provider record includes:
 - outage and exit plan;
 - last and next review dates.
 
-Google and Facebook receive authentication requests only when chosen by the user. Navigation providers receive destination data only after the user requests directions. Sentry receives scrubbed technical events. Map providers receive only requests necessary to render the viewed map.
+Google and Facebook receive authentication requests only when chosen by the user. Google Places receives an existing catalog place name, optional public address, and coordinates when a visible image slot needs a photo. Navigation providers receive destination data only after the user requests directions. Sentry receives scrubbed technical events. Map providers receive only requests necessary to render the viewed map.
 
 Provider terms and international-transfer safeguards are reviewed before beta and at least annually. A provider's certification does not replace application configuration or controller accountability.
 

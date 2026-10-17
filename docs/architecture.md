@@ -38,7 +38,7 @@ The beta posture is:
 - one application repository;
 - one deployable PWA with public, authenticated, and administrative surfaces;
 - managed PostgreSQL rather than a custom database service;
-- background batch ingestion rather than live provider aggregation on every user request;
+- background batch ingestion for canonical place data, with bounded on-demand photo enrichment only for visible places;
 - deterministic SQL-backed search and ranking rather than AI or a dedicated search cluster;
 - replaceable providers rather than provider-specific domain models;
 - free or low-cost plans during validation, with explicit production-readiness gates.
@@ -60,6 +60,7 @@ Scaling should be driven by measured load. The first upgrade path is vertical an
 | Initial basemap | MapTiler during eligible private evaluation | Fastest beta path; provider remains replaceable |
 | Place seed data | OpenStreetMap | Lawful baseline place coverage with required attribution |
 | Enrichment candidate | Foursquare Places | Used only after record-quality, licensing, retention, and cost checks pass |
+| On-demand place photos | Google Places API (New) | Fresh establishment photos for visible catalog places without copying them into project storage |
 | Search | PostgreSQL full-text, trigram/fuzzy matching, and PostGIS | Adequate for city-scale discovery without another service |
 | Scheduled ingestion | GitHub Actions invoking protected ingestion jobs | Observable, versioned, and inexpensive weekly automation |
 | Error monitoring | Sentry free tier | Actionable client/server errors with required data scrubbing |
@@ -422,6 +423,10 @@ Foursquare remains a candidate enrichment adapter. It is disabled for production
 - requested fields may be retained and displayed as designed;
 - ongoing API cost fits the ceiling;
 - required attribution and correction obligations are implementable.
+
+Google Places API (New) is the approved on-demand photo provider for the private beta. It does not replace the canonical OpenStreetMap and Overture catalog. When an image slot approaches the viewport, a server route searches for the existing catalog place using its name and coordinates, accepts only a strong name match within 600 metres, and returns a five-minute signed URL for the selected photo. The browser never receives the Google API key. Photo resource names, image bytes, and search responses use `no-store` handling and are not written to Supabase, Next.js image optimization caches, the service worker, or repository fixtures. Local rights-confirmed media takes precedence over provider media.
+
+The user interface displays the supplied photographer attribution and a Google source link with every provider photo. The OpenStreetMap map continues to render application-owned catalog coordinates; Google search coordinates are used only to reject mismatches and are not added to the map or canonical data. Any broader use of Google place results on the map requires a separate policy review and may require changing the map provider.
 
 Foodpanda is not an ingestion provider. Its documented APIs are partner-scoped and do not provide an authorized city-wide discovery feed.
 
@@ -792,6 +797,7 @@ The monthly infrastructure ceiling is ₱3,000. No paid upgrade or provider with
 | Supabase | Free staging and production projects | Capacity monitoring; external encrypted backups |
 | MapTiler | Evaluation use only when eligible | Hard usage limit; confirm terms before invitations |
 | Foursquare | Audit usage only until approved | Call cap, field minimization, and no production dependency |
+| Google Places | On-demand photos for visible places only | API restriction, Google quota, billing alert, field mask, strict match threshold, and application rate limit |
 | Sentry | Free tier | Event sampling and payload scrubbing |
 | GitHub Actions | Included allowance | Weekly schedule and bounded jobs |
 
@@ -903,6 +909,9 @@ Provider capabilities, prices, quotas, and terms can change. Recheck these offic
 - [OpenStreetMap copyright and license](https://www.openstreetmap.org/copyright)
 - [Foursquare Places API overview](https://docs.foursquare.com/fsq-developers-places/reference/places-api-overview)
 - [Foursquare Place Search](https://docs.foursquare.com/fsq-developers-places/reference/place-search)
+- [Google Place Photos (New)](https://developers.google.com/maps/documentation/places/web-service/place-photos)
+- [Google Places policies and attribution](https://developers.google.com/maps/documentation/places/web-service/policies)
+- [Google Maps Platform pricing](https://developers.google.com/maps/billing-and-pricing/pricing)
 - [Protomaps basemap downloads and licensing](https://docs.protomaps.com/basemaps/downloads)
 - [Protomaps deployment documentation](https://docs.protomaps.com/deploy/)
 

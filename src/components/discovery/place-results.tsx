@@ -12,6 +12,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 import { MascotMark } from "@/components/brand/mascot-mark";
+import { ProviderPlacePhoto } from "@/components/place-media/provider-place-photo";
 import { formatDistance } from "@/modules/discovery/distance";
 import {
   googleMapsDirectionsUrl,
@@ -79,10 +80,23 @@ function PlaceMediaPreview({ result }: Readonly<{ result: RankedPlace }>) {
 
   if (!media || state === "failed") {
     return (
-      <span className={styles.placeMediaFallback}>
-        <MascotMark />
-        <small>{state === "failed" ? "Photo could not load" : "Photo not available"}</small>
-      </span>
+      <ProviderPlacePhoto
+        className={styles.placeMediaFallback}
+        fallback={
+          <>
+            <MascotMark className={styles.placeMediaMascot} />
+            <small>{state === "failed" ? "Photo could not load" : "Finding photo"}</small>
+          </>
+        }
+        failedFallback={
+          <>
+            <MascotMark className={styles.placeMediaMascot} />
+            <small>Photo not available</small>
+          </>
+        }
+        imageClassName={styles.placeMediaImage}
+        placeId={result.place.id}
+      />
     );
   }
 
@@ -97,6 +111,9 @@ function PlaceMediaPreview({ result }: Readonly<{ result: RankedPlace }>) {
         sizes="(min-width: 1024px) 96px, 104px"
         src={media.url}
       />
+      {media.attributionText ? (
+        <small className={styles.placeMediaAttribution}>{media.attributionText}</small>
+      ) : null}
     </span>
   );
 }

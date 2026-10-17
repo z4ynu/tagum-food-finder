@@ -19,10 +19,7 @@ export class CatalogUnavailableError extends Error {
 
 type ServerSupabaseClient = Awaited<ReturnType<typeof createServerSupabaseClient>>;
 
-function publicMediaFromRow(
-  supabase: ServerSupabaseClient,
-  row: PlaceMediaRow,
-): PlaceMedia | null {
+function publicMediaFromRow(supabase: ServerSupabaseClient, row: PlaceMediaRow): PlaceMedia | null {
   if (!row.object_path) {
     return null;
   }

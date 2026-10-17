@@ -28,6 +28,8 @@ npm run dev
 
 Vercel is the approved application host for the private beta. The repository uses the native Next.js build and does not require a hosting adapter or `vercel.json`. Connect the repository in Vercel, keep production deployment approval manual, and configure environment variables in the Vercel dashboard rather than committing them.
 
+`GOOGLE_PLACES_API_KEY` enables on-demand establishment photos through a server-only Google Places proxy. Restrict the key to Places API (New), configure provider quotas and billing alerts, and never use a `NEXT_PUBLIC_` prefix. Without the key, the existing catalog and designed photo fallbacks continue to work.
+
 The Vercel Hobby plan may be used only while the beta qualifies for its personal, noncommercial terms. Review the current plan terms before invitations or monetization.
 
 User-facing page changes still require approved mobile and desktop mockups before implementation.
