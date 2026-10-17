@@ -94,7 +94,7 @@ function PlaceMediaPreview({ result }: Readonly<{ result: RankedPlace }>) {
         fill
         onError={() => setState("failed")}
         onLoad={() => setState("ready")}
-        sizes="(min-width: 1024px) 144px, 104px"
+        sizes="(min-width: 1024px) 96px, 104px"
         src={media.url}
       />
     </span>

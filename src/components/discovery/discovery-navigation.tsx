@@ -17,17 +17,12 @@ type NavigationDestination = (typeof ITEMS)[number]["label"];
 export function DiscoveryNavigation({
   activeDestination = "Discover",
   accountReturnTo = "/",
-  desktopMode = "sidebar",
 }: Readonly<{
   accountReturnTo?: string;
   activeDestination?: NavigationDestination;
-  desktopMode?: "sidebar" | "top";
 }>) {
   return (
-    <nav
-      className={`${styles.navigation} ${desktopMode === "top" ? styles.navigationTop : ""}`}
-      aria-label="Primary navigation"
-    >
+    <nav className={styles.navigation} aria-label="Primary navigation">
       <Link className={styles.brand} href="/#discovery-results" aria-label="Asa Ta Mangaon? home">
         <span className={styles.brandMark} aria-hidden="true">
           <MascotMark priority />

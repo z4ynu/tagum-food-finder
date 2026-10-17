@@ -1607,136 +1607,14 @@
     bottom: 12px;
   }
 
-  .discoveryShell {
-    grid-template-rows: 72px minmax(0, 1fr);
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .navigationTop {
-    z-index: 30;
-    grid-row: 1;
-    flex-direction: row;
-    align-items: center;
-    width: 100%;
-    height: 72px;
-    padding: 8px 28px;
-    background: rgb(255 255 255 / 0.98);
-    border-right: 0;
-    border-bottom: 1px solid #e1e7e1;
-  }
-
-  .navigationTop .brand {
-    flex-direction: row;
-    gap: 10px;
-    padding: 0;
-    text-align: left;
-  }
-
-  .navigationTop .brandMark img {
-    width: 46px;
-    height: 46px;
-  }
-
-  .navigationTop .brandText {
-    align-items: flex-start;
-  }
-
-  .navigationTop .brandText strong {
-    max-width: none;
-    font-size: 18px;
-    line-height: 1.05;
-  }
-
-  .navigationTop .brandText small {
-    margin-top: 3px;
-    font-size: 11px;
-  }
-
-  .navigationTop .navItems {
-    flex: 0 1 auto;
-    flex-direction: row;
-    align-items: center;
-    margin-left: auto;
-    gap: 4px;
-  }
-
-  .navigationTop .navItem,
-  .navigationTop .navItemSelected {
-    justify-content: center;
-    min-height: 44px;
-    padding: 8px 14px;
-  }
-
-  .navigationTop .navItem:last-child {
-    margin-top: 0;
-  }
-
-  .discoveryShell .workspace {
-    grid-row: 2;
-    grid-template-columns: minmax(0, 58%) minmax(400px, 42%);
-    min-height: calc(100dvh - 72px);
-    height: calc(100dvh - 72px);
-  }
-
-  .discoveryShell .mobileMapHeader {
-    top: 20px;
-    right: auto;
-    left: 24px;
-    display: grid;
-    width: min(520px, calc(58vw - 72px));
-  }
-
-  .discoveryShell .mobileMapBrand {
-    display: none;
-  }
-
-  .discoveryShell .mobileSearchRow .searchField,
-  .discoveryShell .mobileSearchRow .filtersButton {
-    border: 1px solid #dce5dc;
-    box-shadow: 0 10px 30px rgb(38 87 40 / 0.12);
-  }
-
-  .discoveryShell .resultsPanel,
-  .discoveryShell .sheet-collapsed,
-  .discoveryShell .sheet-half,
-  .discoveryShell .sheet-full {
-    grid-column: 2;
-    height: calc(100dvh - 72px);
-    border-right: 0;
-    border-left: 1px solid #e1e7e1;
-    box-shadow: -8px 0 30px rgb(38 87 40 / 0.06);
-  }
-
-  .discoveryShell .resultsHeader .searchRow {
-    display: none;
-  }
-
-  .discoveryShell .mapRegion,
-  .discoveryShell .mapPlaceholder {
-    grid-column: 1;
-    height: calc(100dvh - 72px);
-  }
-
-  .discoveryShell .mapControls {
-    top: 94px;
-  }
-
-  .discoveryShell .mapError {
-    top: 94px;
-  }
-
-  .placeSelect {
-    grid-template-columns: 144px minmax(0, 1fr);
-  }
-
   .placeMedia,
   .placeMediaFallback {
-    width: 144px;
+    width: 96px;
   }
 
   .mediaSuggestion,
   .selectedActions {
-    margin-left: 160px;
+    margin-left: 112px;
   }
 }
 

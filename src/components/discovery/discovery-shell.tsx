@@ -181,7 +181,7 @@ export function DiscoveryShell({ catalogStatus, places }: DiscoveryShellProps) {
   );
 
   return (
-    <main className={`${styles.shell} ${styles.discoveryShell}`}>
+    <main className={styles.shell}>
       {!online ? (
         <div className={styles.offlineBanner} role="status">
           <WifiSlashIcon aria-hidden="true" weight="bold" />
@@ -190,7 +190,7 @@ export function DiscoveryShell({ catalogStatus, places }: DiscoveryShellProps) {
         </div>
       ) : null}
 
-      <DiscoveryNavigation desktopMode="top" />
+      <DiscoveryNavigation />
 
       <div className={styles.workspace}>
         <header className={styles.mobileMapHeader}>
